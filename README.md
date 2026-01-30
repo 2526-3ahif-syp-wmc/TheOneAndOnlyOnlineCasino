@@ -321,4 +321,4 @@ Der Benutzer soll Coins sinnvoll verwenden und sein Casino personalisieren könn
 
 ### 6.2 Datenmodell
 
-<img src="/pics/er_diagram.png>
+<img src="pics/er_diagram.png" width=350>
