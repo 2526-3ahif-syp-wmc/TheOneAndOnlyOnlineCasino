@@ -314,11 +314,8 @@ Der Benutzer soll Coins sinnvoll verwenden und sein Casino personalisieren könn
 
 ### 6.1 Deployment-Diagramm
 
-- Auflistung der Softwarekomponenten in einem Verteilungsdiagramm (typisch: Client - Server - Datenbank).
-- Beispiel:
-
-<img src="./Architektur.jpg">
+<img src="pics/deployment_diagram.png" width=500>
 
 ### 6.2 Datenmodell
 
-<img src="pics/er_diagram.png" width=350>
+<img src="pics/er_diagram.png" width=300>
