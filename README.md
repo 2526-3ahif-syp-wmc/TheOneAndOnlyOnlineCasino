@@ -309,3 +309,16 @@ Der Benutzer soll Coins sinnvoll verwenden und sein Casino personalisieren könn
 
 - **Serveranfragen:**  
   - ca. 10-30 Serveranfragen pro Sitzung je nach Gebrauch (z. B. Laden von Daten, Seiten, Spielen, Leaderboards)
+
+## 6. Systemarchitektur
+
+### 6.1 Deployment-Diagramm
+
+- Auflistung der Softwarekomponenten in einem Verteilungsdiagramm (typisch: Client - Server - Datenbank).
+- Beispiel:
+
+<img src="./Architektur.jpg">
+
+### 6.2 Datenmodell
+
+<img src="/pics/er_diagram.png>
