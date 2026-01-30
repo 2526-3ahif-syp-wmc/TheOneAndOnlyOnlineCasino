@@ -100,7 +100,7 @@ Der Benutzer soll verschiedene Spiele spielen und Coins gewinnen oder verlieren 
 
 ## Slot-Machine Übersicht
 
-<img src="slot-machine.jpg" width="400">
+<img src="pics/slot-machine.jpg" width="400">
 
 ### Definition
 Ein Spielautomat mit einem Raster aus Symbolen, z.B:
@@ -123,7 +123,7 @@ Ein Spielautomat mit einem Raster aus Symbolen, z.B:
 
 ## Mines Übersicht
 
-<img src="mines.jpg" width="400">
+<img src="pics/mines.jpg" width="400">
 
 ## Definition
 Mines ist ein einfaches Raster-Spiel mit wählbaren Größen, z.B:
@@ -153,7 +153,7 @@ Multiplikatoren pro sicherem Feld:
 
 ##  Roulette Übersicht
 
-<img src="roulette.jpg" width="400">
+<img src="pics/roulette.jpg" width="400">
 
 ### Definition
 Spieler setzen auf Zahlen oder Farben und die Kugel im Rad die Gewinnzahl bestimmt.
@@ -176,7 +176,7 @@ Beispiel: 10 € auf Zahl 12 → Kugel landet auf 12: **350 € Gewinn**.
 
 ## Blackjack Übersicht
 
-<img src="blackjack.jpg" width="400">
+<img src="pics/blackjack.jpg" width="400">
 
 ### Definition
 Ein Kartenspiel, bei dem Spieler versuchen, näher an **21** zu kommen als der Dealer, ohne diese Zahl zu überschreiten.
@@ -208,7 +208,7 @@ Spieler gewinnt, wenn:
 
 ## Plinko Übersicht
 
-<img src="plinko.jpg" width="400">
+<img src="pics/plinko.jpg" width="400">
 
 ## Definition
 Ein Ball fällt von oben und an Pins abprallt, bevor er in unten liegenden Fächern landet, die Punkte vergeben.
