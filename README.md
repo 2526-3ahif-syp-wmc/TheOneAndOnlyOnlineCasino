@@ -319,3 +319,7 @@ Der Benutzer soll Coins sinnvoll verwenden und sein Casino personalisieren könn
 ### 6.2 Datenmodell
 
 <img src="pics/er_diagram.png" width=300>
+
+Figma
+
+https://www.figma.com/make/xXRmznEHGdh0XT9beNfcd8/Online-Casino-App?t=Gc9UMz5TjBcvOwUe-1
