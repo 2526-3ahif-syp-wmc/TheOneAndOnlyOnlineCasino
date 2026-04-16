@@ -1,0 +1,82 @@
+<div class="auth-wrapper">
+
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="/background.mp4" type="video/mp4"/>
+    </video>
+
+  <input type="checkbox" id="toggle" class="toggle" />
+
+  <div class="auth-container">
+
+    
+
+    <!-- LOGIN FORM -->
+    <div class="form-container login-container">
+      <form>
+        <h1 class="logo glow-text">Welcome Back</h1>
+        <p>Sign in to continue</p>
+
+        <input type="email" placeholder="Email" />
+        <input type="password" placeholder="Password" />
+
+        <button type="button" routerLink="/home" class="auth-btn">
+          Sign In
+        </button>
+
+        <label for="toggle" class="switch-link">
+          Don’t have an account? Sign Up
+        </label>
+      </form>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="form-container signup-container">
+      <form>
+        <h1 class="logo glow-text">Create Account</h1>
+        <p>Join the casino</p>
+
+        <input type="text" placeholder="Username" />
+        <input type="email" placeholder="Email" />
+        <input type="password" placeholder="Password" />
+
+        <button type="button" class="auth-btn">
+          Sign Up
+        </button>
+
+        <label for="toggle" class="switch-link">
+          Already have an account? Sign In
+        </label>
+      </form>
+    </div>
+
+    <!-- 🔥 OVERLAY SYSTEM -->
+    <div class="overlay-container">
+
+      <div class="overlay">
+
+        <!-- LEFT COVER (LOGIN STATE) -->
+        <div class="overlay-panel overlay-left">
+          <h1 class="big-text">WELCOME BACK</h1>
+          <p>Sign in and enter the casino</p>
+
+          <label for="toggle" class="ghost-btn">
+            Sign Up
+          </label>
+        </div>
+
+        <!-- RIGHT COVER (SIGNUP STATE) -->
+        <div class="overlay-panel overlay-right">
+          <h1 class="big-text">NEW PLAYER?</h1>
+          <p>Create your account and start winning</p>
+
+          <label for="toggle" class="ghost-btn">
+            Sign In
+          </label>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
