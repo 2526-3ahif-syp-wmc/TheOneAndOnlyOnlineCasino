@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
 import { ContactPage } from './contact-page/contact-page';
 import { Home } from './home/home';
-import { SignIn } from './sign-in/sign-in';
+import { Auth } from './auth/auth';
 import { UserProfile } from './user-profile/user-profile';
 
 
 export const routes: Routes = [
-    {path: '', redirectTo: '/sign-in', pathMatch: 'full'},
+    {path: '', redirectTo: '/auth', pathMatch: 'full'},
     {path: 'home', component: Home },
-    {path: 'sign-in', component: SignIn },
+    {path: 'auth', component: Auth },
     {path: 'contact', component: ContactPage },
     {path: 'user-profile', component: UserProfile }
 ];
