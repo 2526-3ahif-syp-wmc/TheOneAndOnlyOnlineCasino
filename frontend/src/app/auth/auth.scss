@@ -18,7 +18,7 @@
   background: #14141a;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 0 40px rgba(255, 122, 26, 0.25);
 }
 
 .form-container {
@@ -46,7 +46,7 @@ input {
   margin: 8px 0;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(255, 122, 26, 0.3);
   background: #0f0f14;
   color: white;
 }
@@ -54,7 +54,7 @@ input {
 .auth-btn {
   margin-top: 15px;
   width: 100%;
-  background: linear-gradient(145deg, #d4af37, #b8860b);
+  background: linear-gradient(145deg, #ff7a1a, #cc5e12);
   border: none;
   padding: 10px;
   border-radius: 10px;
@@ -63,7 +63,7 @@ input {
 
 .switch-link {
   margin-top: 15px;
-  color: #d4af37;
+  color: #ff7a1a;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -97,24 +97,23 @@ input {
   align-items: center;
   text-align: center;
   padding: 40px;
-  color: #d4af37;
+  color: #ff7a1a;
   background: linear-gradient(145deg, #0b0b0f, #1a1a22);
 }
 
 .big-text {
   font-size: 42px;
   letter-spacing: 3px;
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  text-shadow: 0 0 20px rgba(255, 122, 26, 0.4);
 }
 
 .ghost-btn {
   margin-top: 20px;
   padding: 10px 20px;
-  border: 1px solid #d4af37;
+  border: 1px solid #ff7a1a;
   border-radius: 10px;
   cursor: pointer;
 }
-
 
 .toggle:checked ~ .auth-container .overlay-container {
   transform: translateX(-100%);
