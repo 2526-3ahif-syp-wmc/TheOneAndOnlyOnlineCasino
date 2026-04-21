@@ -1,0 +1,87 @@
+<div class="games-overview-shell">
+	<div class="ambient ambient-left"></div>
+	<div class="ambient ambient-right"></div>
+
+	<header class="hero card-glass">
+		<div class="hero-copy">
+			<span class="eyebrow">Games Overview</span>
+			<h1>Five games. One modern lobby.</h1>
+			<p class="hero-text">
+				Jump between strategy, speed and pure spectacle. This overview keeps the experience dark,
+				clean and high-end, just like the sign-in screen.
+			</p>
+
+			<div class="hero-metrics">
+				@for (stat of stats; track stat.label) {
+					<div class="metric-card">
+						<strong>{{ stat.value }}</strong>
+						<span>{{ stat.label }}</span>
+					</div>
+				}
+			</div>
+
+			<div class="hero-actions">
+				<a class="action action-primary" routerLink="/user-profile">Open profile</a>
+				<a class="action action-secondary" routerLink="/contact">Support</a>
+			</div>
+		</div>
+
+		<aside class="spotlight">
+			<div class="spotlight-card">
+				<span class="spotlight-badge">Featured table</span>
+				<h2>{{ featuredGame.title }}</h2>
+				<p>{{ featuredGame.description }}</p>
+
+				<dl class="spotlight-details">
+					<div>
+						<dt>Style</dt>
+						<dd>{{ featuredGame.subtitle }}</dd>
+					</div>
+					<div>
+						<dt>Risk</dt>
+						<dd>{{ featuredGame.volatility }}</dd>
+					</div>
+					<div>
+						<dt>Speed</dt>
+						<dd>{{ featuredGame.pace }}</dd>
+					</div>
+					<div>
+						<dt>Edge</dt>
+						<dd>{{ featuredGame.edge }}</dd>
+					</div>
+				</dl>
+			</div>
+		</aside>
+	</header>
+
+	<section class="games-grid">
+		@for (game of games; track game.title) {
+			<article class="game-card card-glass game-card--{{ game.accent }}">
+				<div class="game-card-top">
+					<span class="game-badge">{{ game.badge }}</span>
+					<span class="game-subtitle">{{ game.subtitle }}</span>
+				</div>
+
+				<h3>{{ game.title }}</h3>
+				<p>{{ game.description }}</p>
+
+				<ul class="game-tags">
+					@for (tag of game.tags; track tag) {
+						<li>{{ tag }}</li>
+					}
+				</ul>
+
+				<div class="game-footer">
+					<div>
+						<span class="footer-label">House edge</span>
+						<strong>{{ game.edge }}</strong>
+					</div>
+					<div>
+						<span class="footer-label">Pace</span>
+						<strong>{{ game.pace }}</strong>
+					</div>
+				</div>
+			</article>
+		}
+	</section>
+</div>
