@@ -1,0 +1,21 @@
+<div class="container">
+  <h1 class="glow-text">🏆 Leaderboard</h1>
+
+  <div class="card leaderboard">
+    <div class="leaderboard-header">
+      <span>#</span>
+      <span>Player</span>
+      <span>Coins</span>
+    </div>
+
+    @for (player of players; track $index) {
+      <div class="leaderboard-row">
+        <span class="rank" [ngClass]="getRankClass($index)">
+          {{ $index + 1 }}
+        </span>
+        <span class="name">{{ player.name }}</span>
+        <span class="coins">{{ player.coins }}</span>
+      </div>
+    }
+  </div>
+</div>
