@@ -4,7 +4,7 @@ import { NgFor, NgClass } from '@angular/common';
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [NgFor, NgClass],
+  imports: [NgClass],
   templateUrl: './leaderboard.html',
   styleUrls: ['./leaderboard.scss']
 })

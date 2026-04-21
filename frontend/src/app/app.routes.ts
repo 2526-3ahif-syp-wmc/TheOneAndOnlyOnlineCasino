@@ -3,11 +3,8 @@ import { ContactPage } from './contact-page/contact-page';
 import { Home } from './home/home';
 import { Auth } from './auth/auth';
 import { UserProfile } from './user-profile/user-profile';
-<<<<<<< HEAD
 import { Games } from './games/games';
-=======
 import { Leaderboard } from './leaderboard/leaderboard';
->>>>>>> bdefdbce4e4bd5d78f1996b379173250db28023b
 
 
 export const routes: Routes = [
