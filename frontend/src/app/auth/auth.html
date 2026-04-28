@@ -7,10 +7,17 @@
         <h1 class="logo glow-text">Welcome Back</h1>
         <p>Log in to continue</p>
 
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
+        <input [formField]="loginForm.username" type="text" placeholder="Username">
+         @for(error of loginForm.username().errors(); track error.kind){
+        <mat-error>{{error.message}}</mat-error>
+        }
 
-        <button type="button" routerLink="/home" class="auth-btn">
+        <input [formField]="loginForm.password" type="password" placeholder="Password">
+         @for(error of loginForm.password().errors(); track error.kind){
+        <mat-error>{{error.message}}</mat-error>
+        }
+
+        <button matButton="elevated" [disabled]="loginForm().invalid() || loginForm().submitting()" type="button" routerLink="/home" class="auth-btn" (click)="handleLogIn()">
           Log In
         </button>
 
@@ -25,11 +32,22 @@
         <h1 class="logo glow-text">Create Account</h1>
         <p>Join the casino</p>
 
-        <input type="text" placeholder="Username" />
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
+         <input [formField]="registerForm.username" type="text" placeholder="Username">
+         @for(error of registerForm.username().errors(); track error.kind){
+         <mat-error>{{error.message}}</mat-error>
+         }
 
-        <button type="button" class="auth-btn">
+        <input [formField]="registerForm.password" type="password" placeholder="Password">
+         @for(error of registerForm.password().errors(); track error.kind){
+        <mat-error>{{error.message}}</mat-error>
+        }
+
+        <input [formField]="registerForm.confirmPassword" type="password" placeholder="Confirm Password">
+         @for(error of registerForm.confirmPassword().errors(); track error.kind){
+        <mat-error>{{error.message}}</mat-error>
+        }
+
+        <button matButton="elevated" [disabled]="registerForm().invalid() || registerForm().submitting()" type="button" class="auth-btn" routerLink="/home" (click)="handleRegister()">
           Register
         </button>
 

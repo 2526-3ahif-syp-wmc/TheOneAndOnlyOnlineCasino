@@ -1,8 +1,46 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
 :root {
-  --bg-primary: #0b0b0f;       
-  --bg-secondary: #14141a;      
-  --gold: #ff7a1a;             
-  --gold-light: #ffb067;        
+  --bg-primary: #0b0b0f;
+  --bg-secondary: #14141a;
+  --gold: #ff7a1a;
+  --gold-light: #ffb067;
   --text-primary: #ffffff;
   --text-muted: #b5b5b5;
   --danger: #ff4d4d;
@@ -16,7 +54,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 body {
@@ -26,7 +64,9 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--gold);
   letter-spacing: 1px;
 }
@@ -82,7 +122,9 @@ button:active {
   box-shadow: 0 0 20px rgba(255, 122, 26, 0.3);
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 10px;
   border-radius: var(--radius);
@@ -140,9 +182,15 @@ input:focus {
 }
 
 @keyframes glow {
-  0% { text-shadow: 0 0 5px var(--gold); }
-  50% { text-shadow: 0 0 20px var(--gold); }
-  100% { text-shadow: 0 0 5px var(--gold); }
+  0% {
+    text-shadow: 0 0 5px var(--gold);
+  }
+  50% {
+    text-shadow: 0 0 20px var(--gold);
+  }
+  100% {
+    text-shadow: 0 0 5px var(--gold);
+  }
 }
 
 .glow-text {
