@@ -52,8 +52,14 @@ export class Auth {
       const data = form().value();
       const username = data.username;
       const password = data.password;
-      this.service.logIn(username, password);
-      this.loginFormModel.set(Auth.LOGIN_DEFAULT); 
+
+      try {
+        this.service.logIn(username, password);
+        this.loginFormModel.set(Auth.LOGIN_DEFAULT); 
+      } catch (err: any) {
+        console.log(err.error?.message ?? 'Register failed');
+        alert('Register Failed');
+      }
     });
   }   
 
@@ -62,8 +68,15 @@ export class Auth {
       const data = form().value();
       const username = data.username;
       const password = data.password;
-      this.service.register(username, password);
-      this.loginFormModel.set(Auth.LOGIN_DEFAULT); 
+
+      try {
+
+        this.service.register(username, password);
+        this.registerFormModel.set(Auth.REGISTER_DEFAULT); 
+      } catch (err: any) {
+        console.log(err.error?.message ?? 'Login failed');
+        alert('Login Failed');
+      } 
     });
   }
 }
