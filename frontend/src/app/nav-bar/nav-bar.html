@@ -1,9 +1,29 @@
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="/home">Home</a>
-    <a class="navbar-brand" href="/contact-page">Contact</a>
-    <a class="navbar-brand" href="">Shop</a>
-    <a class="navbar-brand" href="/leaderboard">Leaderboard</a>
-    <a class="navbar-brand" href="/games">Games</a>
-    <a class="navbar-brand" href="">Settings</a>
-    <a class="navbar-brand" href="/user-profile">Profile</a>
-</nav>
+<header class="site-nav-shell">
+    <nav class="site-nav" aria-label="Main navigation">
+        <a class="brand" routerLink="/home" aria-label="EduBet home">
+            <span class="brand-mark">EB</span>
+            <span class="brand-copy">
+                <strong>EduBet</strong>
+                <small>Play smart, win bold</small>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a routerLink="/home" routerLinkActive="is-active">Home</a>
+            <a routerLink="/games" routerLinkActive="is-active">Games</a>
+            <a routerLink="/leaderboard" routerLinkActive="is-active">Leaderboard</a>
+            <a routerLink="/contact-page" routerLinkActive="is-active">Contact</a>
+            <a routerLink="/user-profile" routerLinkActive="is-active">Profile</a>
+        </div>
+
+        <div class="nav-actions">
+            <span class="nav-status">
+                <span class="user-avatar" aria-hidden="true">U</span>
+                <span class="user-meta">
+                    <small>User</small>
+                    <strong>Username</strong>
+                </span>
+            </span>
+        </div>
+    </nav>
+</header>
