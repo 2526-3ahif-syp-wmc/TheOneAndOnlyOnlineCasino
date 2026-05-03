@@ -97,8 +97,7 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.nav-links a,
-.nav-cta {
+.nav-links a {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -160,33 +159,50 @@
 .nav-status {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.6rem 0.85rem;
+    gap: 0.6rem;
+    padding: 0.45rem 0.55rem 0.45rem 0.45rem;
     border-radius: 999px;
-    border: 1px solid rgba(46, 204, 113, 0.24);
-    background: rgba(46, 204, 113, 0.1);
-    color: #98f0b8;
-    font-size: 0.82rem;
-    font-weight: 700;
+    border: 1px solid rgba(255, 122, 26, 0.24);
+    background: linear-gradient(135deg, rgba(255, 122, 26, 0.12), rgba(255, 255, 255, 0.04));
+    color: #fff;
+    min-height: 2.7rem;
 }
 
-.nav-status::before {
-    content: '';
-    width: 0.55rem;
-    height: 0.55rem;
+.user-avatar {
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
     border-radius: 999px;
-    background: #2ecc71;
-    box-shadow: 0 0 10px rgba(46, 204, 113, 0.55);
-}
-
-.nav-cta {
-    color: #0b0b0f;
     background: linear-gradient(135deg, var(--gold), #cc5e12);
-    box-shadow: 0 12px 28px rgba(255, 122, 26, 0.26);
+    color: #0b0b0f;
+    font-weight: 900;
+    font-size: 0.84rem;
+    letter-spacing: 0.03em;
+    box-shadow: 0 8px 20px rgba(255, 122, 26, 0.25);
 }
 
-.nav-links a:hover,
-.nav-cta:hover {
+.user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+    padding-right: 0.25rem;
+}
+
+.user-meta small {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.user-meta strong {
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: #fff;
+}
+
+.nav-links a:hover {
     transform: translateY(-1px);
 }
 
@@ -194,7 +210,6 @@
     .brand,
     .brand-mark,
     .nav-links a,
-    .nav-cta,
     .nav-links a::after {
         transition: none;
     }
@@ -234,9 +249,5 @@
     .nav-status {
         flex: 1;
         justify-content: center;
-    }
-
-    .nav-cta {
-        flex: 0 0 auto;
     }
 }
