@@ -9,7 +9,7 @@
     padding: 1rem;
     background: linear-gradient(180deg, rgba(8, 8, 12, 0.96), rgba(8, 8, 12, 0.84));
     backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(255, 122, 26, 0.14);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.14);
 }
 
 .site-nav-shell::before {
@@ -19,8 +19,8 @@
     width: min(1200px, 100%);
     margin: 0 auto 0.85rem;
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(255, 122, 26, 0.95), rgba(255, 255, 255, 0.2), transparent);
-    box-shadow: 0 0 18px rgba(255, 122, 26, 0.32);
+    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.95), rgba(255, 255, 255, 0.2), transparent);
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.32);
 }
 
 .site-nav {
@@ -33,7 +33,7 @@
     padding: 0.9rem 1rem;
     border-radius: 1.25rem;
     background: linear-gradient(135deg, rgba(20, 20, 26, 0.94), rgba(12, 12, 17, 0.94));
-    border: 1px solid rgba(255, 122, 26, 0.16);
+    border: 1px solid rgba(168, 85, 247, 0.16);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
@@ -57,17 +57,17 @@
     display: grid;
     place-items: center;
     border-radius: 1rem;
-    background: linear-gradient(135deg, var(--gold), #cc5e12);
+    background: linear-gradient(135deg, var(--gold), #7c3aed);
     color: #0b0b0f;
     font-weight: 900;
     letter-spacing: 0.06em;
-    box-shadow: 0 12px 28px rgba(255, 122, 26, 0.26);
+    box-shadow: 0 12px 28px rgba(168, 85, 247, 0.26);
     transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
 .brand:hover .brand-mark {
     transform: rotate(-4deg) scale(1.03);
-    box-shadow: 0 14px 34px rgba(255, 122, 26, 0.34);
+    box-shadow: 0 14px 34px rgba(168, 85, 247, 0.34);
 }
 
 .brand-copy {
@@ -134,14 +134,14 @@
 }
 
 .nav-links a:hover::after {
-    background: rgba(255, 122, 26, 0.42);
+    background: rgba(168, 85, 247, 0.42);
     transform: scaleX(1);
 }
 
 .nav-links a.is-active {
     color: #0b0b0f;
-    background: linear-gradient(135deg, var(--gold), #cc5e12);
-    box-shadow: 0 10px 24px rgba(255, 122, 26, 0.2);
+    background: linear-gradient(135deg, var(--gold), #7c3aed);
+    box-shadow: 0 10px 24px rgba(168, 85, 247, 0.2);
 }
 
 .nav-links a.is-active::after {
@@ -162,8 +162,8 @@
     gap: 0.6rem;
     padding: 0.45rem 0.55rem 0.45rem 0.45rem;
     border-radius: 999px;
-    border: 1px solid rgba(255, 122, 26, 0.24);
-    background: linear-gradient(135deg, rgba(255, 122, 26, 0.12), rgba(255, 255, 255, 0.04));
+    border: 1px solid rgba(168, 85, 247, 0.24);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(255, 255, 255, 0.04));
     color: #fff;
     min-height: 2.7rem;
 }
@@ -174,12 +174,12 @@
     display: grid;
     place-items: center;
     border-radius: 999px;
-    background: linear-gradient(135deg, var(--gold), #cc5e12);
+    background: linear-gradient(135deg, var(--gold), #7c3aed);
     color: #0b0b0f;
     font-weight: 900;
     font-size: 0.84rem;
     letter-spacing: 0.03em;
-    box-shadow: 0 8px 20px rgba(255, 122, 26, 0.25);
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.25);
 }
 
 .user-meta {
@@ -209,8 +209,8 @@
 
 .nav-status:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 122, 26, 0.42);
-    background: linear-gradient(135deg, rgba(255, 122, 26, 0.18), rgba(255, 255, 255, 0.08));
+    border-color: rgba(168, 85, 247, 0.42);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(255, 255, 255, 0.08));
 }
 
 .nav-logout {
@@ -220,8 +220,8 @@
     min-height: 2.7rem;
     padding: 0.7rem 1rem;
     border-radius: 999px;
-    border: 1px solid rgba(255, 122, 26, 0.24);
-    background: rgba(255, 122, 26, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.24);
+    background: rgba(168, 85, 247, 0.08);
     color: #fff;
     font-weight: 700;
     font-size: 0.88rem;
@@ -232,9 +232,9 @@
 
 .nav-logout:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 122, 26, 0.42);
-    background: rgba(255, 122, 26, 0.16);
-    box-shadow: 0 8px 18px rgba(255, 122, 26, 0.15);
+    border-color: rgba(168, 85, 247, 0.42);
+    background: rgba(168, 85, 247, 0.16);
+    box-shadow: 0 8px 18px rgba(168, 85, 247, 0.15);
 }
 
 .nav-links a:hover {
