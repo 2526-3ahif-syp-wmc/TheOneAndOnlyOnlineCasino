@@ -11,9 +11,8 @@ export type User = {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class UserService {
   private httpClient = inject(HttpClient);
-
   private apiUrl = 'http://localhost:3000/auth';
 
   private currentUserSignal = signal<User | null>(
@@ -23,6 +22,10 @@ export class AuthService {
   public currentUser = this.currentUserSignal.asReadonly();
 
   public isLoggedIn = computed(() => this.currentUserSignal() !== null);
+
+  public username = computed(() => this.currentUserSignal()?.username ?? 'User');
+
+  public coins = computed(() => this.currentUserSignal()?.coins ?? 0);
 
   public logIn(username: string, password: string) {
     return this.httpClient
@@ -46,19 +49,36 @@ export class AuthService {
     });
   }
 
+  public updateCoins(coins: number) {
+    const user = this.currentUserSignal();
+
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    return this.httpClient
+      .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
+        coins
+      })
+      .pipe(
+        tap(updatedUser => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.currentUserSignal.set(updatedUser);
+      })
+    );
+  }
+
   public logOut() {
     localStorage.removeItem('user');
     this.currentUserSignal.set(null);
   }
 
   public getUsername() {
-    const user = localStorage.getItem('user');
+    return this.currentUserSignal()?.username ?? null;
+  }
 
-    if (!user) {
-      return null;
-    }
-
-    return JSON.parse(user).username;
+  public getCoins() {
+    return this.currentUserSignal()?.coins ?? 0;
   }
 
   private loadUserFromStorage(): User | null {

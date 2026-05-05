@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserService } from '../services/user-service';
 
 @Component({
   selector: 'app-home',
@@ -6,4 +7,9 @@ import { Component } from '@angular/core';
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {}
+export class Home {
+  private service = inject(UserService);
+
+  protected username = this.service.getUsername();
+  protected coins = this.service.getCoins();
+}

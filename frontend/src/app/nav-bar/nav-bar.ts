@@ -1,6 +1,6 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../services/auth-service';
+import { UserService } from '../services/user-service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -9,11 +9,12 @@ import { AuthService } from '../services/auth-service';
   styleUrl: './nav-bar.scss',
 })
 export class NavBar {
-  private service = inject(AuthService);
+  private service = inject(UserService);
 
   private router = inject(Router);
 
-  public username = this.service.getUsername();
+  protected username = this.service.getUsername();
+  protected coins = this.service.getCoins();
   
   logOut() {
     this.service.logOut();

@@ -1,8 +1,8 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { form, FormField, minLength, pattern, required, submit, validate } from '@angular/forms/signals';
+import { form, FormField, minLength, required, submit, validate } from '@angular/forms/signals';
 import { MatError } from '@angular/material/form-field';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../services/auth-service';
+import { Router } from '@angular/router';
+import { UserService } from '../services/user-service';
 import { MatButton } from '@angular/material/button';
 import { firstValueFrom } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './auth.scss',
 })
 export class Auth {
-  private service = inject(AuthService);
+  private service = inject(UserService);
   private router = inject(Router);
 
   private static readonly LOGIN_DEFAULT: LoginFormModel = {

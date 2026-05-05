@@ -68,3 +68,32 @@ authRouter.post('/login', (req, res) => {
 
   return res.json(user);
 });
+
+authRouter.patch('/users/:id/coins', (req, res) => {
+  const userId = Number(req.params.id);
+  const { coins } = req.body;
+
+  const result = db
+    .prepare(`
+      UPDATE users
+      SET coins = ?
+      WHERE id = ?
+    `)
+    .run(coins, userId);
+
+  if (result.changes === 0) {
+    return res.status(404).json({
+      message: 'User not found'
+    });
+  }
+
+  const updatedUser = db
+    .prepare(`
+      SELECT id, username, coins
+      FROM users
+      WHERE id = ?
+    `)
+    .get(userId);
+
+  return res.json(updatedUser);
+});
