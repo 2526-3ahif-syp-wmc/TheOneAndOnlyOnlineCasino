@@ -13,17 +13,17 @@
             <a routerLink="/games" routerLinkActive="is-active">Games</a>
             <a routerLink="/leaderboard" routerLinkActive="is-active">Leaderboard</a>
             <a routerLink="/contact-page" routerLinkActive="is-active">Contact</a>
-            <a routerLink="/user-profile" routerLinkActive="is-active">Profile</a>
         </div>
 
         <div class="nav-actions">
-            <span class="nav-status">
+            <a routerLink="/user-profile" class="nav-status">
                 <span class="user-avatar" aria-hidden="true">U</span>
                 <span class="user-meta">
                     <small>User</small>
                     <strong>Username</strong>
                 </span>
-            </span>
+            </a>
+            <button class="nav-logout" type="button" aria-label="Logout">Logout</button>
         </div>
     </nav>
 </header>
