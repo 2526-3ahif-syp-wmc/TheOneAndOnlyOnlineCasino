@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../services/user-service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-nav-bar',
@@ -13,8 +14,8 @@ export class NavBar {
 
   private router = inject(Router);
 
-  protected username = this.service.getUsername();
-  protected coins = this.service.getCoins();
+  protected username = this.service.username;
+  protected coins = this.service.coins;
   
   logOut() {
     this.service.logOut();

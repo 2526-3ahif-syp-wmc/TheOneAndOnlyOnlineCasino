@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from './app/services/user-service';
+import { UserService } from './app/services/user-service';
 
 export const authGuard: CanActivateFn = () => {
-  const authService = inject(AuthService);
+  const userService = inject(UserService);
   const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
+  if (userService.isLoggedIn()) {
     return true;
   }
 
@@ -14,10 +14,10 @@ export const authGuard: CanActivateFn = () => {
 };
 
 export const guestGuard: CanActivateFn = () => {
-  const authService = inject(AuthService);
+  const userService = inject(UserService);
   const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
+  if (userService.isLoggedIn()) {
     return router.createUrlTree(['/home']);
   }
 

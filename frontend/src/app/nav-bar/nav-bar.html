@@ -20,11 +20,12 @@
                 <span class="user-avatar" aria-hidden="true">U</span>
                 <span class="user-meta">
                     <small>User</small>
-                    <strong>{{ username }}</strong>
-                    <small>{{ coins }} coins</small>
+                    <strong>{{ username() }}</strong>
+                    <small>{{ coins() }} coins</small>
                 </span>
             </a>
             <button class="nav-logout" type="button" aria-label="Logout" (click)="logOut()">➜]</button>
+            <button routerLink="/shop">Get EduBet+</button>
         </div>
     </nav>
 </header>

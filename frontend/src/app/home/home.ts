@@ -10,6 +10,6 @@ import { UserService } from '../services/user-service';
 export class Home {
   private service = inject(UserService);
 
-  protected username = this.service.getUsername();
-  protected coins = this.service.getCoins();
+  protected username = this.service.username;
+  protected coins = this.service.coins;
 }

@@ -11,3 +11,11 @@ Content-Type: application/json
   "password": "1234",
   "coins": 1000
 }
+
+###
+PATCH http://localhost:3000/auth/users/3/coins
+Content-Type: application/json
+
+{
+  "coins": 1500
+}

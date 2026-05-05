@@ -73,14 +73,6 @@ export class UserService {
     this.currentUserSignal.set(null);
   }
 
-  public getUsername() {
-    return this.currentUserSignal()?.username ?? null;
-  }
-
-  public getCoins() {
-    return this.currentUserSignal()?.coins ?? 0;
-  }
-
   private loadUserFromStorage(): User | null {
     const user = localStorage.getItem('user');
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { authRouter } from './routes/auth-routes';
+import { authRouter } from './routes/user-routes';
 import { db } from './databases/db';
 
 const app = express();
