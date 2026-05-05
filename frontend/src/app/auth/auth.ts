@@ -37,8 +37,8 @@ export class Auth {
   protected readonly registerFormModel: WritableSignal<RegisterFormModel> = signal(Auth.REGISTER_DEFAULT);
 
   protected readonly registerForm = form(this.registerFormModel, path => {
-    required(path.username, {message: "Username is required to log in"});
-    required(path.password, {message: "Password is required to log in"});
+    required(path.username, {message: "Username is required to register"});
+    required(path.password, {message: "Password is required to register"});
     minLength(path.password, 6 ,{message: "Password needs to be at least 6 characters long"});
 
     validate(path.confirmPassword, ({ value, valueOf }) => {

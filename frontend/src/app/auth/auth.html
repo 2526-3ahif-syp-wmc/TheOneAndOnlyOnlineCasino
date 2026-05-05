@@ -1,25 +1,60 @@
 <div class="auth-wrapper">
+  <div class="floating-chip chip-one"></div>
+  <div class="floating-chip chip-two"></div>
+  <div class="floating-chip chip-three"></div>
+
   <input type="checkbox" id="toggle" class="toggle" />
 
   <div class="auth-container">
     <div class="form-container login-container">
       <form>
+        <div class="brand">
+          <img src="logo.png" alt="EduBet logo" />
+          <span>EduBet</span>
+        </div>
+
         <h1 class="logo glow-text">Welcome Back</h1>
-        <p>Log in to continue</p>
+        <p class="form-subtitle">Log in and enter the lobby</p>
 
         <input [formField]="loginForm.username" type="text" placeholder="Username">
-         @for(error of loginForm.username().errors(); track error.kind){
-        <mat-error>{{error.message}}</mat-error>
-        }
+
+        <div class="error-box">
+          @for(error of loginForm.username().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        </div>
 
         <input [formField]="loginForm.password" type="password" placeholder="Password">
-         @for(error of loginForm.password().errors(); track error.kind){
-        <mat-error>{{error.message}}</mat-error>
-        }
 
-        <button matButton="elevated" [disabled]="loginForm().invalid() || loginForm().submitting()" type="button" class="auth-btn" (click)="handleLogIn()">
+        <div class="error-box">
+          @for(error of loginForm.password().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        </div>
+
+        <div class="login-options">
+          <label>
+            <input type="checkbox">
+            Remember me
+          </label>
+
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button
+          matButton="elevated"
+          [disabled]="loginForm().invalid() || loginForm().submitting()"
+          type="button"
+          class="auth-btn"
+          (click)="handleLogIn()">
           Log In
         </button>
+
+        <div class="game-pills">
+          <span>Blackjack</span>
+          <span>Roulette</span>
+          <span>Slots</span>
+        </div>
 
         <label for="toggle" class="switch-link">
           Don’t have an account? Register Now
@@ -29,27 +64,52 @@
 
     <div class="form-container signup-container">
       <form>
-        <h1 class="logo glow-text">Create Account</h1>
-        <p>Join the casino</p>
+        <div class="brand">
+          <img src="logo.png" alt="EduBet logo" />
+          <span>EduBet</span>
+        </div>
 
-         <input [formField]="registerForm.username" type="text" placeholder="Username">
-         @for(error of registerForm.username().errors(); track error.kind){
-         <mat-error>{{error.message}}</mat-error>
-         }
+        <h1 class="logo glow-text">Create Account</h1>
+        <p class="form-subtitle">Join EduBet and start with free coins</p>
+
+        <input [formField]="registerForm.username" type="text" placeholder="Username">
+
+        <div class="error-box">
+          @for(error of registerForm.username().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        </div>
 
         <input [formField]="registerForm.password" type="password" placeholder="Password">
-         @for(error of registerForm.password().errors(); track error.kind){
-        <mat-error>{{error.message}}</mat-error>
-        }
+
+        <div class="error-box">
+          @for(error of registerForm.password().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        </div>
 
         <input [formField]="registerForm.confirmPassword" type="password" placeholder="Confirm Password">
-         @for(error of registerForm.confirmPassword().errors(); track error.kind){
-        <mat-error>{{error.message}}</mat-error>
-        }
 
-        <button matButton="elevated" [disabled]="registerForm().invalid() || registerForm().submitting()" type="button" class="auth-btn" (click)="handleRegister()">
+        <div class="error-box">
+          @for(error of registerForm.confirmPassword().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        </div>
+
+        <button
+          matButton="elevated"
+          [disabled]="registerForm().invalid() || registerForm().submitting()"
+          type="button"
+          class="auth-btn"
+          (click)="handleRegister()">
           Register
         </button>
+
+        <div class="game-pills">
+          <span>1,000 Coins</span>
+          <span>Free Start</span>
+          <span>No Risk</span>
+        </div>
 
         <label for="toggle" class="switch-link">
           Already have an account? Log In
@@ -60,21 +120,37 @@
     <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">
-          <h1 class="big-text">WELCOME BACK</h1>
-          <p>Log in and enter the casino</p>
+          <div class="overlay-content">
+            <h1 class="big-text">WELCOME BACK</h1>
+            <p>Log in and enter the casino</p>
 
-          <label for="toggle" class="ghost-btn">
-            Log In
-          </label>
+            <div class="bonus-card">
+              <span>Player lobby</span>
+              <h3>Continue your streak</h3>
+              <p>Check your coins, play your favorite games and climb the leaderboard.</p>
+            </div>
+
+            <label for="toggle" class="ghost-btn">
+              Log In
+            </label>
+          </div>
         </div>
 
         <div class="overlay-panel overlay-right">
-          <h1 class="big-text">NEW PLAYER?</h1>
-          <p>Create your account and start winning</p>
+          <div class="overlay-content">
+            <h1 class="big-text">NEW PLAYER?</h1>
+            <p>Create your account and start winning</p>
 
-          <label for="toggle" class="ghost-btn">
-            Sign Up
-          </label>
+            <div class="bonus-card">
+              <span>Starter bonus</span>
+              <h3>1,000 free coins</h3>
+              <p>Register now and try Blackjack, Roulette, Slots and more instantly.</p>
+            </div>
+
+            <label for="toggle" class="ghost-btn">
+              Sign Up
+            </label>
+          </div>
         </div>
       </div>
     </div>
