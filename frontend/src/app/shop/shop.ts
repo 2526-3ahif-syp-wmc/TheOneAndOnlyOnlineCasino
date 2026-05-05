@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserService } from '../services/user-service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-shop',
@@ -6,4 +8,14 @@ import { Component } from '@angular/core';
   templateUrl: './shop.html',
   styleUrl: './shop.scss',
 })
-export class Shop {}
+export class Shop {
+  private service = inject(UserService);
+  
+  async buyCoins() {
+    const currentCoins = this.service.coins();
+
+    await firstValueFrom(
+      this.service.updateCoins(currentCoins + 100)
+  );
+}
+}
