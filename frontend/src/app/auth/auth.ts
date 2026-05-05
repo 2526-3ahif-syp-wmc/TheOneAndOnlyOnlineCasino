@@ -1,18 +1,20 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { form, FormField, minLength, pattern, required, submit, validate } from '@angular/forms/signals';
 import { MatError } from '@angular/material/form-field';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 import { MatButton } from '@angular/material/button';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
-  imports: [RouterLink, FormField, MatError, MatButton],
+  imports: [ FormField, MatError, MatButton],
   templateUrl: './auth.html',
   styleUrl: './auth.scss',
 })
 export class Auth {
   private service = inject(AuthService);
+  private router = inject(Router);
 
   private static readonly LOGIN_DEFAULT: LoginFormModel = {
     username: "",
@@ -36,7 +38,6 @@ export class Auth {
 
   protected readonly registerForm = form(this.registerFormModel, path => {
     required(path.username, {message: "Username is required to log in"});
-    // pattern to check if username exists
     required(path.password, {message: "Password is required to log in"});
     minLength(path.password, 6 ,{message: "Password needs to be at least 6 characters long"});
 
@@ -54,11 +55,19 @@ export class Auth {
       const password = data.password;
 
       try {
-        this.service.logIn(username, password);
+      
+        await firstValueFrom(
+          this.service.logIn(username, password)
+        );
+
+        console.log('Logged In!');
+
         this.loginFormModel.set(Auth.LOGIN_DEFAULT); 
+
+        await this.router.navigate(['/home']);
       } catch (err: any) {
-        console.log(err.error?.message ?? 'Register failed');
-        alert('Register Failed');
+        console.log(err.error?.message ?? 'Log In failed');
+        alert('Log In Failed');
       }
     });
   }   
@@ -71,7 +80,12 @@ export class Auth {
 
       try {
 
-        this.service.register(username, password);
+        await firstValueFrom(
+          this.service.register(username, password)
+        );
+
+        alert(`Account created. Please Log In!`)
+
         this.registerFormModel.set(Auth.REGISTER_DEFAULT); 
       } catch (err: any) {
         console.log(err.error?.message ?? 'Login failed');

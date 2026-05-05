@@ -17,7 +17,7 @@
         <mat-error>{{error.message}}</mat-error>
         }
 
-        <button matButton="elevated" [disabled]="loginForm().invalid() || loginForm().submitting()" type="button" routerLink="/home" class="auth-btn" (click)="handleLogIn()">
+        <button matButton="elevated" [disabled]="loginForm().invalid() || loginForm().submitting()" type="button" class="auth-btn" (click)="handleLogIn()">
           Log In
         </button>
 
@@ -47,7 +47,7 @@
         <mat-error>{{error.message}}</mat-error>
         }
 
-        <button matButton="elevated" [disabled]="registerForm().invalid() || registerForm().submitting()" type="button" class="auth-btn" routerLink="/home" (click)="handleRegister()">
+        <button matButton="elevated" [disabled]="registerForm().invalid() || registerForm().submitting()" type="button" class="auth-btn" (click)="handleRegister()">
           Register
         </button>
 

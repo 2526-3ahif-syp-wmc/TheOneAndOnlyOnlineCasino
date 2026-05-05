@@ -8,7 +8,7 @@ import { Leaderboard } from './leaderboard/leaderboard';
 
 
 export const routes: Routes = [
-    {path: '', redirectTo: '/auth', pathMatch: 'full'},
+    {path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: 'home', component: Home },
     {path: 'auth', component: Auth },
     {path: 'games', component: Games},
