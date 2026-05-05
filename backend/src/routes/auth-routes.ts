@@ -13,3 +13,24 @@ authRouter.get('/users', (_, res) => {
 
   return res.json(users);
 });
+
+authRouter.post('/users', (req, res) => {
+   const { username, password, coins } = req.body;
+
+  const result = db
+    .prepare(`
+      INSERT INTO users (username, password, coins)
+      VALUES (?, ?, ?)
+    `)
+    .run(username, password, coins ?? 1000);
+
+  const newUser = db
+    .prepare(`
+      SELECT id, username, coins
+      FROM users
+      WHERE id = ?
+    `)
+    .get(result.lastInsertRowid);
+
+  return res.status(201).json(newUser);
+});
