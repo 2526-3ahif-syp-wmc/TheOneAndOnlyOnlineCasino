@@ -51,6 +51,16 @@ export class AuthService {
     this.currentUserSignal.set(null);
   }
 
+  public getUsername() {
+    const user = localStorage.getItem('user');
+
+    if (!user) {
+      return null;
+    }
+
+    return JSON.parse(user).username;
+  }
+
   private loadUserFromStorage(): User | null {
     const user = localStorage.getItem('user');
 

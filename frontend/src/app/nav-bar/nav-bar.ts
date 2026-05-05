@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 
@@ -12,6 +12,8 @@ export class NavBar {
   private service = inject(AuthService);
 
   private router = inject(Router);
+
+  public username = this.service.getUsername();
   
   logOut() {
     this.service.logOut();
