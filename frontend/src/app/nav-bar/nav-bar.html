@@ -16,12 +16,12 @@
         </div>
 
         <div class="nav-actions">
+            <button routerLink="/shop">Get EduBet+</button>
             <a routerLink="/user-profile" class="nav-status">
-                <button routerLink="/shop">Get EduBet+</button>
                 <span class="user-avatar" aria-hidden="true">U</span>
                 <span class="user-meta">
                     <strong>{{ username() }}</strong>
-                    <small>{{ coins() }} coins</small>
+                    <small>Balance: {{ coins() }}Ɇ</small>
                 </span>
             </a>
             <button class="nav-logout" type="button" aria-label="Logout" (click)="logOut()">➜]</button>
