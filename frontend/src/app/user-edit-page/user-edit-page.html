@@ -67,6 +67,9 @@
           <button type="submit" class="action action-primary" [disabled]="isSubmitting">
             {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
           </button>
+          <button type="button" class="action action-secondary" (click)="onUnsubscribe()" [disabled]="isSubmitting">
+            Unsubscribe EduBet+
+          </button>
           <a routerLink="/user-profile" class="action action-secondary">Cancel</a>
         </div>
 

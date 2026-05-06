@@ -77,4 +77,27 @@ export class UserEditPage implements OnInit {
       }
     });
   }
+
+  onUnsubscribe() {
+    if (!confirm('Are you sure you want to unsubscribe from EduBet+?')) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.userService.unbuyPremium().subscribe({
+      next: () => {
+        // show alert as requested and update UI
+        alert('Succesfully unsubscribed');
+        this.successMessage = 'You have been unsubscribed from EduBet+';
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        this.errorMessage = err?.error?.message ?? 'Failed to unsubscribe. Please try again.';
+        this.isSubmitting = false;
+      }
+    });
+  }
 }
