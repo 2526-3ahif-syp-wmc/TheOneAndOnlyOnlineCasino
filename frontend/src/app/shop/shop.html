@@ -1,1 +1,107 @@
-<button (click)="buyCoins()">Buy 100 Coins</button>
+<div class="shop-page">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <section class="shop-topbar card-glass">
+    <div>
+      <span class="eyebrow">EduBet Store</span>
+      <h1>Shop</h1>
+      <p>Buy coins, unlock EduBet+ and grab weekly special offers.</p>
+    </div>
+
+    <div class="topbar-stats">
+      <div>
+        <strong>1¢</strong>
+        <span>Normal price per coin</span>
+      </div>
+
+      <div>
+        <strong>4</strong>
+        <span>Coin packs</span>
+      </div>
+
+      <div>
+        <strong>9.99€</strong>
+        <span>EduBet+ monthly</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="shop-layout">
+    <aside class="subscription-card card-glass">
+      <div class="plus-glow">+</div>
+
+      <span class="premium-badge">Premium</span>
+
+      <h2>EduBet+</h2>
+
+      <p>
+        Unlock the premium EduBet experience with special benefits, exclusive style
+        and a better casino lobby feeling.
+      </p>
+
+      <ul>
+        <li>Premium profile badge</li>
+        <li>Special weekly offers</li>
+        <li>Exclusive casino look</li>
+        <li>Priority support</li>
+      </ul>
+
+      <div class="subscription-price">
+        <strong>9.99€</strong>
+        <span>/ month</span>
+      </div>
+
+      <button type="button" (click)="buySubscription()">
+        Buy EduBet+
+      </button>
+    </aside>
+
+    <section class="coins-section">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">Weekly Specials</span>
+          <h2>Coin Packs</h2>
+        </div>
+
+        <p>Normally 1 cent = 1 coin. These packs are weekly special offers.</p>
+      </div>
+
+      <div class="coin-grid">
+        @for (pack of coinPacks; track pack.coins) {
+          <article class="coin-card card-glass" [class.popular]="pack.popular">
+            @if (pack.popular) {
+              <div class="popular-ribbon">Most Popular</div>
+            }
+
+            <div class="coin-card-head">
+              <span class="coin-badge">{{ pack.badge }}</span>
+              <span class="normal-price">
+                Normal: {{ getNormalPrice(pack.coins) }}€
+              </span>
+            </div>
+
+            <div class="coin-amount">
+              <strong>{{ pack.coins }} EC</strong>
+              <span>Coins</span>
+            </div>
+
+            <h3>{{ pack.title }}</h3>
+            <p>{{ pack.description }}</p>
+
+            <div class="price-box">
+              <div>
+                <span>Special price</span>
+                <strong>{{ pack.price.toFixed(2) }}€</strong>
+              </div>
+
+              <button type="button" (click)="buyCoins(pack)">
+                Buy
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  </main>
+</div>
