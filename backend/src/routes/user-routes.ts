@@ -68,7 +68,7 @@ authRouter.patch('/users/:id/coins', (req, res) => {
   const result = db
     .prepare(`
       UPDATE users
-      SET coins = ?, updated_at = CURRENT_TIMESTAMP
+      SET coins = ?
       WHERE id = ?
     `)
     .run(coins, userId);
@@ -90,6 +90,74 @@ authRouter.patch('/users/:id/coins', (req, res) => {
   return res.json(updatedUser);
 });
 
+// UPDATE PROFILE
+authRouter.patch('/users/:id', (req, res) => {
+  const userId = Number(req.params.id);
+  const { username, currentPassword, newPassword } = req.body;
+
+  type ProfileUserRow = {
+    id: number;
+    username: string;
+    password: string;
+    coins: number;
+    premium: number;
+  };
+
+  const user = db
+    .prepare(`
+      SELECT id, username, password, coins, premium
+      FROM users
+      WHERE id = ?
+    `)
+    .get(userId) as ProfileUserRow | undefined;
+
+  if (!user) {
+    return res.status(404).json({
+      message: 'User not found'
+    });
+  }
+
+  if (user.password !== currentPassword) {
+    return res.status(401).json({
+      message: 'Current password is incorrect'
+    });
+  }
+
+  if (username !== user.username) {
+    const existingUser = db
+      .prepare(`
+        SELECT id
+        FROM users
+        WHERE username = ? AND id != ?
+      `)
+      .get(username, userId);
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: 'Username already exists'
+      });
+    }
+  }
+
+  const passwordToSave = newPassword && newPassword.length > 0 ? newPassword : user.password;
+
+  db.prepare(`
+    UPDATE users
+    SET username = ?, password = ?
+    WHERE id = ?
+  `).run(username, passwordToSave, userId);
+
+  const updatedUser = db
+    .prepare(`
+      SELECT id, username, coins, premium
+      FROM users
+      WHERE id = ?
+    `)
+    .get(userId);
+
+  return res.json(updatedUser);
+});
+
 // PREMIUM
 authRouter.patch('/users/:id/premium', (req, res) => {
   const id = Number(req.params.id);
@@ -97,7 +165,7 @@ authRouter.patch('/users/:id/premium', (req, res) => {
 
   db.prepare(`
     UPDATE users
-    SET premium = ?, updated_at = CURRENT_TIMESTAMP
+    SET premium = ?
     WHERE id = ?
   `).run(premium, id);
 

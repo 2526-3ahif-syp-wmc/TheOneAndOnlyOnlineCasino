@@ -7,16 +7,12 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-<<<<<<< Updated upstream
-    coins INTEGER NOT NULL DEFAULT 0
-=======
     premium INTEGER NOT NULL DEFAULT 0,
     coins INTEGER NOT NULL DEFAULT 1000,
     wins INTEGER NOT NULL DEFAULT 0,
     losses INTEGER NOT NULL DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
->>>>>>> Stashed changes
   );
 `);
 
