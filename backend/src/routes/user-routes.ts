@@ -109,3 +109,38 @@ authRouter.patch('/users/:id/premium', (req, res) => {
 
   return res.json(updatedUser);
 });
+
+// LEADERBOARD
+authRouter.get('/leaderboard', (req, res) => {
+  const { type, period } = req.query; // type: 'wins' or 'losses', period: 'all'
+
+  let orderBy = 'coins DESC'; // for wins, highest coins
+  if (type === 'losses') {
+    orderBy = 'coins ASC'; // for losses, lowest coins (most spent)
+  }
+
+  const users = db
+    .prepare(`
+      SELECT id, username, coins
+      FROM users
+      ORDER BY ${orderBy}
+      LIMIT 10
+    `)
+    .all();
+
+  return res.json(users);
+});
+
+// TOP PLAYERS
+authRouter.get('/top-players', (req, res) => {
+  const users = db
+    .prepare(`
+      SELECT id, username, coins
+      FROM users
+      ORDER BY coins DESC
+      LIMIT 10
+    `)
+    .all();
+
+  return res.json(users);
+});
