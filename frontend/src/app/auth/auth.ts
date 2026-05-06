@@ -1,6 +1,6 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { form, FormField, minLength, pattern, required, submit, validate } from '@angular/forms/signals';
-import { MatError } from '@angular/material/form-field';
+import { MatError } from '@angular/material/form-field';w
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 import { MatButton } from '@angular/material/button';
