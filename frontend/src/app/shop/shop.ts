@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserService } from '../services/user-service';
+import { firstValueFrom } from 'rxjs';
 
 type CoinPack = {
   coins: number;
@@ -16,6 +18,8 @@ type CoinPack = {
   styleUrl: './shop.scss'
 })
 export class Shop {
+  private service = inject(UserService);
+
   protected coinPacks: CoinPack[] = [
     {
       coins: 500,
@@ -48,8 +52,12 @@ export class Shop {
     }
   ];
 
-  protected buyCoins(pack: CoinPack) {
+  protected async buyCoins(pack: CoinPack) {
     alert(`You bought ${pack.coins} Coins for ${pack.price.toFixed(2)}€`);
+
+    const currentCoins = this.service.currentUser()?.coins ?? 0;
+
+    await firstValueFrom(this.service.updateCoins(currentCoins + pack.coins ));
   }
 
   protected buySubscription() {
