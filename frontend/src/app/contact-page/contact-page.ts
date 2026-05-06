@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './contact-page.scss',
 })
 export class ContactPage {
-
+  protected sendMessage() {
+    alert('Message sent successfully!');
+  }
 }

@@ -1,87 +1,72 @@
-<div class="games-overview-shell">
-	<div class="ambient ambient-left"></div>
-	<div class="ambient ambient-right"></div>
+<div class="games-lobby-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
 
-	<header class="hero card-glass">
-		<div class="hero-copy">
-			<span class="eyebrow">Games Overview</span>
-			<h1>Five games. One modern lobby.</h1>
-			<p class="hero-text">
-				Jump between strategy, speed and pure spectacle. This overview keeps the experience dark,
-				clean and high-end, just like the sign-in screen.
-			</p>
+  <header class="lobby-header card-glass">
+    <div>
+      <span class="eyebrow">EduBet Games</span>
+      <h1>Choose your game</h1>
+      <p>
+        Pick a table, start a quick round and build your balance. Your next win is one click away.
+      </p>
+    </div>
 
-			<div class="hero-metrics">
-				@for (stat of stats; track stat.label) {
-					<div class="metric-card">
-						<strong>{{ stat.value }}</strong>
-						<span>{{ stat.label }}</span>
-					</div>
-				}
-			</div>
+    <div class="search-card">
+      <input type="text" placeholder="Search games..." />
+      <button type="button">Search</button>
+    </div>
+  </header>
 
-			<div class="hero-actions">
-				<a class="action action-primary" routerLink="/user-profile">Open profile</a>
-				<a class="action action-secondary" routerLink="/contact">Support</a>
-			</div>
-		</div>
+  <section class="category-pills">
+    <button type="button" class="active">All</button>
+    <button type="button">Favorites</button>
+    <button type="button">Last played</button>
+    <button type="button">Table games</button>
+    <button type="button">High risk</button>
+  </section>
 
-		<aside class="spotlight">
-			<div class="spotlight-card">
-				<span class="spotlight-badge">Featured table</span>
-				<h2>{{ featuredGame.title }}</h2>
-				<p>{{ featuredGame.description }}</p>
+  @for (row of gameRows; track row.title) {
+    <section class="game-row">
+      <div class="row-header">
+        <div>
+          <h2>{{ row.title }}</h2>
+          <p>{{ row.description }}</p>
+        </div>
 
-				<dl class="spotlight-details">
-					<div>
-						<dt>Style</dt>
-						<dd>{{ featuredGame.subtitle }}</dd>
-					</div>
-					<div>
-						<dt>Risk</dt>
-						<dd>{{ featuredGame.volatility }}</dd>
-					</div>
-					<div>
-						<dt>Speed</dt>
-						<dd>{{ featuredGame.pace }}</dd>
-					</div>
-					<div>
-						<dt>Edge</dt>
-						<dd>{{ featuredGame.edge }}</dd>
-					</div>
-				</dl>
-			</div>
-		</aside>
-	</header>
+        <button type="button" class="see-all-btn">See all</button>
+      </div>
 
-	<section class="games-grid">
-		@for (game of games; track game.title) {
-			<article class="game-card card-glass game-card--{{ game.accent }}">
-				<div class="game-card-top">
-					<span class="game-badge">{{ game.badge }}</span>
-					<span class="game-subtitle">{{ game.subtitle }}</span>
-				</div>
+      <div class="game-track">
+        @for (game of row.games; track game.title) {
+          <a class="game-tile tile--{{ game.accent }}" [routerLink]="game.route">
+            <div class="tile-cover">
+              <div class="tile-glow"></div>
 
-				<h3>{{ game.title }}</h3>
-				<p>{{ game.description }}</p>
+              <span class="tile-badge">{{ game.badge }}</span>
+              <span class="favorite-star">★</span>
 
-				<ul class="game-tags">
-					@for (tag of game.tags; track tag) {
-						<li>{{ tag }}</li>
-					}
-				</ul>
+              <div class="tile-icon">
+                {{ game.icon }}
+              </div>
 
-				<div class="game-footer">
-					<div>
-						<span class="footer-label">House edge</span>
-						<strong>{{ game.edge }}</strong>
-					</div>
-					<div>
-						<span class="footer-label">Pace</span>
-						<strong>{{ game.pace }}</strong>
-					</div>
-				</div>
-			</article>
-		}
-	</section>
+              <div class="play-overlay">
+                <span>Play now</span>
+              </div>
+            </div>
+
+            <div class="tile-info">
+              <div>
+                <h3>{{ game.title }}</h3>
+                <p>{{ game.subtitle }}</p>
+              </div>
+
+              <span class="players">
+                {{ game.players }} playing
+              </span>
+            </div>
+          </a>
+        }
+      </div>
+    </section>
+  }
 </div>

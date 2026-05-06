@@ -1,16 +1,20 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-interface GameCard {
+interface GameTile {
   title: string;
   subtitle: string;
-  description: string;
-  edge: string;
-  volatility: string;
-  pace: string;
   badge: string;
+  icon: string;
+  players: number;
   accent: string;
-  tags: string[];
+  route: string;
+}
+
+interface GameRow {
+  title: string;
+  description: string;
+  games: GameTile[];
 }
 
 @Component({
@@ -20,75 +24,76 @@ interface GameCard {
   styleUrl: './games.scss',
 })
 export class Games {
-  readonly stats = [
-    { value: '5', label: 'Games ready' },
-    { value: '24/7', label: 'Lobby access' },
-    { value: '1 tap', label: 'To your table' },
-  ];
+  readonly blackjack: GameTile = {
+    title: 'Blackjack',
+    subtitle: 'Beat the dealer',
+    badge: 'Popular',
+    icon: '♠',
+    players: 128,
+    accent: 'gold',
+    route: '/games/blackjack',
+  };
 
-  readonly games: GameCard[] = [
+  readonly mines: GameTile = {
+    title: 'Mines',
+    subtitle: 'Risk every tile',
+    badge: 'Hot',
+    icon: '✦',
+    players: 94,
+    accent: 'violet',
+    route: '/games/mines',
+  };
+
+  readonly slots: GameTile = {
+    title: 'Slot Machine',
+    subtitle: 'Spin for coins',
+    badge: 'Fast',
+    icon: '★',
+    players: 211,
+    accent: 'cyan',
+    route: '/games/slots',
+  };
+
+  readonly roulette: GameTile = {
+    title: 'Roulette',
+    subtitle: 'Follow the wheel',
+    badge: 'Classic',
+    icon: '●',
+    players: 76,
+    accent: 'red',
+    route: '/games/roulette',
+  };
+
+  readonly plinko: GameTile = {
+    title: 'Plinko',
+    subtitle: 'Drop and win',
+    badge: 'New',
+    icon: '◆',
+    players: 63,
+    accent: 'emerald',
+    route: '/games/plinko',
+  };
+
+  readonly gameRows: GameRow[] = [
     {
-      title: 'Blackjack',
-      subtitle: 'Strategy first, low noise',
-      description:
-        'Beat the dealer with smart decisions, clean pacing and the most disciplined table in the lobby.',
-      edge: 'Low',
-      volatility: 'Medium',
-      pace: 'Fast rounds',
-      badge: 'Best control',
-      accent: 'gold',
-      tags: ['Hit or stand', 'Split hands', 'Double down'],
+      title: 'Continue playing',
+      description: 'Jump back into the games you played recently.',
+      games: [this.blackjack, this.mines, this.slots],
     },
     {
-      title: 'Mines',
-      subtitle: 'Risk in every step',
-      description:
-        'Reveal tiles, manage the multiplier and decide exactly how far you want to push the run.',
-      edge: 'Variable',
-      volatility: 'High',
-      pace: 'Instant turns',
-      badge: 'High tension',
-      accent: 'violet',
-      tags: ['Tile pressure', 'Multiplier climb', 'Cash-out timing'],
+      title: 'Favorite games',
+      description: 'Your most played EduBet tables and quick rounds.',
+      games: [this.blackjack, this.roulette, this.plinko],
     },
     {
-      title: 'Slot Machine',
-      subtitle: 'Pure visual momentum',
-      description:
-        'Spin a polished reel layout with bright effects, rapid outcomes and a classic casino rhythm.',
-      edge: 'Medium',
-      volatility: 'Very high',
-      pace: 'Single click',
-      badge: 'Flashiest game',
-      accent: 'cyan',
-      tags: ['Reel bursts', 'Bonus symbols', 'Quick spins'],
+      title: 'Popular right now',
+      description: 'Games with the most active players in the lobby.',
+      games: [this.slots, this.blackjack, this.mines, this.roulette, this.plinko],
     },
     {
-      title: 'Roulette',
-      subtitle: 'Table energy, elegant flow',
-      description:
-        'Place your bets, follow the wheel and keep the session moving with a refined classic setup.',
-      edge: 'Low to medium',
-      volatility: 'Medium',
-      pace: 'Structured',
-      badge: 'Classic table',
-      accent: 'red',
-      tags: ['Inside bets', 'Outside bets', 'Wheel suspense'],
-    },
-    {
-      title: 'Plinko',
-      subtitle: 'Drop, bounce, reward',
-      description:
-        'Send the ball through a field of pins and watch the path turn into a quick, readable result.',
-      edge: 'Balanced',
-      volatility: 'High',
-      pace: 'Animated drops',
-      badge: 'Best spectacle',
-      accent: 'emerald',
-      tags: ['Path chaos', 'Payout lanes', 'Replay value'],
+      title: 'High risk, high reward',
+      description: 'Fast games with bigger swings and more tension.',
+      games: [this.mines, this.plinko, this.slots],
     },
   ];
-
-  readonly featuredGame = this.games[0];
 }
-

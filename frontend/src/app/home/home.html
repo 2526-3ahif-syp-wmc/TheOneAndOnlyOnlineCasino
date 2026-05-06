@@ -1,1 +1,114 @@
-<h2>Insert cool homepage here</h2>
+<div class="home-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <section class="hero card-glass">
+    <div class="hero-content">
+      <span class="eyebrow">Welcome to EduBet</span>
+
+      <h1>
+        Enter the lobby.
+        <span>Play smarter.</span>
+      </h1>
+
+      <p>
+        Choose your favorite casino games, collect coins, climb the leaderboard
+        and enjoy a clean modern gaming experience.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/games" class="action action-primary">Play Games</a>
+        <a routerLink="/leaderboard" class="action action-secondary">Leaderboard</a>
+      </div>
+    </div>
+
+    <aside class="player-card">
+      <div class="player-top">
+        <div class="avatar">
+          <span>E</span>
+        </div>
+
+        <div>
+          <span class="player-label">Current player</span>
+          <h2>{{ username() }}</h2>
+        </div>
+      </div>
+
+      <div class="coin-box">
+        <span>Your balance</span>
+        <strong>{{ coins() }} coins</strong>
+      </div>
+
+      <div class="player-actions">
+        <a routerLink="/user-profile">Profile</a>
+        <a routerLink="/games">Start playing</a>
+      </div>
+    </aside>
+  </section>
+
+  <section class="quick-grid">
+    <article class="quick-card card-glass">
+      <span class="quick-icon">♠</span>
+      <h3>Blackjack</h3>
+      <p>Play smart, beat the dealer and build your coin balance.</p>
+      <a routerLink="/games">Play now</a>
+    </article>
+
+    <article class="quick-card card-glass">
+      <span class="quick-icon">●</span>
+      <h3>Roulette</h3>
+      <p>Pick your number, choose your color and let the wheel decide.</p>
+      <a routerLink="/games">Try roulette</a>
+    </article>
+
+    <article class="quick-card card-glass">
+      <span class="quick-icon">★</span>
+      <h3>Slots</h3>
+      <p>Fast, simple and full of casino energy. Spin for big wins.</p>
+      <a routerLink="/games">Spin now</a>
+    </article>
+  </section>
+
+  <section class="stats-section card-glass">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Lobby Stats</span>
+        <h2>Everything in one place</h2>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <strong>6</strong>
+        <span>Team members</span>
+      </div>
+
+      <div class="stat-card">
+        <strong>5+</strong>
+        <span>Casino games</span>
+      </div>
+
+      <div class="stat-card">
+        <strong>1000</strong>
+        <span>Starting coins</span>
+      </div>
+
+      <div class="stat-card">
+        <strong>24/7</strong>
+        <span>Open lobby</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta card-glass">
+    <div>
+      <span class="eyebrow">Ready?</span>
+      <h2>Jump into the EduBet casino lobby.</h2>
+      <p>
+        Start with free coins, explore the games and try to reach the top of the leaderboard.
+      </p>
+    </div>
+
+    <a routerLink="/games" class="action action-primary">Start Playing</a>
+  </section>
+</div>

@@ -1,9 +1,30 @@
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="/home">Home</a>
-    <a class="navbar-brand" href="/contact-page">Contact</a>
-    <a class="navbar-brand" href="/home">Shop</a>
-    <a class="navbar-brand" href="/leaderboard">Leaderboard</a>
-    <a class="navbar-brand" href="/games">Games</a>
-    <a class="navbar-brand" href="/home">Settings</a>
-    <a class="navbar-brand" href="/user-profile">Profile</a>
-</nav>
+<header class="site-nav-shell">
+    <nav class="site-nav" aria-label="Main navigation">
+        <a class="brand" routerLink="/home" aria-label="EduBet home">
+            <img src = "logo.png" class="brand-mark">
+            <span class="brand-copy">
+                <strong>EduBet</strong>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a routerLink="/home" routerLinkActive="is-active">Home</a>
+            <a routerLink="/games" routerLinkActive="is-active">Games</a>
+            <a routerLink="/shop" routerLinkActive="is-active">Shop</a>
+            <a routerLink="/leaderboard" routerLinkActive="is-active">Leaderboard</a>
+            <a routerLink="/contact-page" routerLinkActive="is-active">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+            <a routerLink="/user-profile" class="nav-status">
+                <button routerLink="/shop">Get EduBet+</button>
+                <span class="user-avatar" aria-hidden="true">U</span>
+                <span class="user-meta">
+                    <strong>{{ username() }}</strong>
+                    <small>{{ coins() }} coins</small>
+                </span>
+            </a>
+            <button class="nav-logout" type="button" aria-label="Logout" (click)="logOut()">➜]</button>
+        </div>
+    </nav>
+</header>

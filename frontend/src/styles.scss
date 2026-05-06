@@ -77,8 +77,8 @@ body {
 :root {
   --bg-primary: #0b0b0f;
   --bg-secondary: #14141a;
-  --gold: #ff7a1a;
-  --gold-light: #ffb067;
+  --gold: #a855f7;
+  --gold-light: #d8b4fe;
   --text-primary: #ffffff;
   --text-muted: #b5b5b5;
   --danger: #ff4d4d;
@@ -233,4 +233,29 @@ input:focus {
 
 .glow-text {
   animation: glow 2s infinite;
+}
+
+footer {
+  position: relative;
+  z-index: 10;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(7, 7, 11, 0.75), rgba(5, 5, 8, 0.95));
+  border-top: 1px solid rgba(168, 85, 247, 0.18);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.35);
+}
+
+footer div {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+footer div::first-letter {
+  color: #c084fc;
+}
+
+footer:hover div {
+  color: rgba(255, 255, 255, 0.8);
 }

@@ -1,8 +1,197 @@
-<div class="container">
-    <h1>Contact Us</h1>
-    <p>If you have any questions or concerns, please feel free to reach out to us!</p>
-    <ul>
-        <li>Email: davidpuryarrrrrrrogay@gmail.com</li>
-        <li>Phone: +43 676 67676767</li>
-    </ul>
+<div class="contact-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <header class="contact-hero card-glass">
+    <div class="hero-copy">
+      <span class="eyebrow">Contact & Support</span>
+
+      <h1>Need help? Our casino crew is ready.</h1>
+
+      <p class="hero-text">
+        Questions about your account, games, coins or technical issues? Reach out to our support team
+        and we will help you keep the experience smooth, safe and entertaining.
+      </p>
+
+      <div class="hero-metrics">
+        <div class="metric-card">
+          <strong>24/7</strong>
+          <span>Support access</span>
+        </div>
+
+        <div class="metric-card">
+          <strong>6</strong>
+          <span>Team members</span>
+        </div>
+
+        <div class="metric-card">
+          <strong>Linz</strong>
+          <span>Austria based</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="contact-card">
+      <span class="contact-badge">Fast support</span>
+      <h2>Contact us directly</h2>
+
+      <div class="contact-info-list">
+        <div class="contact-info-item">
+          <span>Email</span>
+          <strong>edubet@htl-leonding.ac.at</strong>
+        </div>
+
+        <div class="contact-info-item">
+          <span>Phone</span>
+          <strong>+43 677 99028193</strong>
+        </div>
+
+        <div class="contact-info-item">
+          <span>Location</span>
+          <strong>Linz, Austria</strong>
+        </div>
+      </div>
+    </aside>
+  </header>
+
+  <section class="contact-grid">
+    <article class="form-card card-glass">
+      <span class="eyebrow">Send message</span>
+      <h2>Talk to us</h2>
+
+      <form class="contact-form">
+        <div class="input-group">
+          <label for="name">Your name</label>
+          <input id="name" type="text" placeholder="Enter your name" />
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email address</label>
+          <input id="email" type="email" placeholder="example@email.com" />
+        </div>
+
+        <div class="input-group">
+          <label for="topic">Topic</label>
+          <select id="topic">
+            <option>Account problem</option>
+            <option>Coins issue</option>
+            <option>Game bug</option>
+            <option>Payment question</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="message">Message</label>
+          <textarea id="message" rows="6" placeholder="Write your message here..."></textarea>
+        </div>
+
+        <button (click)="sendMessage()" class="submit-button" type="button">
+          Send message
+        </button>
+      </form>
+    </article>
+
+    <article class="map-card card-glass">
+      <div class="map-header">
+        <div>
+          <span class="eyebrow">Visit us</span>
+          <h2>Our office</h2>
+        </div>
+
+        <span class="map-pill">Linz, AT</span>
+      </div>
+
+      <div class="map-frame">
+        <iframe
+          src="https://www.google.com/maps?q=Hauptplatz%20Linz%20Austria&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <div class="office-details">
+        <div>
+          <span>Address</span>
+          <strong>Hauptplatz, 4020 Linz</strong>
+        </div>
+
+        <div>
+          <span>Support hours</span>
+          <strong>Monday - Friday, 09:00 - 18:00</strong>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="team-section card-glass">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Our team</span>
+        <h2>Meet the people behind the lobby</h2>
+      </div>
+    </div>
+
+    <div class="team-grid">
+      <article class="team-card">
+        <div class="avatar-placeholder">
+          <img src="david.jpeg" class ="photo">
+        </div>
+
+        <h3>David Purcaru</h3>
+        <p>CEO</p>
+        <span class="team-tag">Developer</span>
+      </article>
+
+      <article class="team-card">
+        <div class="avatar-placeholder">
+          <img src="sulejman.jpeg" class ="photo">
+        </div>
+
+        <h3>Sulejman Adilovic</h3>
+        <p>CEO</p>
+        <span class="team-tag">Design</span>
+      </article>
+
+      <article class="team-card">
+        <div class="avatar-placeholder">
+          <img src="aldin.jpeg" class ="photo">
+        </div>
+
+        <h3>Aldin Tuholjakovic</h3>
+        <p>Developer</p>
+        <span class="team-tag">Systems</span>
+      </article>
+
+      <article class="team-card">
+        <div class="avatar-placeholder">
+          <img src="metehan.jpeg" class ="photo">
+        </div>
+
+        <h3>Metehan Kanmaz</h3>
+        <p>Developer</p>
+        <span class="team-tag">Backend</span>
+      </article>
+
+      <article class="team-card">
+        <div class="avatar-placeholder">
+          <img src="osama.jpeg" class ="photo">
+        </div>
+
+        <h3>Osama Haj Najib</h3>
+        <p>Developer</p>
+        <span class="team-tag">Security</span>
+      </article>
+
+      <article class="team-card">
+        <div class="avatar-placeholder">
+          <img src="hamlet.jpeg" class ="photo">
+        </div>
+
+        <h3>Hamlet Mehrabyan</h3>
+        <p>Developer</p>
+        <span class="team-tag">Marketing</span>
+      </article>
+    </div>
+  </section>
 </div>

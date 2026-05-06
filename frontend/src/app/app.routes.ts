@@ -5,14 +5,16 @@ import { Auth } from './auth/auth';
 import { UserProfile } from './user-profile/user-profile';
 import { Games } from './games/games';
 import { Leaderboard } from './leaderboard/leaderboard';
+import { Shop } from './shop/shop';
 
 
 export const routes: Routes = [
-    {path: '', redirectTo: '/auth', pathMatch: 'full'},
+    {path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: 'home', component: Home },
     {path: 'auth', component: Auth },
     {path: 'games', component: Games},
     {path: 'contact-page', component: ContactPage },
     {path: 'user-profile', component: UserProfile },
-    {path: 'leaderboard', component: Leaderboard }
+    {path: 'leaderboard', component: Leaderboard },
+    {path: 'shop', component: Shop}
 ];
