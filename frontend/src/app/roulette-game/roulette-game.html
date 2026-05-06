@@ -14,10 +14,10 @@
       </div>
     </div>
 
-    <!-- Roobet-style Race Track mit SICHTBARER Animation -->
+    <!-- Roobet-style Race Track mit LAUFBAND EFFEKT -->
     <div class="race-track-section">
       <div class="track-wrapper" [class.spinning]="isSpinning">
-        <div class="number-track" [style.transform]="'translateX(' + trackPosition + 'px)'">
+        <div class="number-track" #trackElement>
           <div *ngFor="let num of trackNumbers; let i = index" class="track-number" 
                [style.background]="getNumberColor(num)"
                [class.highlight]="i === winningIndex">
@@ -25,17 +25,10 @@
           </div>
         </div>
         <div class="indicator-line"></div>
-        <div class="track-overlay" *ngIf="isSpinning">
-          <div class="spin-particles">
-            <span class="particle">⚡</span>
-            <span class="particle">💫</span>
-            <span class="particle">✨</span>
-            <span class="particle">🎯</span>
-          </div>
-        </div>
+        <div class="track-speed-lines" *ngIf="isSpinning"></div>
       </div>
       
-      <!-- LAST RESULTS HISTORY - Bleibt unter dem Spinner stehen! -->
+      <!-- LAST RESULTS HISTORY -->
       <div class="results-history">
         <div class="history-header">
           <span>📜 LAST RESULTS</span>
@@ -86,9 +79,32 @@
       </div>
     </div>
 
+    <!-- BET RESULT PROTOKOLL - Das wichtigste Feature! -->
+    <div class="bet-result-protocol" *ngIf="lastSpinResults.length > 0">
+      <div class="protocol-header">
+        <span>📊 SPIN RESULTS</span>
+        <button class="close-protocol" (click)="closeProtocol()">✖</button>
+      </div>
+      <div class="protocol-list">
+        <div *ngFor="let result of lastSpinResults" class="protocol-item" [class.won]="result.won" [class.lost]="!result.won">
+          <div class="protocol-bet-label">{{ result.betLabel }}</div>
+          <div class="protocol-bet-amount">{{ result.betAmount | currency:'EUR':'symbol':'1.0-0' }}</div>
+          <div class="protocol-result">
+            <span *ngIf="result.won" class="win-badge">🎉 +{{ result.winAmount | currency:'EUR':'symbol':'1.0-0' }}</span>
+            <span *ngIf="!result.won" class="loss-badge">💔 -{{ result.betAmount | currency:'EUR':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="protocol-total" [class.total-win]="totalSpinWin > 0" [class.total-loss]="totalSpinWin < 0">
+        <span>TOTAL:</span>
+        <strong *ngIf="totalSpinWin > 0">+{{ totalSpinWin | currency:'EUR':'symbol':'1.0-0' }}</strong>
+        <strong *ngIf="totalSpinWin <= 0">{{ totalSpinWin | currency:'EUR':'symbol':'1.0-0' }}</strong>
+      </div>
+    </div>
+
     <!-- Betting Area -->
     <div class="betting-area">
-      <!-- Bet Controls - OHNE +50/-50 Buttons! -->
+      <!-- Bet Controls -->
       <div class="bet-controls">
         <div class="bet-amount-card">
           <label>🎲 BET AMOUNT</label>
@@ -198,4 +214,4 @@
       </div>
     </div>
   </div>
-</div>
+</div>          

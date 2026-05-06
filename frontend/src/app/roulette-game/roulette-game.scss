@@ -122,9 +122,8 @@
 }
 
 .track-wrapper.spinning {
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5), 0 4px 30px rgba(168, 85, 247, 0.5);
-  border-color: rgba(168, 85, 247, 0.8);
-  animation: borderPulse 0.3s infinite;
+  border-color: #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
 
 .number-track {
@@ -171,42 +170,29 @@
 }
 
 .track-wrapper.spinning .indicator-line {
-  animation: indicatorFlash 0.15s infinite;
+  animation: indicatorFlash 0.1s infinite;
 }
 
-/* Track Overlay mit Partikeln während des Spins */
-.track-overlay {
+/* Speed lines für Laufband-Effekt */
+.track-speed-lines {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 30px,
+    rgba(168, 85, 247, 0.15) 30px,
+    rgba(168, 85, 247, 0.15) 60px
+  );
   pointer-events: none;
-  z-index: 5;
+  animation: speedLines 0.3s linear infinite;
+  z-index: 2;
 }
 
-.spin-particles {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  gap: 15px;
-  animation: particlesRotate 0.5s linear infinite;
-}
-
-.particle {
-  font-size: 1.5rem;
-  animation: particleFloat 0.5s ease-in-out infinite;
-}
-
-.particle:nth-child(1) { animation-delay: 0s; }
-.particle:nth-child(2) { animation-delay: 0.15s; }
-.particle:nth-child(3) { animation-delay: 0.3s; }
-.particle:nth-child(4) { animation-delay: 0.45s; }
-
-/* Results History - Bleibt unter dem Spinner! */
+/* Results History */
 .results-history {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 20px;
@@ -404,6 +390,135 @@
   font-size: 1.3rem;
   font-weight: 900;
   color: #ff4444;
+}
+
+/* BET RESULT PROTOKOLL */
+.bet-result-protocol {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 340px;
+  background: linear-gradient(160deg, rgba(18, 18, 25, 0.98), rgba(10, 10, 16, 0.95));
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 20px;
+  z-index: 200;
+  animation: slideInRight 0.3s ease-out;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.protocol-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px 20px 0 0;
+}
+
+.protocol-header span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a855f7;
+}
+
+.close-protocol {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 4px;
+}
+
+.close-protocol:hover {
+  color: #fff;
+}
+
+.protocol-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.protocol-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.protocol-item.won {
+  border-left: 3px solid #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.protocol-item.lost {
+  border-left: 3px solid #ff4444;
+  background: rgba(255, 68, 68, 0.05);
+}
+
+.protocol-bet-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.protocol-bet-amount {
+  font-size: 0.8rem;
+  color: #f8d76b;
+  font-weight: 600;
+}
+
+.protocol-result {
+  text-align: right;
+}
+
+.win-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4caf50;
+}
+
+.loss-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ff4444;
+}
+
+.protocol-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 20px 20px;
+  font-weight: 700;
+}
+
+.protocol-total span {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.protocol-total.total-win strong {
+  color: #4caf50;
+  font-size: 1.1rem;
+}
+
+.protocol-total.total-loss strong {
+  color: #ff4444;
+  font-size: 1.1rem;
 }
 
 /* Betting Area */
@@ -720,23 +835,13 @@ button:disabled {
 }
 
 @keyframes indicatorFlash {
-  0%, 100% { opacity: 1; transform: translateX(-50%) scaleX(1); }
-  50% { opacity: 0.5; transform: translateX(-50%) scaleX(1.5); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
-@keyframes borderPulse {
-  0%, 100% { border-color: rgba(168, 85, 247, 0.5); }
-  50% { border-color: rgba(168, 85, 247, 1); }
-}
-
-@keyframes particlesRotate {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes particleFloat {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
-  50% { transform: translateY(-15px) scale(1.2); opacity: 0.7; }
+@keyframes speedLines {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 0; }
 }
 
 @keyframes winnerFlash {
@@ -773,6 +878,17 @@ button:disabled {
   50% { transform: translateY(-8px); }
 }
 
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .bet-controls {
@@ -806,6 +922,12 @@ button:disabled {
     height: 35px;
     font-size: 0.75rem;
   }
+  
+  .bet-result-protocol {
+    width: 300px;
+    right: 10px;
+    bottom: 10px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -834,5 +956,14 @@ button:disabled {
     width: 30px;
     height: 30px;
     font-size: 0.7rem;
+  }
+  
+  .bet-result-protocol {
+    width: 280px;
+  }
+  
+  .protocol-bet-label {
+    min-width: 70px;
+    font-size: 0.75rem;
   }
 }

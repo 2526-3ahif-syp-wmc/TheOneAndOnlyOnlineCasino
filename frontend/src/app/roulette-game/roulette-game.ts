@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,13 @@ interface Result {
   colorName: string;
 }
 
+interface SpinResult {
+  betLabel: string;
+  betAmount: number;
+  won: boolean;
+  winAmount: number;
+}
+
 @Component({
   selector: 'app-roulette',
   standalone: true,
@@ -24,6 +31,8 @@ interface Result {
   styleUrls: ['./roulette-game.scss']
 })
 export class RouletteComponent implements OnInit {
+  @ViewChild('trackElement') trackElement!: ElementRef;
+  
   balance: number = 5000;
   currentBet: number = 50;
   isSpinning: boolean = false;
@@ -36,6 +45,10 @@ export class RouletteComponent implements OnInit {
   showLossAnimation: boolean = false;
   winningIndex: number = -1;
   
+  // Bet-Protokoll
+  lastSpinResults: SpinResult[] = [];
+  totalSpinWin: number = 0;
+  
   numbers: number[] = Array.from({ length: 36 }, (_, i) => i + 1);
   trackNumbers: number[] = [];
   trackPosition: number = 0;
@@ -43,7 +56,7 @@ export class RouletteComponent implements OnInit {
   
   private animationId: number | null = null;
   private startTime: number = 0;
-  private duration: number = 3000;
+  private duration: number = 2500;
   private startPosition: number = 0;
   private targetPosition: number = 0;
   
@@ -76,13 +89,6 @@ export class RouletteComponent implements OnInit {
     }
   }
   
-  adjustBet(amount: number) {
-    const newBet = this.currentBet + amount;
-    if (newBet >= 10 && newBet <= this.balance) {
-      this.currentBet = newBet;
-    }
-  }
-  
   setBet(amount: number) {
     if (amount <= this.balance - this.currentBetTotal) {
       this.currentBet = amount;
@@ -111,9 +117,7 @@ export class RouletteComponent implements OnInit {
   
   placeNumberBet(number: number) {
     if (this.isSpinning) return;
-    if (this.currentBet > this.balance - this.currentBetTotal) {
-      return;
-    }
+    if (this.currentBet > this.balance - this.currentBetTotal) return;
     
     const existingBet = this.activeBets.find(b => b.type === 'number' && b.value === number);
     if (existingBet) {
@@ -123,16 +127,14 @@ export class RouletteComponent implements OnInit {
         type: 'number',
         value: number,
         amount: this.currentBet,
-        label: `${number}`
+        label: `Number ${number}`
       });
     }
   }
   
   placeColorBet(color: string) {
     if (this.isSpinning) return;
-    if (this.currentBet > this.balance - this.currentBetTotal) {
-      return;
-    }
+    if (this.currentBet > this.balance - this.currentBetTotal) return;
     
     const existingBet = this.activeBets.find(b => b.type === 'color' && b.value === color);
     if (existingBet) {
@@ -149,9 +151,7 @@ export class RouletteComponent implements OnInit {
   
   placeEvenOddBet(type: string) {
     if (this.isSpinning) return;
-    if (this.currentBet > this.balance - this.currentBetTotal) {
-      return;
-    }
+    if (this.currentBet > this.balance - this.currentBetTotal) return;
     
     const existingBet = this.activeBets.find(b => b.type === 'evenodd' && b.value === type);
     if (existingBet) {
@@ -161,16 +161,14 @@ export class RouletteComponent implements OnInit {
         type: 'evenodd',
         value: type,
         amount: this.currentBet,
-        label: type === 'even' ? 'Even' : 'Odd'
+        label: type === 'even' ? 'Even Numbers' : 'Odd Numbers'
       });
     }
   }
   
   placeHighLowBet(type: string) {
     if (this.isSpinning) return;
-    if (this.currentBet > this.balance - this.currentBetTotal) {
-      return;
-    }
+    if (this.currentBet > this.balance - this.currentBetTotal) return;
     
     const existingBet = this.activeBets.find(b => b.type === 'highlow' && b.value === type);
     if (existingBet) {
@@ -180,16 +178,14 @@ export class RouletteComponent implements OnInit {
         type: 'highlow',
         value: type,
         amount: this.currentBet,
-        label: type === 'low' ? '1-18' : '19-36'
+        label: type === 'low' ? '1-18 (Low)' : '19-36 (High)'
       });
     }
   }
   
   placeDozenBet(dozen: number) {
     if (this.isSpinning) return;
-    if (this.currentBet > this.balance - this.currentBetTotal) {
-      return;
-    }
+    if (this.currentBet > this.balance - this.currentBetTotal) return;
     
     const existingBet = this.activeBets.find(b => b.type === 'dozen' && b.value === dozen);
     if (existingBet) {
@@ -199,7 +195,7 @@ export class RouletteComponent implements OnInit {
         type: 'dozen',
         value: dozen,
         amount: this.currentBet,
-        label: `${dozen}st Dozen`
+        label: `${dozen}st Dozen (${dozen === 1 ? '1-12' : dozen === 2 ? '13-24' : '25-36'})`
       });
     }
   }
@@ -220,22 +216,24 @@ export class RouletteComponent implements OnInit {
     this.cdr.detectChanges();
   }
   
+  closeProtocol() {
+    this.lastSpinResults = [];
+    this.cdr.detectChanges();
+  }
+  
   spinWheel() {
     if (this.isSpinning || this.activeBets.length === 0) return;
-    if (this.currentBetTotal > this.balance) {
-      return;
-    }
+    if (this.currentBetTotal > this.balance) return;
     
-    // Deduct total bet amount
     this.balance -= this.currentBetTotal;
     this.isSpinning = true;
     this.winningIndex = -1;
+    this.lastSpinResults = [];
     this.cdr.detectChanges();
     
-    // Calculate random target - different distance for variety (MEHR BEWEGUNG!)
-    const travelDistance = 2500 + Math.random() * 2000;
+    const scrollDistance = 1800 + Math.random() * 1200;
     this.startPosition = this.trackPosition;
-    this.targetPosition = this.startPosition - travelDistance;
+    this.targetPosition = this.startPosition - scrollDistance;
     this.startTime = performance.now();
     
     this.animateTrack();
@@ -245,16 +243,17 @@ export class RouletteComponent implements OnInit {
     const animate = (currentTime: number) => {
       const elapsed = currentTime - this.startTime;
       const progress = Math.min(1, elapsed / this.duration);
-      // Benutze eine stärkere Easing-Funktion für flüssigeres Gefühl
-      const easeOutCubic = 1 - Math.pow(1 - progress, 4);
       
-      this.trackPosition = this.startPosition + (this.targetPosition - this.startPosition) * easeOutCubic;
+      this.trackPosition = this.startPosition + (this.targetPosition - this.startPosition) * progress;
       
-      // Reset position for infinite effect when at edge
-      if (this.trackPosition <= -2100) {
-        this.trackPosition += 2100;
-        this.startPosition += 2100;
-        this.targetPosition += 2100;
+      if (this.trackElement) {
+        this.trackElement.nativeElement.style.transform = `translateX(${this.trackPosition}px)`;
+      }
+      
+      if (this.trackPosition <= -2500) {
+        this.trackPosition = this.trackPosition + 2500;
+        this.startPosition = this.startPosition + 2500;
+        this.targetPosition = this.targetPosition + 2500;
       }
       
       if (progress < 1) {
@@ -268,18 +267,15 @@ export class RouletteComponent implements OnInit {
   }
   
   private determineWinner() {
-    // Calculate winning number based on final track position
     const segmentWidth = 72;
     const containerWidth = window.innerWidth;
     const centerX = containerWidth / 2;
-    const trackElement = document.querySelector('.number-track') as HTMLElement;
-    const trackOffset = trackElement ? trackElement.getBoundingClientRect().left : 0;
+    const trackOffset = this.trackElement ? this.trackElement.nativeElement.getBoundingClientRect().left : 0;
     
-    const visibleIndex = Math.floor((centerX - trackOffset) / segmentWidth);
-    const centerIndex = Math.floor(this.trackNumbers.length / 3) + visibleIndex;
+    let visibleIndex = Math.floor((centerX - trackOffset) / segmentWidth);
+    let centerIndex = Math.floor(this.trackNumbers.length / 3) + visibleIndex;
     let winningNumber = this.trackNumbers[centerIndex % this.trackNumbers.length];
     
-    // Fallback falls was schiefgeht
     if (isNaN(winningNumber)) {
       const rouletteOrder = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
       winningNumber = rouletteOrder[Math.floor(Math.random() * rouletteOrder.length)];
@@ -288,7 +284,6 @@ export class RouletteComponent implements OnInit {
     const winningColor = this.getNumberColor(winningNumber);
     const winningColorName = winningColor === '#dc2626' ? 'Red' : winningColor === '#1f2937' ? 'Black' : 'Green';
     
-    // Find and highlight the winning number in track
     for (let i = 0; i < this.trackNumbers.length; i++) {
       if (this.trackNumbers[i] === winningNumber && Math.abs(i - centerIndex) < 8) {
         this.winningIndex = i;
@@ -296,7 +291,7 @@ export class RouletteComponent implements OnInit {
       }
     }
     
-    // Evaluate bets
+    const spinResults: SpinResult[] = [];
     let totalWin = 0;
     
     for (const bet of this.activeBets) {
@@ -347,13 +342,20 @@ export class RouletteComponent implements OnInit {
           break;
       }
       
-      if (won) {
-        const winAmount = bet.amount * (multiplier + 1);
-        totalWin += winAmount;
-      }
+      const winAmount = won ? bet.amount * (multiplier + 1) : 0;
+      totalWin += winAmount;
+      
+      spinResults.push({
+        betLabel: bet.label,
+        betAmount: bet.amount,
+        won: won,
+        winAmount: winAmount
+      });
     }
     
-    // Add to history
+    this.lastSpinResults = spinResults;
+    this.totalSpinWin = totalWin;
+    
     const newResult: Result = {
       number: winningNumber,
       color: winningColor,
@@ -364,7 +366,6 @@ export class RouletteComponent implements OnInit {
       this.resultsHistory.pop();
     }
     
-    // Update balance and show animations
     if (totalWin > 0) {
       this.balance += totalWin;
       this.lastWin = totalWin;
@@ -387,18 +388,22 @@ export class RouletteComponent implements OnInit {
     }
     
     this.lastResult = newResult;
-    
-    // Clear bets
     this.activeBets = [];
     this.isSpinning = false;
     this.animationId = null;
     this.cdr.detectChanges();
     
-    // Remove highlight after animation
     setTimeout(() => {
       this.winningIndex = -1;
       this.cdr.detectChanges();
     }, 1500);
+    
+    setTimeout(() => {
+      if (this.lastSpinResults.length > 0) {
+        this.lastSpinResults = [];
+        this.cdr.detectChanges();
+      }
+    }, 8000);
   }
   
   goBack() {
@@ -407,4 +412,4 @@ export class RouletteComponent implements OnInit {
     }
     this.router.navigate(['/games']);
   }
-}
+}   
