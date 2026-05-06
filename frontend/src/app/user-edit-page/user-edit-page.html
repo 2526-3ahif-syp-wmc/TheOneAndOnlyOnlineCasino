@@ -1,0 +1,113 @@
+<div class="edit-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <section class="edit-hero card-glass">
+    <div class="edit-header">
+      <span class="eyebrow">Account Settings</span>
+      <h1>Edit Profile</h1>
+      <p>Update your account information including username and password.</p>
+    </div>
+  </section>
+
+  <div class="edit-container">
+    <section class="edit-form card-glass">
+      <form (ngSubmit)="onSubmit()" [formGroup]="editForm">
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            id="username"
+            class="form-input"
+            formControlName="username"
+            placeholder="Enter new username"
+          />
+          <span class="form-hint">Your unique account name</span>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-group">
+          <label for="currentPassword" class="form-label">Current Password</label>
+          <input
+            type="password"
+            id="currentPassword"
+            class="form-input"
+            formControlName="currentPassword"
+            placeholder="Enter your current password"
+          />
+          <span class="form-hint">Required to verify your identity</span>
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword" class="form-label">New Password</label>
+          <input
+            type="password"
+            id="newPassword"
+            class="form-input"
+            formControlName="newPassword"
+            placeholder="Enter new password (leave blank to keep current)"
+          />
+          <span class="form-hint">Minimum 6 characters</span>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            class="form-input"
+            formControlName="confirmPassword"
+            placeholder="Confirm new password"
+          />
+          <span class="form-hint">Must match your new password</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="action action-primary" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+          </button>
+          <a routerLink="/user-profile" class="action action-secondary">Cancel</a>
+        </div>
+
+        <div class="form-message" *ngIf="successMessage" class="success">
+          {{ successMessage }}
+        </div>
+        <div class="form-message" *ngIf="errorMessage" class="error">
+          {{ errorMessage }}
+        </div>
+      </form>
+    </section>
+
+    <section class="info-card card-glass">
+      <div class="info-title">
+        <span class="eyebrow">Security Tips</span>
+        <h3>Keep Your Account Safe</h3>
+      </div>
+
+      <ul class="info-list">
+        <li>
+          <span class="info-icon">✓</span>
+          <div>
+            <strong>Strong Password</strong>
+            <p>Use at least 6 characters with a mix of letters and numbers</p>
+          </div>
+        </li>
+        <li>
+          <span class="info-icon">✓</span>
+          <div>
+            <strong>Unique Username</strong>
+            <p>Choose a username that's easy for you to remember</p>
+          </div>
+        </li>
+        <li>
+          <span class="info-icon">✓</span>
+          <div>
+            <strong>Don't Share</strong>
+            <p>Never share your password with anyone, even support staff</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>
