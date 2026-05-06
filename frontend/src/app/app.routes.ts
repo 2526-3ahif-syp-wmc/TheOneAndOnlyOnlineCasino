@@ -7,16 +7,20 @@ import { UserEditPage } from './user-edit-page/user-edit-page';
 import { Games } from './games/games';
 import { Leaderboard } from './leaderboard/leaderboard';
 import { Shop } from './shop/shop';
-
+import { authGuard, guestGuard } from '../auth-guard';
 
 export const routes: Routes = [
-    {path: '', redirectTo: '/home', pathMatch: 'full'},
-    {path: 'home', component: Home },
-    {path: 'auth', component: Auth },
-    {path: 'games', component: Games},
-    {path: 'contact-page', component: ContactPage },
-    {path: 'user-profile', component: UserProfile },
-    {path: 'user-edit-page', component: UserEditPage },
-    {path: 'leaderboard', component: Leaderboard },
-    {path: 'shop', component: Shop}
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  { path: 'auth', component: Auth, canActivate: [guestGuard] },
+
+  { path: 'home', component: Home, canActivate: [authGuard] },
+  { path: 'games', component: Games, canActivate: [authGuard] },
+  { path: 'contact-page', component: ContactPage, canActivate: [authGuard] },
+  { path: 'user-profile', component: UserProfile, canActivate: [authGuard] },
+  { path: 'user-edit-page', component: UserEditPage, canActivate: [authGuard] },
+  { path: 'leaderboard', component: Leaderboard, canActivate: [authGuard] },
+  { path: 'shop', component: Shop, canActivate: [authGuard] },
+
+  { path: '**', redirectTo: 'home' }
 ];
