@@ -1,21 +1,97 @@
-<div class="container">
-  <h1 class="glow-text">🏆 Leaderboard</h1>
+<div class="leaderboard-container">
+  <!-- Header -->
+  <div class="leaderboard-header">
+    <h1 class="leaderboard-title">🏆 CASINO LEADERBOARD 🏆</h1>
+    <p class="leaderboard-subtitle">Top Players & Rankings</p>
+  </div>
 
-  <div class="card leaderboard">
-    <div class="leaderboard-header">
-      <span>#</span>
-      <span>Player</span>
-      <span>Coins</span>
+  <div class="leaderboard-grid">
+    <!-- Top Wins Today -->
+    <div class="leaderboard-section wins-today">
+      <div class="section-header">
+        <h2>🎰 Top Wins Today</h2>
+        <span class="live-badge">LIVE</span>
+      </div>
+      <div class="leaderboard-list">
+        @for (player of topWinsToday; track $index) {
+          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
+            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
+            <div class="player-info">
+              <span class="player-name">{{ player.name }}</span>
+              <span class="player-level">Lvl {{ player.level }}</span>
+            </div>
+            <div class="player-value">
+              <span class="coin-icon">💰</span>
+              <span class="amount">{{ player.value | number }}</span>
+            </div>
+          </div>
+        }
+      </div>
     </div>
 
-    @for (player of players; track $index) {
-      <div class="leaderboard-row">
-        <span class="rank" [ngClass]="getRankClass($index)">
-          {{ $index + 1 }}
-        </span>
-        <span class="name">{{ player.name }}</span>
-        <span class="coins">{{ player.coins }}</span>
+    <!-- Top Losses Today -->
+    <div class="leaderboard-section losses-today">
+      <div class="section-header">
+        <h2>📉 Top Losses Today</h2>
+        <span class="live-badge">LIVE</span>
       </div>
-    }
+      <div class="leaderboard-list">
+        @for (player of topLossesToday; track $index) {
+          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
+            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
+            <div class="player-info">
+              <span class="player-name">{{ player.name }}</span>
+              <span class="player-level">Lvl {{ player.level }}</span>
+            </div>
+            <div class="player-value loss">
+              <span class="coin-icon">📊</span>
+              <span class="amount">{{ player.value | number }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Highest Levels -->
+    <div class="leaderboard-section highest-level">
+      <div class="section-header">
+        <h2>⭐ Highest Levels</h2>
+      </div>
+      <div class="leaderboard-list">
+        @for (player of highestLevels; track $index) {
+          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
+            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
+            <div class="player-info">
+              <span class="player-name">{{ player.name }}</span>
+            </div>
+            <div class="level-value">
+              <span class="level-badge">Level {{ player.level }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Top Wins All Time -->
+    <div class="leaderboard-section wins-all-time">
+      <div class="section-header">
+        <h2>👑 All Time Legends</h2>
+      </div>
+      <div class="leaderboard-list">
+        @for (player of topWinsAllTime; track $index) {
+          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
+            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
+            <div class="player-info">
+              <span class="player-name">{{ player.name }}</span>
+              <span class="player-level">Lvl {{ player.level }}</span>
+            </div>
+            <div class="player-value legendary">
+              <span class="coin-icon">✨</span>
+              <span class="amount">{{ player.value | number }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
   </div>
 </div>
