@@ -45,7 +45,6 @@ export class UserService {
     return this.httpClient.post<User>(`${this.apiUrl}/users`, {
       username,
       password,
-      coins: 1000
     });
   }
 
