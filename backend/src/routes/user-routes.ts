@@ -81,7 +81,7 @@ authRouter.patch('/users/:id/coins', (req, res) => {
 
   const updatedUser = db
     .prepare(`
-      SELECT id, username, coins
+      SELECT id, username, coins, premium
       FROM users
       WHERE id = ?
     `)
