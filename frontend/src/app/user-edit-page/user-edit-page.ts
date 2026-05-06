@@ -38,6 +38,8 @@ export class UserEditPage implements OnInit {
       return;
     }
 
+    const username = this.editForm.get('username')?.value.trim();
+    const currentPassword = this.editForm.get('currentPassword')?.value;
     const newPassword = this.editForm.get('newPassword')?.value;
     const confirmPassword = this.editForm.get('confirmPassword')?.value;
 
@@ -56,28 +58,23 @@ export class UserEditPage implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
 
-    // Simulate API call
-    setTimeout(() => {
-      try {
-        const username = this.editForm.get('username')?.value;
-        const currentUser = this.userService.currentUser();
+    this.userService.updateProfile({
+      username,
+      currentPassword,
+      newPassword: newPassword?.trim() || undefined
+    }).subscribe({
+      next: () => {
+        this.successMessage = 'Profile updated successfully!';
+        this.isSubmitting = false;
 
-        if (currentUser) {
-          // Update local storage with new username
-          const updatedUser = { ...currentUser, username };
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-          this.userService['currentUserSignal'].set(updatedUser);
-
-          this.successMessage = 'Profile updated successfully!';
-          setTimeout(() => {
-            window.location.href = '/user-profile';
-          }, 1500);
-        }
-      } catch (error) {
-        this.errorMessage = 'Failed to update profile. Please try again.';
-      } finally {
+        setTimeout(() => {
+          window.location.href = '/user-profile';
+        }, 1500);
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message ?? 'Failed to update profile. Please try again.';
         this.isSubmitting = false;
       }
-    }, 800);
+    });
   }
 }

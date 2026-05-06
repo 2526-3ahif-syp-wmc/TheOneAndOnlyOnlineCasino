@@ -9,6 +9,12 @@ export type User = {
   premium: number;
 };
 
+export type UpdateProfileRequest = {
+  username: string;
+  currentPassword: string;
+  newPassword?: string;
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -49,6 +55,23 @@ export class UserService {
       username,
       password,
     });
+  }
+
+  public updateProfile(request: UpdateProfileRequest) {
+    const user = this.currentUserSignal();
+
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    return this.httpClient
+      .patch<User>(`${this.apiUrl}/users/${user.id}`, request)
+      .pipe(
+        tap(updatedUser => {
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+          this.currentUserSignal.set(updatedUser);
+        })
+      );
   }
 
   public updateCoins(coins: number) {
