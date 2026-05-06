@@ -284,6 +284,90 @@ h3 {
   line-height: 1.6;
 }
 
+.custom-coin-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1rem;
+  align-items: center;
+  border-radius: 28px;
+  padding: 1.2rem;
+}
+
+.custom-coin-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.custom-coin-info h2 {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.custom-coin-info p {
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.6;
+}
+
+.custom-coin-info strong {
+  color: var(--gold-light, #f8d76b);
+}
+
+.custom-coin-buy {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.custom-coin-buy label {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.custom-coin-buy input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  outline: none;
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 1rem;
+}
+
+.custom-coin-buy input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.custom-coin-buy input:focus {
+  border-color: rgba(168, 85, 247, 0.55);
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.12);
+}
+
+.custom-coin-buy button {
+  border: 0;
+  border-radius: 999px;
+  min-height: 3rem;
+  padding: 0.8rem 1.1rem;
+  cursor: pointer;
+  color: #0b0b0f;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold, #d4af37), #7c3aed);
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.28);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.custom-coin-buy button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(168, 85, 247, 0.38);
+}
+
 /* COIN CARDS */
 
 .coin-grid {
