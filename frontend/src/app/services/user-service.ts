@@ -70,6 +70,30 @@ export class UserService {
     );
   }
 
+  public decreaseCoins(coins: number) {
+    const user = this.currentUserSignal();
+
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    const newCoins = user.coins - coins;
+
+    if (newCoins < 0) {
+      throw new Error('Not enough coins');
+    }
+
+    return this.httpClient
+      .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
+        coins: newCoins
+      })
+      .pipe(tap(updatedUser => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.currentUserSignal.set(updatedUser);
+      })
+    );
+  }
+
   public buyPremium() {
     const userId = this.currentUser()?.id;
 

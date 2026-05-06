@@ -17,7 +17,7 @@ export class NavBar {
   protected username = this.service.username;
   protected coins = this.service.coins;
   protected premium = this.service.premium;
-  
+
   protected isPremium = computed(() => Number(this.premium()) === 1);
   
   logOut() {
