@@ -21,6 +21,6 @@ export const routes: Routes = [
   { path: 'user-edit-page', component: UserEditPage, canActivate: [authGuard] },
   { path: 'leaderboard', component: Leaderboard, canActivate: [authGuard] },
   { path: 'shop', component: Shop, canActivate: [authGuard] },
-  {path : 'games/roulette', loadComponent: () => import('./roulette-game/roulette-game').then(m => m.RouletteGame), canActivate: [authGuard]},
+  {path : 'games/roulette', loadComponent: () => import('./roulette-game/roulette-game').then(m => m.RouletteComponent), canActivate: [authGuard]},
   { path: '**', redirectTo: 'home' }
 ];
