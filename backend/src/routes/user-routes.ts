@@ -30,7 +30,7 @@ authRouter.post('/users', (req, res) => {
 
   const newUser = db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses
+      SELECT id, username, coins, premium
       FROM users
       WHERE id = ?
     `)
@@ -170,7 +170,7 @@ authRouter.patch('/users/:id/premium', (req, res) => {
   `).run(premium, id);
 
   const updatedUser = db.prepare(`
-    SELECT id, username, coins, premium, wins, losses
+    SELECT id, username, coins, premium
     FROM users
     WHERE id = ?
   `).get(id);

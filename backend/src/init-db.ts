@@ -35,7 +35,6 @@ try {
   // Column might already exist, ignore error
 }
 
-console.log('Database tables created successfully.');
 console.log('Database tables created/updated successfully.');
 
 db.close();
