@@ -7,7 +7,8 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    coins INTEGER NOT NULL DEFAULT 0
+    premium INTEGER NOT NULL DEFAULT 0,
+    coins INTEGER NOT NULL DEFAULT 1000
   );
 `);
 

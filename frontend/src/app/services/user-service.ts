@@ -6,6 +6,7 @@ export type User = {
   id: number;
   username: string;
   coins: number;
+  premium: number;
 };
 
 @Injectable({
@@ -26,6 +27,8 @@ export class UserService {
   public username = computed(() => this.currentUserSignal()?.username ?? 'User');
 
   public coins = computed(() => this.currentUserSignal()?.coins ?? 0);
+
+  public premium = computed(() => this.currentUserSignal()?.premium ?? 0);
 
   public logIn(username: string, password: string) {
     return this.httpClient
@@ -63,6 +66,36 @@ export class UserService {
         tap(updatedUser => {
         localStorage.setItem('user', JSON.stringify(updatedUser));
         this.currentUserSignal.set(updatedUser);
+      })
+    );
+  }
+
+  public buyPremium() {
+    const userId = this.currentUser()?.id;
+
+    return this.httpClient
+      .patch<User>(`http://localhost:3000/auth/users/${userId}/premium`, {
+        premium: 1
+      })
+      .pipe(
+      tap(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSignal.set(user);
+        })
+      );
+  }
+
+  public unbuyPremium() {
+    const userId = this.currentUser()?.id;
+
+    return this.httpClient
+      .patch<User>(`http://localhost:3000/auth/users/${userId}/premium`, {
+        premium: 0
+      })
+      .pipe(
+      tap(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSignal.set(user);
       })
     );
   }
