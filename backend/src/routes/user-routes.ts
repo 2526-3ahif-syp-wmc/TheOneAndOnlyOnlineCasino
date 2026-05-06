@@ -112,7 +112,7 @@ authRouter.patch('/users/:id/premium', (req, res) => {
 
 // LEADERBOARD
 authRouter.get('/leaderboard', (req, res) => {
-  const { type, period } = req.query; // type: 'wins' or 'losses', period: 'all'
+  const { type, period } = req.query;
 
   let orderBy = 'coins DESC'; // for wins, highest coins
   if (type === 'losses') {
