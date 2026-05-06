@@ -3,6 +3,7 @@ import { ContactPage } from './contact-page/contact-page';
 import { Home } from './home/home';
 import { Auth } from './auth/auth';
 import { UserProfile } from './user-profile/user-profile';
+import { UserEditPage } from './user-edit-page/user-edit-page';
 import { Games } from './games/games';
 import { Leaderboard } from './leaderboard/leaderboard';
 import { Shop } from './shop/shop';
@@ -15,6 +16,7 @@ export const routes: Routes = [
     {path: 'games', component: Games},
     {path: 'contact-page', component: ContactPage },
     {path: 'user-profile', component: UserProfile },
+    {path: 'user-edit-page', component: UserEditPage },
     {path: 'leaderboard', component: Leaderboard },
     {path: 'shop', component: Shop}
 ];

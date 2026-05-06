@@ -1,1 +1,121 @@
+<<<<<<< HEAD
 <p>Cancel EduBet+ Subscription</p>
+=======
+<div class="profile-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <section class="profile-hero card-glass">
+    <div class="profile-header">
+      <span class="eyebrow">Your Account</span>
+      <h1>Player Profile</h1>
+      <p>Manage your account, view your stats, and track your gaming progress.</p>
+    </div>
+  </section>
+
+  <div class="profile-grid">
+    <section class="profile-card card-glass">
+      <div class="card-content">
+        <div class="profile-avatar">
+          <span>{{ userService.username().charAt(0).toUpperCase() }}</span>
+        </div>
+
+        <div class="profile-info">
+          <div>
+            <span class="info-label">Username</span>
+            <h2>{{ userService.username() }}</h2>
+          </div>
+
+          <div class="coin-display">
+            <span class="info-label">Current Balance</span>
+            <div class="coin-amount">
+              <span class="coin-icon">💰</span>
+              <strong>{{ userService.coins() }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <a routerLink="/user-edit-page" class="action action-secondary">Edit Profile</a>
+        <button type="button" class="action action-secondary" (click)="logout()">Logout</button>
+      </div>
+    </section>
+
+    <section class="stats-section card-glass">
+      <div class="section-title">
+        <span class="eyebrow">Account Stats</span>
+        <h2>Your Gaming Activity</h2>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <strong>{{ totalGamesPlayed }}</strong>
+          <span>Games Played</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>{{ totalWins }}</strong>
+          <span>Total Wins</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>{{ winRate }}%</strong>
+          <span>Win Rate</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>{{ totalCoinsWon }}</strong>
+          <span>Coins Won</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="activity-section card-glass">
+    <div class="section-title">
+      <span class="eyebrow">Recent Activity</span>
+      <h2>Your Game Sessions</h2>
+    </div>
+
+    <div class="activity-list">
+      <article class="activity-item">
+        <div class="activity-game">
+          <span class="game-icon">♠</span>
+          <div>
+            <h3>Blackjack</h3>
+            <p>Won 150 coins</p>
+          </div>
+        </div>
+        <span class="activity-time">2 hours ago</span>
+      </article>
+
+      <article class="activity-item">
+        <div class="activity-game">
+          <span class="game-icon">●</span>
+          <div>
+            <h3>Roulette</h3>
+            <p>Lost 50 coins</p>
+          </div>
+        </div>
+        <span class="activity-time">5 hours ago</span>
+      </article>
+
+      <article class="activity-item">
+        <div class="activity-game">
+          <span class="game-icon">★</span>
+          <div>
+            <h3>Slots</h3>
+            <p>Won 300 coins</p>
+          </div>
+        </div>
+        <span class="activity-time">1 day ago</span>
+      </article>
+    </div>
+  </section>
+
+  <div class="profile-footer">
+    <a routerLink="/games" class="action action-primary">Play More Games</a>
+  </div>
+</div>
+>>>>>>> 65aba2d2c742dac3236ff631d54336d2fb6db99a
