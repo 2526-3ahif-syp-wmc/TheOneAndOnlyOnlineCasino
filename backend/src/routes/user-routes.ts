@@ -200,7 +200,7 @@ authRouter.get('/leaderboard', (req, res) => {
 });
 
 // TOP PLAYERS
-authRouter.get('/top-players', (req, res) => {
+authRouter.get('/top-players', (_, res) => {
   const users = db
     .prepare(`
       SELECT id, username, coins
