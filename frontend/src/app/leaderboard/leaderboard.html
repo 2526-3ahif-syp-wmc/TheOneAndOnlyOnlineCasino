@@ -1,97 +1,73 @@
-<div class="leaderboard-container">
-  <!-- Header -->
-  <div class="leaderboard-header">
-    <h1 class="leaderboard-title">🏆 CASINO LEADERBOARD 🏆</h1>
-    <p class="leaderboard-subtitle">Top Players & Rankings</p>
-  </div>
+<div class="leaderboard-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
 
-  <div class="leaderboard-grid">
-    <!-- Top Wins Today -->
-    <div class="leaderboard-section wins-today">
+  <section class="leaderboard-header card-glass">
+    <div class="header-content">
+      <span class="eyebrow">Casino Leaderboard</span>
+      <h1>Top Players</h1>
+      <p>Check out the highest wins and biggest losses in the casino.</p>
+    </div>
+  </section>
+
+  <section class="leaderboard-grid">
+    <div class="leaderboard-section card-glass">
       <div class="section-header">
-        <h2>🎰 Top Wins Today</h2>
-        <span class="live-badge">LIVE</span>
+        <div class="header-title">
+          <h2>Top Wins</h2>
+          <div class="period-selector-inline">
+            <select [(ngModel)]="selectedWinsPeriod" (ngModelChange)="onWinsPeriodChange($event)">
+              <option *ngFor="let period of periods" [value]="period.value">{{ period.label }}</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div class="leaderboard-list">
-        @for (player of topWinsToday; track $index) {
-          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
-            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
-            <div class="player-info">
-              <span class="player-name">{{ player.name }}</span>
-              <span class="player-level">Lvl {{ player.level }}</span>
-            </div>
-            <div class="player-value">
-              <span class="coin-icon">💰</span>
-              <span class="amount">{{ player.value | number }}</span>
-            </div>
+        <div class="leaderboard-item" *ngFor="let user of topWins(); let i = index">
+          <div class="rank">#{{ i + 1 }}</div>
+          <div class="player-info">
+            <span class="username">{{ user.username }}</span>
+            <span class="coins">{{ user.coins | number }} EC</span>
           </div>
-        }
+        </div>
       </div>
     </div>
 
-    <!-- Top Losses Today -->
-    <div class="leaderboard-section losses-today">
+    <div class="leaderboard-section card-glass">
       <div class="section-header">
-        <h2>📉 Top Losses Today</h2>
-        <span class="live-badge">LIVE</span>
+        <div class="header-title">
+          <h2>Top Losses</h2>
+          <div class="period-selector-inline">
+            <select [(ngModel)]="selectedLossesPeriod" (ngModelChange)="onLossesPeriodChange($event)">
+              <option *ngFor="let period of periods" [value]="period.value">{{ period.label }}</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div class="leaderboard-list">
-        @for (player of topLossesToday; track $index) {
-          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
-            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
-            <div class="player-info">
-              <span class="player-name">{{ player.name }}</span>
-              <span class="player-level">Lvl {{ player.level }}</span>
-            </div>
-            <div class="player-value loss">
-              <span class="coin-icon">📊</span>
-              <span class="amount">{{ player.value | number }}</span>
-            </div>
+        <div class="leaderboard-item" *ngFor="let user of topLosses(); let i = index">
+          <div class="rank">#{{ i + 1 }}</div>
+          <div class="player-info">
+            <span class="username">{{ user.username }}</span>
+            <span class="coins">{{ user.coins | number }} EC</span>
           </div>
-        }
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Highest Levels -->
-    <div class="leaderboard-section highest-level">
-      <div class="section-header">
-        <h2>⭐ Highest Levels</h2>
-      </div>
-      <div class="leaderboard-list">
-        @for (player of highestLevels; track $index) {
-          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
-            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
-            <div class="player-info">
-              <span class="player-name">{{ player.name }}</span>
-            </div>
-            <div class="level-value">
-              <span class="level-badge">Level {{ player.level }}</span>
-            </div>
-          </div>
-        }
+  <section class="top-players-section card-glass">
+    <div class="section-header">
+      <h2>Top Players</h2>
+    </div>
+    <div class="leaderboard-list">
+      <div class="leaderboard-item" *ngFor="let user of topPlayers(); let i = index">
+        <div class="rank">#{{ i + 1 }}</div>
+        <div class="player-info">
+          <span class="username">{{ user.username }}</span>
+          <span class="coins">{{ user.coins | number }} EC</span>
+        </div>
       </div>
     </div>
-
-    <!-- Top Wins All Time -->
-    <div class="leaderboard-section wins-all-time">
-      <div class="section-header">
-        <h2>👑 All Time Legends</h2>
-      </div>
-      <div class="leaderboard-list">
-        @for (player of topWinsAllTime; track $index) {
-          <div class="leaderboard-item" [ngClass]="getRankClass($index)">
-            <div class="rank-badge">{{ getMedalEmoji($index) }}</div>
-            <div class="player-info">
-              <span class="player-name">{{ player.name }}</span>
-              <span class="player-level">Lvl {{ player.level }}</span>
-            </div>
-            <div class="player-value legendary">
-              <span class="coin-icon">✨</span>
-              <span class="amount">{{ player.value | number }}</span>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  </div>
+  </section>
 </div>

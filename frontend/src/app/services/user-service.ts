@@ -124,6 +124,14 @@ export class UserService {
     );
   }
 
+  public getLeaderboard(type: 'wins' | 'losses', period: string = 'all') {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/leaderboard?type=${type}&period=${period}`);
+  }
+
+  public getTopPlayers() {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/top-players`);
+  }
+
   public logOut() {
     localStorage.removeItem('user');
     this.currentUserSignal.set(null);
