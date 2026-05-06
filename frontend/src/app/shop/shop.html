@@ -102,6 +102,29 @@
           </article>
         }
       </div>
+      <div class="custom-coin-card card-glass">
+        <div class="custom-coin-info">
+            <span class="eyebrow">Custom Amount</span>
+            <h2>Buy coins</h2>
+            <p>Choose any amount you want. Normal price: <strong>1 coin = 1 cent</strong>.</p>
+        </div>
+
+        <div class="custom-coin-buy">
+            <label for="customCoins">Coins amount</label>
+
+            <input
+            #customCoins
+            id="customCoins"
+            type="number"
+            min="1"
+            placeholder="Example: 250"
+            />
+
+            <button type="button" (click)="buyCustomCoins(customCoins.value)">
+            Buy coins
+             </button>
+            </div>
+        </div>
     </section>
   </main>
 </div>

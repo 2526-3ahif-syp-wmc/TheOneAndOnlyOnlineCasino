@@ -3,17 +3,7 @@ import { db } from '../databases/db';
 
 export const authRouter = Router();
 
-authRouter.get('/users', (_, res) => {
-  const users = db
-    .prepare(`
-      SELECT id, username, coins
-      FROM users
-    `)
-    .all();
-
-  return res.json(users);
-});
-
+// REGISTER
 authRouter.post('/users', (req, res) => {
    const { username, password, coins } = req.body;
 
@@ -49,6 +39,7 @@ authRouter.post('/users', (req, res) => {
   return res.status(201).json(newUser);
 });
 
+// LOG IN
 authRouter.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -69,6 +60,7 @@ authRouter.post('/login', (req, res) => {
   return res.json(user);
 });
 
+// UPDATE COINS
 authRouter.patch('/users/:id/coins', (req, res) => {
   const userId = Number(req.params.id);
   const { coins } = req.body;
@@ -118,54 +110,29 @@ authRouter.patch('/users/:id/premium', (req, res) => {
   return res.json(updatedUser);
 });
 
-// LEADERBOARD - GET BY TYPE AND PERIOD
-authRouter.get('/leaderboard/:type', (req, res) => {
-  const { type } = req.params;
-  const { period } = req.query;
+// LEADERBOARD
+authRouter.get('/leaderboard', (req, res) => {
+  const { type, period } = req.query;
 
-  if (type !== 'wins' && type !== 'losses') {
-    return res.status(400).json({
-      message: 'Invalid type. Must be "wins" or "losses"'
-    });
-  }
-
-  // Determine the date filter based on period
-  let dateFilter = '1=1'; // default: all time
-  if (period === 'today') {
-    dateFilter = `DATE(gh.created_at) = DATE('now')`;
-  } else if (period === 'last-week') {
-    dateFilter = `DATE(gh.created_at) >= DATE('now', '-7 days')`;
-  } else if (period === 'last-month') {
-    dateFilter = `DATE(gh.created_at) >= DATE('now', '-30 days')`;
-  }
-
-  let orderBy = 'total DESC'; // for wins, highest count
-  let resultFilter = "'win'"; // default to wins
-  
+  let orderBy = 'coins DESC'; // for wins, highest coins
   if (type === 'losses') {
-    orderBy = 'total DESC'; // for losses, we still want most losses at top
-    resultFilter = "'loss'";
+    orderBy = 'coins ASC'; // for losses, lowest coins (most spent)
   }
 
-  const query = `
-    SELECT 
-      u.id,
-      u.username,
-      COALESCE(COUNT(gh.id), 0) as coins
-    FROM users u
-    LEFT JOIN game_history gh ON u.id = gh.user_id AND gh.result = ${resultFilter} AND ${dateFilter}
-    GROUP BY u.id, u.username
-    ORDER BY ${orderBy}
-    LIMIT 10
-  `;
-
-  const users = db.prepare(query).all();
+  const users = db
+    .prepare(`
+      SELECT id, username, coins
+      FROM users
+      ORDER BY ${orderBy}
+      LIMIT 10
+    `)
+    .all();
 
   return res.json(users);
 });
 
 // TOP PLAYERS
-authRouter.get('/leaderboard/top-players', (req, res) => {
+authRouter.get('/top-players', (req, res) => {
   const users = db
     .prepare(`
       SELECT id, username, coins

@@ -32,7 +32,14 @@ db.exec(`
   );
 `);
 
+// Add premium column if it doesn't exist
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN premium INTEGER NOT NULL DEFAULT 0;`);
+} catch (error) {
+  // Column might already exist, ignore error
+}
+
 console.log('Database tables created successfully.');
-console.log('Database tables created successfully.');
+console.log('Database tables created/updated successfully.');
 
 db.close();

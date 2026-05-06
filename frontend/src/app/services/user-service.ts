@@ -6,6 +6,7 @@ export type User = {
   id: number;
   username: string;
   coins: number;
+  premium: number;
 };
 
 @Injectable({
@@ -27,6 +28,8 @@ export class UserService {
 
   public coins = computed(() => this.currentUserSignal()?.coins ?? 0);
 
+  public premium = computed(() => this.currentUserSignal()?.premium ?? 0);
+
   public logIn(username: string, password: string) {
     return this.httpClient
       .post<User>(`${this.apiUrl}/login`, {
@@ -45,7 +48,6 @@ export class UserService {
     return this.httpClient.post<User>(`${this.apiUrl}/users`, {
       username,
       password,
-      coins: 1000
     });
   }
 
@@ -66,6 +68,68 @@ export class UserService {
         this.currentUserSignal.set(updatedUser);
       })
     );
+  }
+
+  public decreaseCoins(coins: number) {
+    const user = this.currentUserSignal();
+
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    const newCoins = user.coins - coins;
+
+    if (newCoins < 0) {
+      throw new Error('Not enough coins');
+    }
+
+    return this.httpClient
+      .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
+        coins: newCoins
+      })
+      .pipe(tap(updatedUser => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.currentUserSignal.set(updatedUser);
+      })
+    );
+  }
+
+  public buyPremium() {
+    const userId = this.currentUser()?.id;
+
+    return this.httpClient
+      .patch<User>(`http://localhost:3000/auth/users/${userId}/premium`, {
+        premium: 1
+      })
+      .pipe(
+      tap(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSignal.set(user);
+        })
+      );
+  }
+
+  public unbuyPremium() {
+    const userId = this.currentUser()?.id;
+
+    return this.httpClient
+      .patch<User>(`http://localhost:3000/auth/users/${userId}/premium`, {
+        premium: 0
+      })
+      .pipe(
+      tap(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSignal.set(user);
+      })
+    );
+  }
+
+  public getLeaderboard(type: 'wins' | 'losses', period: string = 'all') {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/leaderboard?type=${type}&period=${period}`);
+  }
+
+  public getTopPlayers() {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/top-players`);
   }
 
   public logOut() {

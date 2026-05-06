@@ -1,21 +1,73 @@
-<div class="container">
-  <h1 class="glow-text">🏆 Leaderboard</h1>
+<div class="leaderboard-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
 
-  <div class="card leaderboard">
-    <div class="leaderboard-header">
-      <span>#</span>
-      <span>Player</span>
-      <span>Coins</span>
+  <section class="leaderboard-header card-glass">
+    <div class="header-content">
+      <span class="eyebrow">Casino Leaderboard</span>
+      <h1>Top Players</h1>
+      <p>Check out the highest wins and biggest losses in the casino.</p>
+    </div>
+  </section>
+
+  <section class="leaderboard-grid">
+    <div class="leaderboard-section card-glass">
+      <div class="section-header">
+        <div class="header-title">
+          <h2>Top Wins</h2>
+          <div class="period-selector-inline">
+            <select [(ngModel)]="selectedWinsPeriod" (ngModelChange)="onWinsPeriodChange($event)">
+              <option *ngFor="let period of periods" [value]="period.value">{{ period.label }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="leaderboard-list">
+        <div class="leaderboard-item" *ngFor="let user of topWins(); let i = index">
+          <div class="rank">#{{ i + 1 }}</div>
+          <div class="player-info">
+            <span class="username">{{ user.username }}</span>
+            <span class="coins">{{ user.coins | number }} EC</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    @for (player of players; track $index) {
-      <div class="leaderboard-row">
-        <span class="rank" [ngClass]="getRankClass($index)">
-          {{ $index + 1 }}
-        </span>
-        <span class="name">{{ player.name }}</span>
-        <span class="coins">{{ player.coins }}</span>
+    <div class="leaderboard-section card-glass">
+      <div class="section-header">
+        <div class="header-title">
+          <h2>Top Losses</h2>
+          <div class="period-selector-inline">
+            <select [(ngModel)]="selectedLossesPeriod" (ngModelChange)="onLossesPeriodChange($event)">
+              <option *ngFor="let period of periods" [value]="period.value">{{ period.label }}</option>
+            </select>
+          </div>
+        </div>
       </div>
-    }
-  </div>
+      <div class="leaderboard-list">
+        <div class="leaderboard-item" *ngFor="let user of topLosses(); let i = index">
+          <div class="rank">#{{ i + 1 }}</div>
+          <div class="player-info">
+            <span class="username">{{ user.username }}</span>
+            <span class="coins">{{ user.coins | number }} EC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="top-players-section card-glass">
+    <div class="section-header top-players-header">
+      <h2>Highest Level Players</h2>
+    </div>
+    <div class="leaderboard-list">
+      <div class="leaderboard-item" *ngFor="let user of topPlayers(); let i = index">
+        <div class="rank">#{{ i + 1 }}</div>
+        <div class="player-info">
+          <span class="username">{{ user.username }}</span>
+          <span class="coins">{{ user.coins | number }} EC</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
