@@ -7,6 +7,7 @@
 
 html {
   height: 100%;
+  scroll-behavior: smooth;
   @include mat.theme(
     (
       color: (
@@ -72,6 +73,10 @@ body {
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 :root {
   --bg-primary: #0b0b0f;
