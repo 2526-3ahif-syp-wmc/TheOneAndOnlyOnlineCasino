@@ -7,15 +7,7 @@ export type User = {
   username: string;
   coins: number;
   premium: number;
-  wins?: number;
-  losses?: number;
 };
-
-export interface LeaderboardEntry {
-  id: number;
-  username: string;
-  coins: number;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -78,73 +70,66 @@ export class UserService {
     );
   }
 
-  public updateProfile(username: string, currentPassword: string, newPassword?: string) {
+  public decreaseCoins(coins: number) {
     const user = this.currentUserSignal();
 
     if (!user) {
       throw new Error('No user logged in');
     }
 
-    const body: any = { username, currentPassword };
+    const newCoins = user.coins - coins;
 
-    if (newPassword) {
-      body.newPassword = newPassword;
+    if (newCoins < 0) {
+      throw new Error('Not enough coins');
     }
 
     return this.httpClient
-      .patch<User>(`${this.apiUrl}/users/${user.id}`, body)
-      .pipe(
-        tap(updatedUser => {
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-          this.currentUserSignal.set(updatedUser);
-        })
-      );
-  }
-
-  public unsubscribeEduBet() {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
-
-    return this.httpClient
-      .patch<User>(`${this.apiUrl}/users/${user.id}`, { edubet: 0 })
-      .pipe(
-        tap(updatedUser => {
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-          this.currentUserSignal.set(updatedUser);
-        })
-      );
-  }
-
-  public getLeaderboard(type: 'wins' | 'losses', period: string) {
-    return this.httpClient.get<LeaderboardEntry[]>(
-      `${this.apiUrl}/leaderboard/${type}?period=${period}`
-    );
-  }
-
-  public getTopPlayers() {
-    return this.httpClient.get<LeaderboardEntry[]>(
-      `${this.apiUrl}/leaderboard/top-players`
+      .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
+        coins: newCoins
+      })
+      .pipe(tap(updatedUser => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.currentUserSignal.set(updatedUser);
+      })
     );
   }
 
   public buyPremium() {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
+    const userId = this.currentUser()?.id;
 
     return this.httpClient
-      .patch<User>(`${this.apiUrl}/users/${user.id}/premium`, {})
+      .patch<User>(`http://localhost:3000/auth/users/${userId}/premium`, {
+        premium: 1
+      })
       .pipe(
-        tap(updatedUser => {
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-          this.currentUserSignal.set(updatedUser);
+      tap(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSignal.set(user);
         })
       );
+  }
+
+  public unbuyPremium() {
+    const userId = this.currentUser()?.id;
+
+    return this.httpClient
+      .patch<User>(`http://localhost:3000/auth/users/${userId}/premium`, {
+        premium: 0
+      })
+      .pipe(
+      tap(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSignal.set(user);
+      })
+    );
+  }
+
+  public getLeaderboard(type: 'wins' | 'losses', period: string = 'all') {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/leaderboard?type=${type}&period=${period}`);
+  }
+
+  public getTopPlayers() {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/top-players`);
   }
 
   public logOut() {

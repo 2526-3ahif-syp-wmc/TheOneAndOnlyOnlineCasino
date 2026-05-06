@@ -56,26 +56,28 @@ export class UserEditPage implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
 
-    const username = this.editForm.get('username')?.value;
-    const currentPassword = this.editForm.get('currentPassword')?.value;
+    // Simulate API call
+    setTimeout(() => {
+      try {
+        const username = this.editForm.get('username')?.value;
+        const currentUser = this.userService.currentUser();
 
-    const newPasswordValue = this.editForm.get('newPassword')?.value;
+        if (currentUser) {
+          // Update local storage with new username
+          const updatedUser = { ...currentUser, username };
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+          this.userService['currentUserSignal'].set(updatedUser);
 
-    this.userService.updateProfile(username, currentPassword, newPasswordValue)
-      .subscribe({
-        next: () => {
           this.successMessage = 'Profile updated successfully!';
           setTimeout(() => {
             window.location.href = '/user-profile';
-          }, 1200);
-        },
-        error: (err) => {
-          const msg = err?.error?.message ?? 'Failed to update profile. Please try again.';
-          this.errorMessage = msg;
-        },
-        complete: () => {
-          this.isSubmitting = false;
+          }, 1500);
         }
-      });
+      } catch (error) {
+        this.errorMessage = 'Failed to update profile. Please try again.';
+      } finally {
+        this.isSubmitting = false;
+      }
+    }, 800);
   }
 }

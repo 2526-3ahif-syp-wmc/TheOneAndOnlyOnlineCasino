@@ -22,21 +22,4 @@ export class UserProfile {
     this.userService.logOut();
     this.router.navigate(['/auth'])
   }
-
-  unsubscribe() {
-    try {
-      this.userService.unsubscribeEduBet().subscribe({
-        next: () => {
-          // simple UI feedback: reload to reflect new state
-          window.location.reload();
-        },
-        error: (err) => {
-          const msg = err?.error?.message ?? 'Failed to unsubscribe';
-          alert(msg);
-        }
-      });
-    } catch (e) {
-      alert('Unable to unsubscribe');
-    }
-  }
 }
