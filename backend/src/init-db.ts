@@ -7,11 +7,17 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    premium INTEGER NOT NULL DEFAULT 0,
     coins INTEGER NOT NULL DEFAULT 1000
   );
 `);
 
-console.log('Users table created successfully.');
+// Add premium column if it doesn't exist
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN premium INTEGER NOT NULL DEFAULT 0;`);
+} catch (error) {
+  // Column might already exist, ignore error
+}
+
+console.log('Users table created/updated successfully.');
 
 db.close();
