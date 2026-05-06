@@ -16,7 +16,15 @@
         </div>
 
         <div class="nav-actions">
-            <button routerLink="/shop">Get EduBet+</button>
+            @if (isPremium()) {
+                <button disabled class="premium-active">
+                EduBet+ Active
+                </button>
+            } @else {
+                <button routerLink="/shop">
+                Get EduBet+
+                </button>
+            }
             <a routerLink="/user-profile" class="nav-status">
                 <span class="user-avatar" aria-hidden="true">U</span>
                 <span class="user-meta">

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../services/user-service';
 import { firstValueFrom } from 'rxjs';
@@ -16,6 +16,9 @@ export class NavBar {
 
   protected username = this.service.username;
   protected coins = this.service.coins;
+  protected premium = this.service.premium;
+
+  protected isPremium = computed(() => Number(this.premium()) === 1);
   
   logOut() {
     this.service.logOut();

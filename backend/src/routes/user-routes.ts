@@ -3,17 +3,7 @@ import { db } from '../databases/db';
 
 export const authRouter = Router();
 
-authRouter.get('/users', (_, res) => {
-  const users = db
-    .prepare(`
-      SELECT id, username, coins
-      FROM users
-    `)
-    .all();
-
-  return res.json(users);
-});
-
+// REGISTER
 authRouter.post('/users', (req, res) => {
    const { username, password, coins } = req.body;
 
@@ -49,12 +39,13 @@ authRouter.post('/users', (req, res) => {
   return res.status(201).json(newUser);
 });
 
+// LOG IN
 authRouter.post('/login', (req, res) => {
   const { username, password } = req.body;
 
   const user = db
     .prepare(`
-      SELECT id, username, coins
+      SELECT id, username, coins, premium
       FROM users
       WHERE username = ? AND password = ?
     `)
@@ -69,6 +60,7 @@ authRouter.post('/login', (req, res) => {
   return res.json(user);
 });
 
+// UPDATE COINS
 authRouter.patch('/users/:id/coins', (req, res) => {
   const userId = Number(req.params.id);
   const { coins } = req.body;
@@ -89,7 +81,7 @@ authRouter.patch('/users/:id/coins', (req, res) => {
 
   const updatedUser = db
     .prepare(`
-      SELECT id, username, coins
+      SELECT id, username, coins, premium
       FROM users
       WHERE id = ?
     `)
@@ -98,130 +90,57 @@ authRouter.patch('/users/:id/coins', (req, res) => {
   return res.json(updatedUser);
 });
 
-authRouter.patch('/users/:id', (req, res) => {
-  const userId = Number(req.params.id);
-  const { username, currentPassword, newPassword, edubet } = req.body;
+// PREMIUM
+authRouter.patch('/users/:id/premium', (req, res) => {
+  const id = Number(req.params.id);
+  const { premium } = req.body;
 
-  const existing = db
-    .prepare(`
-      SELECT id, username, password, coins
-      FROM users
-      WHERE id = ?
-    `)
-    .get(userId);
+  db.prepare(`
+    UPDATE users
+    SET premium = ?
+    WHERE id = ?
+  `).run(premium, id);
 
-  if (!existing) {
-    return res.status(404).json({ message: 'User not found' });
+  const updatedUser = db.prepare(`
+    SELECT id, username, coins, premium
+    FROM users
+    WHERE id = ?
+  `).get(id);
+
+  return res.json(updatedUser);
+});
+
+// LEADERBOARD
+authRouter.get('/leaderboard', (req, res) => {
+  const { type, period } = req.query;
+
+  let orderBy = 'coins DESC'; // for wins, highest coins
+  if (type === 'losses') {
+    orderBy = 'coins ASC'; // for losses, lowest coins (most spent)
   }
 
-  // If a password change or validation is requested, verify current password
-  if (currentPassword) {
-    if (existing.password !== currentPassword) {
-      return res.status(401).json({ message: 'Current password is incorrect' });
-    }
-  }
-
-  // If username is changing, ensure uniqueness
-  if (username && username !== existing.username) {
-    const conflict = db
-      .prepare(`
-        SELECT id
-        FROM users
-        WHERE username = ? AND id != ?
-      `)
-      .get(username, userId);
-
-    if (conflict) {
-      return res.status(409).json({ message: 'Username already exists' });
-    }
-  }
-
-  // If edubet flag is provided, ensure column exists (add if missing)
-  let hasEduColumn = db
-    .prepare("PRAGMA table_info(users)")
-    .all()
-    .some((c: any) => c.name === 'edubet');
-
-  if (edubet !== undefined && !hasEduColumn) {
-    try {
-      db.exec(`ALTER TABLE users ADD COLUMN edubet INTEGER NOT NULL DEFAULT 1`);
-      hasEduColumn = true;
-    } catch (e) {
-      // ignore - column may have been added concurrently
-    }
-  }
-
-  const updates: Array<string> = [];
-  const params: Array<any> = [];
-
-  if (username && username !== existing.username) {
-    updates.push('username = ?');
-    params.push(username);
-  }
-
-  if (newPassword) {
-    updates.push('password = ?');
-    params.push(newPassword);
-  }
-
-  if (edubet !== undefined) {
-    updates.push('edubet = ?');
-    params.push(edubet ? 1 : 0);
-  }
-
-  if (updates.length === 0) {
-    // Nothing to update; return current user info (include edubet if present)
-    if (hasEduColumn) {
-      const user = db
-        .prepare(`
-          SELECT id, username, coins, edubet
-          FROM users
-          WHERE id = ?
-        `)
-        .get(userId);
-
-      return res.json(user);
-    }
-
-    const user = db
-      .prepare(`
-        SELECT id, username, coins
-        FROM users
-        WHERE id = ?
-      `)
-      .get(userId);
-
-    return res.json(user);
-  }
-
-  const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
-  params.push(userId);
-
-  const result = db.prepare(sql).run(...params);
-
-  if (result.changes === 0) {
-    return res.status(500).json({ message: 'Failed to update user' });
-  }
-
-  if (hasEduColumn) {
-    const updatedUser = db
-      .prepare(`
-        SELECT id, username, coins, edubet
-        FROM users
-        WHERE id = ?
-      `)
-      .get(userId);
-
-    return res.json(updatedUser);
-  }
-
-  const updatedUser = db
+  const users = db
     .prepare(`
       SELECT id, username, coins
       FROM users
-      WHERE id = ?
+      ORDER BY ${orderBy}
+      LIMIT 10
     `)
-    .get(userId);
+    .all();
 
-  return res.json(updatedUser);
+  return res.json(users);
+});
+
+// TOP PLAYERS
+authRouter.get('/top-players', (req, res) => {
+  const users = db
+    .prepare(`
+      SELECT id, username, coins
+      FROM users
+      ORDER BY coins DESC
+      LIMIT 10
+    `)
+    .all();
+
+  return res.json(users);
 });

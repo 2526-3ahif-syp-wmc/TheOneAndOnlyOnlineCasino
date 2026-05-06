@@ -88,10 +88,22 @@ export class Shop {
     console.log(err);
     alert('Buying custom coins failed');
   }
-}
+ }
 
-  protected buySubscription() {
-    alert('You bought EduBet+ Subscription for 9.99€ per month');
+  protected async buySubscription() {
+    if(this.service.premium() === 1) {
+      alert('You already own Edubet+ Subscription!');
+      return;
+    }
+    
+    try {
+      await firstValueFrom(this.service.buyPremium());
+
+      alert('You bought EduBet+ Subscription for 9.99€ per month');
+    } catch (err) {
+      console.log(err);
+      alert('Buying EduBet+ failed');
+    }
   }
 
   protected getNormalPrice(coins: number) {
