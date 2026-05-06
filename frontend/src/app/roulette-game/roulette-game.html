@@ -1,1 +1,55 @@
-<p>roulette-game works!</p>
+<div class="roulette-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <section class="game-section card-glass">
+    <h1>Roulette Game</h1>
+
+    <div class="wheel-container">
+      <div class="wheel" [class.spinning]="spinning()">
+        <div class="number" *ngFor="let num of rouletteNumbers; let i = index"
+             [style.transform]="'rotate(' + (i * 360 / rouletteNumbers.length) + 'deg) translateY(-120px)'"
+             [style.background-color]="num.color">
+          {{ num.number }}
+        </div>
+      </div>
+      <div class="pointer"></div>
+    </div>
+
+    <div class="bet-section">
+      <mat-form-field>
+        <mat-label>Bet Amount</mat-label>
+        <input matInput type="number" [(ngModel)]="betAmount" min="1">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Bet Type</mat-label>
+        <mat-select [(ngModel)]="betType">
+          <mat-option value="number">Number</mat-option>
+          <mat-option value="color">Color</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="betType() === 'number'">
+        <mat-label>Bet Number (0-36)</mat-label>
+        <input matInput type="number" [(ngModel)]="betNumber" min="0" max="36">
+      </mat-form-field>
+
+      <mat-form-field *ngIf="betType() === 'color'">
+        <mat-label>Bet Color</mat-label>
+        <mat-select [(ngModel)]="betColor">
+          <mat-option value="red">Red</mat-option>
+          <mat-option value="black">Black</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="placeBet()" [disabled]="spinning()">Place Bet & Spin</button>
+    </div>
+
+    <div class="result-section">
+      <p *ngIf="result()">Result: {{ result()?.number }} ({{ result()?.color }})</p>
+      <p>{{ message() }}</p>
+      <p>Your Balance: {{ coins() }} EC</p>
+    </div>
+  </section>
+</div>
