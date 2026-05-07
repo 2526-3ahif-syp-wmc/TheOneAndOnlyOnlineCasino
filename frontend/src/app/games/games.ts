@@ -80,26 +80,82 @@ export class Games {
     route: '/games/plinko',
   };
 
-  readonly gameRows: GameRow[] = [
-    {
-      title: 'Continue playing',
-      description: 'Jump back into the games you played recently.',
-      games: [this.blackjack, this.mines, this.slots],
-    },
-    {
-      title: 'Favorite games',
-      description: 'Your most played EduBet tables and quick rounds.',
-      games: [this.blackjack, this.roulette, this.plinko],
-    },
-    {
-      title: 'Popular right now',
-      description: 'Games with the most active players in the lobby.',
-      games: [this.slots, this.blackjack, this.mines, this.roulette, this.plinko],
-    },
-    {
-      title: 'High risk, high reward',
-      description: 'Fast games with bigger swings and more tension.',
-      games: [this.mines, this.plinko, this.slots],
-    },
+  // list of all game tiles for easy lookup
+  readonly allGames: GameTile[] = [
+    this.blackjack,
+    this.mines,
+    this.slots,
+    this.roulette,
+    this.plinko,
   ];
+
+  private favoritesKey = 'edubet.favorites';
+  favorites: string[] = [];
+  private lastPlayedKey = 'edubet.lastplayed';
+  lastPlayed: string[] = [];
+
+  constructor() {
+    try {
+      const stored = localStorage.getItem(this.favoritesKey);
+      this.favorites = stored ? JSON.parse(stored) : [];
+    } catch {
+      this.favorites = [];
+    }
+    try {
+      const storedLast = localStorage.getItem(this.lastPlayedKey);
+      this.lastPlayed = storedLast ? JSON.parse(storedLast) : [];
+    } catch {
+      this.lastPlayed = [];
+    }
+  }
+
+  get favoriteGames(): GameTile[] {
+    return this.allGames.filter(g => this.favorites.includes(g.title));
+  }
+
+  get gameRows(): GameRow[] {
+    const continueGames: GameTile[] = this.lastPlayed
+      .map(t => this.allGames.find(g => g.title === t))
+      .filter((g): g is GameTile => !!g);
+
+    return [
+      {
+        title: 'Continue playing',
+        description: 'Jump back into the games you played recently.',
+        games: continueGames,
+      },
+      {
+        title: 'Favorite games',
+        description: 'Your most played EduBet tables and quick rounds.',
+        games: this.favoriteGames,
+      },
+      {
+        title: 'Popular right now',
+        description: 'Games with the most active players in the lobby.',
+        games: [this.slots, this.blackjack, this.mines, this.roulette, this.plinko],
+      },
+      {
+        title: 'High risk, high reward',
+        description: 'Fast games with bigger swings and more tension.',
+        games: [this.mines, this.plinko, this.slots],
+      },
+    ];
+  }
+
+  isFavorite(game: GameTile) {
+    return this.favorites.includes(game.title);
+  }
+
+  toggleFavorite(game: GameTile, event?: Event) {
+    event?.stopPropagation();
+    event?.preventDefault();
+
+    const idx = this.favorites.indexOf(game.title);
+    if (idx === -1) this.favorites.push(game.title);
+    else this.favorites.splice(idx, 1);
+
+    try {
+      localStorage.setItem(this.favoritesKey, JSON.stringify(this.favorites));
+    } catch {}
+  }
 }

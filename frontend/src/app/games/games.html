@@ -44,7 +44,16 @@
               <div class="tile-glow"></div>
 
               <span class="tile-badge">{{ game.badge }}</span>
-              <span class="favorite-star">★</span>
+              <button
+                type="button"
+                class="favorite-star"
+                [class.favorited]="isFavorite(game)"
+                (click)="toggleFavorite(game, $event)"
+                aria-pressed="{{ isFavorite(game) }}"
+                title="Toggle favorite"
+              >
+                {{ isFavorite(game) ? '★' : '☆' }}
+              </button>
 
               <div class="tile-icon">
                 {{ game.icon }}
