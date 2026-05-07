@@ -40,6 +40,7 @@
         @for (game of row.games; track game.title) {
           <a class="game-tile tile--{{ game.accent }}" [routerLink]="game.route">
             <div class="tile-cover">
+              <img class="tile-image" [src]="game.coverImage" [alt]="game.title" />
               <div class="tile-glow"></div>
 
               <span class="tile-badge">{{ game.badge }}</span>
