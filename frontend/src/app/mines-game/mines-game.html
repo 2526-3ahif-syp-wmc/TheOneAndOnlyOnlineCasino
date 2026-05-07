@@ -1,0 +1,50 @@
+<div class="mines-shell">
+  <header class="mines-header card-glass">
+    <div>
+      <h1>Mines</h1>
+      <p>Bet EC and reveal safe tiles. Hit a mine and you lose your bet.</p>
+    </div>
+
+    <div class="controls">
+      <div class="balance">Balance: <strong>{{ localBalance }}</strong> EC</div>
+      <label class="bet">Bet EC
+        <input type="number" [(ngModel)]="bet" min="1" [max]="localBalance" />
+      </label>
+        <button class="btn-purple howto" (click)="toggleHowTo()">How to play</button>
+    </div>
+  </header>
+
+  <main class="mines-main">
+    <div class="board" [style.gridTemplateColumns]="'repeat(' + gridSize + ', 1fr)'">
+      <button
+        class="cell"
+        *ngFor="let c of cells"
+        [class.revealed]="c.revealed"
+        [class.mine]="c.revealed && c.mine"
+        (click)="reveal(c.idx)"
+        [attr.aria-label]="'Cell ' + c.idx"
+      >
+        <span *ngIf="c.revealed">
+          {{ c.mine ? '💥' : '✓' }}
+        </span>
+      </button>
+    </div>
+
+    <aside class="panel">
+      <div class="status">Status: <strong>{{ status }}</strong></div>
+      <div class="current-win">Current Win: <strong>{{ currentWin }}</strong> EC</div>
+      <div class="actions">
+          <button class="btn-purple" (click)="cashOut()" [disabled]="currentWin <= 0">Cash out</button>
+          <button class="btn-purple outline" (click)="startNew()">New Game</button>
+      </div>
+    </aside>
+  </main>
+
+  <div class="howto-modal" *ngIf="showHowTo">
+    <div class="howto-card card-glass">
+      <h2>How to play Mines</h2>
+      <p>Choose a bet in EC and click tiles. Each safe tile increases your payout. If you hit a mine you lose your bet. Cash out anytime to lock your current win.</p>
+      <button (click)="toggleHowTo()">Close</button>
+    </div>
+  </div>
+</div>
