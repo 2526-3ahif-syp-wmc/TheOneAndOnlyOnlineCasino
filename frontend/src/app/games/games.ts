@@ -146,6 +146,17 @@ export class Games {
     return this.favorites.includes(game.title);
   }
 
+  markLastPlayed(game: GameTile) {
+    this.lastPlayed = [
+      game.title,
+      ...this.lastPlayed.filter(title => title !== game.title),
+    ].slice(0, 5);
+
+    try {
+      localStorage.setItem(this.lastPlayedKey, JSON.stringify(this.lastPlayed));
+    } catch {}
+  }
+
   toggleFavorite(game: GameTile, event?: Event) {
     event?.stopPropagation();
     event?.preventDefault();

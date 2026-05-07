@@ -38,7 +38,11 @@
 
       <div class="game-track">
         @for (game of row.games; track game.title) {
-          <a class="game-tile tile--{{ game.accent }}" [routerLink]="game.route">
+          <a
+            class="game-tile tile--{{ game.accent }}"
+            [routerLink]="game.route"
+            (click)="markLastPlayed(game)"
+          >
             <div class="tile-cover">
               <img class="tile-image" [src]="game.coverImage" [alt]="game.title" />
               <div class="tile-glow"></div>

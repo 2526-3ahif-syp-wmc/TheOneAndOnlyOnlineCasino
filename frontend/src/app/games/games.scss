@@ -359,23 +359,33 @@ p {
 .favorite-star {
   right: 0.8rem;
   top: 0.75rem;
-  min-width: 2rem;
-  height: 2rem;
+  min-width: 2.6rem;
+  height: 2.6rem;
   display: inline-grid;
   place-items: center;
-  border-radius: 999px;
-  color: rgba(255,255,255,0.9);
-  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  color: rgba(255,255,255,0.95);
+  background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
-  padding: 0 0.25rem;
+  padding: 0 0.35rem;
+  z-index: 6;
+  font-size: 1.05rem;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
 .favorite-star.favorited {
   background: linear-gradient(135deg, #ffd54a, #f59e0b);
   color: #0b0b0f;
-  transform: scale(1.06);
-  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.18);
+  transform: none;
+  box-shadow: 0 12px 36px rgba(245, 158, 11, 0.22);
+  border-color: rgba(0,0,0,0.12);
+}
+
+/* Hover effect only when NOT favorited */
+.favorite-star:not(.favorited):hover {
+  transform: scale(1.12);
+  box-shadow: 0 10px 28px rgba(124,58,237,0.18);
 }
 
 .play-overlay {
@@ -387,6 +397,7 @@ p {
   background: rgba(6, 6, 10, 0.58);
   opacity: 0;
   transition: opacity 180ms ease;
+  pointer-events: none;
 }
 
 .play-overlay span {
@@ -400,6 +411,7 @@ p {
 
 .game-tile:hover .play-overlay {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .tile-info {
