@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../services/user-service';
 
 @Component({
@@ -13,6 +13,7 @@ import { UserService } from '../services/user-service';
 export class UserEditPage implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UserService);
+  private router = inject(Router);
 
   editForm!: FormGroup;
   isSubmitting = false;
@@ -68,7 +69,7 @@ export class UserEditPage implements OnInit {
         this.isSubmitting = false;
 
         setTimeout(() => {
-          window.location.href = '/user-profile';
+          this.router.navigate(['/user-profile']);
         }, 1500);
       },
       error: (error) => {

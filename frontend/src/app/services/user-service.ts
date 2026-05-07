@@ -63,7 +63,6 @@ export class UserService {
     if (!user) {
       throw new Error('No user logged in');
     }
-
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}`, request)
       .pipe(

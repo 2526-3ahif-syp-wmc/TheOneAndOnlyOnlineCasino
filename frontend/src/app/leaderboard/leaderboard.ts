@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, NgClass, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserService, User } from '../services/user-service';
+import { UserService } from '../services/user-service';
 
 interface LeaderboardEntry {
   id: number;
@@ -12,7 +12,7 @@ interface LeaderboardEntry {
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [CommonModule, NgClass, DecimalPipe, FormsModule],
+  imports: [CommonModule, DecimalPipe, FormsModule],
   templateUrl: './leaderboard.html',
   styleUrls: ['./leaderboard.scss']
 })
