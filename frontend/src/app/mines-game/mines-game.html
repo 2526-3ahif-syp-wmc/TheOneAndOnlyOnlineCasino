@@ -4,7 +4,7 @@
       <span class="eyebrow">EduBet Casino</span>
       <h1>Mines</h1>
       <p>
-        Wähle deinen Einsatz, öffne sichere Tiles und cash out bevor die Bombe zuschlägt.
+        Choose your bet, open safe tiles and cash out before the bomb strikes.
       </p>
     </div>
     <div class="hero-actions">
@@ -51,7 +51,7 @@
         </label>
 
         <label class="field">
-          <span>Einsatz</span>
+          <span>Bet</span>
           <input type="number" [(ngModel)]="bet" min="1" [max]="balance" />
         </label>
 
@@ -75,19 +75,18 @@
           <strong>x{{ multiplier.toFixed(2) }}</strong>
         </article>
         <article>
-          <span>Gewinn</span>
+          <span>Winnings</span>
           <strong>{{ currentWin }} EC</strong>
         </article>
         <article>
-          <span>Bomben</span>
+          <span>Bombs</span>
           <strong>{{ bombs }}</strong>
         </article>
       </div>
 
       <div class="summary">
-        <p><span>Einsatz:</span> {{ bet }} EC</p>
+        <p><span>Bet:</span> {{ bet }} EC</p>
         <p><span>Difficulty:</span> {{ config.label }}</p>
-        <p><span>Verbleibende sichere Tiles:</span> {{ remainingSafeTiles }}</p>
       </div>
 
       <div class="actions">
@@ -103,11 +102,11 @@
 
   <div class="howto-backdrop" *ngIf="showHowTo" (click)="closeHowTo()">
     <div class="howto-modal card-glass" (click)="$event.stopPropagation()">
-      <button class="close-button" type="button" (click)="closeHowTo()" aria-label="Close modal">×</button>
+      <button class="close-button" type="button" (click)="closeHowTo()" aria-label="Close modal">X</button>
       <h2>How to Play</h2>
       <p>
-        Wähle deinen Einsatz, starte das Spiel und öffne Tiles. Diamanten erhöhen deinen Gewinn.
-        Wenn du eine Bombe triffst, verlierst du den Einsatz. Cashout beendet das Spiel und sichert deinen Gewinn.
+        Choose your bet, start the game, and open tiles. Diamonds increase your winnings.
+        If you hit a bomb, you lose your bet. Cashout ends the game and secures your winnings.
       </p>
     </div>
   </div>
