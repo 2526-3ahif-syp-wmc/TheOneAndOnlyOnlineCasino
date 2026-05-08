@@ -62,6 +62,8 @@ export class Auth {
           this.service.logIn(username, password)
         );
 
+        await this.delay(1000);
+
         this.loginFormModel.set(Auth.LOGIN_DEFAULT); 
 
         await this.router.navigate(['/home']);
@@ -84,6 +86,8 @@ export class Auth {
           this.service.register(username, password)
         );
 
+        await this.delay(1000);
+        
         this.alertService.info(`Account created. Please Log In!`)
 
         this.registerFormModel.set(Auth.REGISTER_DEFAULT); 
@@ -92,6 +96,10 @@ export class Auth {
         this.alertService.error("Register failed");
       } 
     });
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
