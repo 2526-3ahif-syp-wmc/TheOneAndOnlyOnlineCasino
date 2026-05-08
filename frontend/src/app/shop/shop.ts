@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { UserService } from '../services/user-service';
 import { firstValueFrom } from 'rxjs';
+import { AlertService } from '../services/alert-service';
 
 type CoinPack = {
   coins: number;
@@ -19,6 +20,7 @@ type CoinPack = {
 })
 export class Shop {
   private service = inject(UserService);
+  private alertService = inject(AlertService);
 
   protected coinPacks: CoinPack[] = [
     {
@@ -60,10 +62,10 @@ export class Shop {
         this.service.updateCoins(currentCoins + pack.coins)
       );
 
-      alert(`You bought ${pack.coins} Coins for ${pack.price.toFixed(2)}€`);
+      this.alertService.info(`You bought ${pack.coins} Coins for ${pack.price.toFixed(2)}€`);
     } catch (err) {
       console.log(err);
-      alert('Buying coins failed');
+      this.alertService.error('Buying coins failed');
     }
   }
 
@@ -71,7 +73,7 @@ export class Shop {
   const coins = Number(value);
 
   if (!coins || coins <= 0) {
-    alert('Please enter a valid coin amount');
+    this.alertService.error('Please enter a valid coin amount');
     return;
   }
 
@@ -83,26 +85,26 @@ export class Shop {
       this.service.updateCoins(currentCoins + coins)
     );
 
-    alert(`You bought ${coins} Coins for ${price.toFixed(2)}€`);
+    this.alertService.info(`You bought ${coins} Coins for ${price.toFixed(2)}€`);
   } catch (err) {
     console.log(err);
-    alert('Buying custom coins failed');
+    this.alertService.error('Buying custom coins failed');
   }
  }
 
   protected async buySubscription() {
     if(this.service.premium() === 1) {
-      alert('You already own Edubet+ Subscription!');
+      this.alertService.info('You already own Edubet+ Subscription!');
       return;
     }
     
     try {
       await firstValueFrom(this.service.buyPremium());
 
-      alert('You bought EduBet+ Subscription for 9.99€ per month');
+      this.alertService.info('You bought EduBet+ Subscription for 9.99€ per month');
     } catch (err) {
       console.log(err);
-      alert('Buying EduBet+ failed');
+      this.alertService.error('Buying EduBet+ failed');
     }
   }
 

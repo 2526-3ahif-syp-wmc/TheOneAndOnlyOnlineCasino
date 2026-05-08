@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavBar } from "./nav-bar/nav-bar";
 import { filter } from 'rxjs';
+import { AlertService } from './services/alert-service';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import { filter } from 'rxjs';
   styleUrl: './app.scss'
 })
 export class App {
+  protected alertService = inject(AlertService);
   showNavbar = true;
 
   constructor(private router: Router) {

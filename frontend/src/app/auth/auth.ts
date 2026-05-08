@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user-service';
 import { MatButton } from '@angular/material/button';
 import { firstValueFrom } from 'rxjs';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-auth',
@@ -13,6 +14,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './auth.scss',
 })
 export class Auth {
+  protected alertService = inject(AlertService);
   private service = inject(UserService);
   private router = inject(Router);
 
@@ -60,14 +62,12 @@ export class Auth {
           this.service.logIn(username, password)
         );
 
-        console.log('Logged In!');
-
         this.loginFormModel.set(Auth.LOGIN_DEFAULT); 
 
         await this.router.navigate(['/home']);
       } catch (err: any) {
         console.log(err.error?.message ?? 'Log In failed');
-        alert('Log In Failed');
+        this.alertService.error("Log In Failed!")
       }
     });
   }   
@@ -84,12 +84,12 @@ export class Auth {
           this.service.register(username, password)
         );
 
-        alert(`Account created. Please Log In!`)
+        this.alertService.info(`Account created. Please Log In!`)
 
         this.registerFormModel.set(Auth.REGISTER_DEFAULT); 
       } catch (err: any) {
-        console.log(err.error?.message ?? 'Login failed');
-        alert('Login Failed');
+        console.log(err.error?.message ?? 'Register failed');
+        this.alertService.error("Register failed");
       } 
     });
   }

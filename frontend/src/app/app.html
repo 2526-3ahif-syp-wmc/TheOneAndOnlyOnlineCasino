@@ -1,3 +1,19 @@
+@if (alertService.alert(); as alert) {
+  <div
+    class="app-alert"
+    [class.app-alert-success]="alert.type === 'success'"
+    [class.app-alert-error]="alert.type === 'error'"
+    [class.app-alert-info]="alert.type === 'info'"
+  >
+    <span>{{ alert.message }}</span>
+
+    <button type="button" (click)="alertService.clear()">
+      ×
+    </button>
+  </div>
+}
+
+
 @if (showNavbar) {
   <app-nav-bar></app-nav-bar>
 }

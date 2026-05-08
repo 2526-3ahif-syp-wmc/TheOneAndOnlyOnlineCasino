@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-contact-page',
@@ -7,7 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './contact-page.scss',
 })
 export class ContactPage {
+  protected alertService = inject(AlertService);
+
   protected sendMessage() {
-    alert('Message sent successfully!');
+    this.alertService.info("Message sent!");
   }
 }
