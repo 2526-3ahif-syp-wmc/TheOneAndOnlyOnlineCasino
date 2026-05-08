@@ -32,7 +32,7 @@ export class Games {
     icon: '♠',
     players: 128,
     accent: 'gold',
-    coverImage: '/pics/blackjack.jpeg',
+    coverImage: '/blackjack.jpeg',
     route: '/games/blackjack',
   };
 
@@ -43,7 +43,7 @@ export class Games {
     icon: '✦',
     players: 94,
     accent: 'violet',
-    coverImage: '/pics/mines.jpeg',
+    coverImage: '/mines.jpeg',
     route: '/games/mines',
   };
 
@@ -54,7 +54,7 @@ export class Games {
     icon: '★',
     players: 211,
     accent: 'cyan',
-    coverImage: '/pics/slot-mashine.jpeg',
+    coverImage: '/slot-mashine.jpeg',
     route: '/games/slots',
   };
 
@@ -65,7 +65,7 @@ export class Games {
     icon: '●',
     players: 76,
     accent: 'red',
-    coverImage: '/pics/roulette.jpeg',
+    coverImage: '/roulette.jpeg',
     route: '/games/roulette',
   };
 
@@ -76,7 +76,7 @@ export class Games {
     icon: '◆',
     players: 63,
     accent: 'emerald',
-    coverImage: '/pics/plinko.jpeg',
+    coverImage: '/plinko.jpeg',
     route: '/games/plinko',
   };
 
