@@ -90,10 +90,10 @@
       </div>
 
       <div class="actions">
-        <button class="primary-button" type="button" (click)="startGame()">
+        <button class="primary-button" type="button" (click)="startGame()" [disabled]="isStartingGame || status === 'playing'">
           {{ startButtonLabel }}
         </button>
-        <button class="secondary-button" type="button" (click)="cashOut()" [disabled]="!canCashOut">
+        <button class="secondary-button" type="button" (click)="cashOut()" [disabled]="!canCashOut || isCashingOut">
           Cashout
         </button>
       </div>

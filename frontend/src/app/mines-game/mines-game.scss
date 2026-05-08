@@ -222,6 +222,13 @@
   box-shadow: none;
 }
 
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .playfield {
   flex: 1;
   min-height: 0;

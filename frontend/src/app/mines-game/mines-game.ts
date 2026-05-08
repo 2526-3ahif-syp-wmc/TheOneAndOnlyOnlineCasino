@@ -65,6 +65,8 @@ export class MinesComponent implements OnInit, OnDestroy {
   showHowTo = false;
 
   private roundStarted = false;
+  isStartingGame = false;
+  isCashingOut = false;
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
   private previousBodyOverflow = '';
   private previousHtmlOverflow = '';
@@ -108,8 +110,20 @@ export class MinesComponent implements OnInit, OnDestroy {
     return this.roundStarted && this.currentWin > 0 && this.status === 'playing';
   }
 
+  get canRestartRound(): boolean {
+    return this.status === 'playing' && this.safeReveals === 0;
+  }
+
   get startButtonLabel(): string {
-    return this.roundStarted ? 'New Game' : 'Start Game';
+    if (this.status === 'lost') {
+      return 'Try Again';
+    }
+
+    if (this.status === 'won') {
+      return 'Reset';
+    }
+
+    return this.roundStarted ? 'New Game' : 'Start New Game';
   }
 
   get statusLabel(): string {
@@ -141,7 +155,20 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   async startGame() {
+    if (this.isStartingGame) {
+      return;
+    }
+
+    if (this.status === 'lost' || this.status === 'won') {
+      this.resetRound(false);
+      return;
+    }
+
     if (this.status === 'playing') {
+      if (!this.canRestartRound) {
+        return;
+      }
+
       this.resetRound(false);
       return;
     }
@@ -158,6 +185,8 @@ export class MinesComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isStartingGame = true;
+
     const newBalance = this.balance - this.bet;
 
     try {
@@ -170,6 +199,8 @@ export class MinesComponent implements OnInit, OnDestroy {
       console.log(err);
       alert('Could not start game');
       return;
+    } finally {
+      this.isStartingGame = false;
     }
 
     this.currentWin = 0;
@@ -183,11 +214,20 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   async cashOut() {
-    if (!this.canCashOut) {
+    if (!this.canCashOut || this.isCashingOut) {
       return;
     }
 
-    const newBalance = this.balance + this.currentWin;
+    this.isCashingOut = true;
+    const winnings = this.currentWin;
+    const newBalance = this.balance + winnings;
+
+    this.buildBoard();
+    this.currentWin = 0;
+    this.multiplier = 1;
+    this.safeReveals = 0;
+    this.status = 'idle';
+    this.roundStarted = false;
 
     try {
       const updatedUser = await firstValueFrom(
@@ -198,11 +238,9 @@ export class MinesComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.log(err);
       alert('Cash out failed');
-      return;
+    } finally {
+      this.isCashingOut = false;
     }
-
-    this.status = 'cashed-out';
-    this.roundStarted = false;
   }
 
   async reveal(index: number) {
