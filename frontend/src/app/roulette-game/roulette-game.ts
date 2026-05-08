@@ -1,7 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../services/user-service';
+import { firstValueFrom } from 'rxjs';
 
 interface Bet {
   type: 'number' | 'color' | 'evenodd' | 'highlow' | 'dozen';
@@ -32,8 +34,10 @@ interface SpinResult {
 })
 export class RouletteComponent implements OnInit {
   @ViewChild('trackElement') trackElement!: ElementRef;
+
+  protected userService = inject(UserService);
   
-  balance: number = 5000;
+  balance: number = this.userService.coins();
   currentBet: number = 50;
   isSpinning: boolean = false;
   activeBets: Bet[] = [];
@@ -59,11 +63,57 @@ export class RouletteComponent implements OnInit {
   private duration: number = 2500;
   private startPosition: number = 0;
   private targetPosition: number = 0;
+
+  private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
   
   constructor(private router: Router, private cdr: ChangeDetectorRef) {}
   
   ngOnInit() {
     this.initTrackNumbers();
+    this.hideGlobalChrome();
+  }
+
+  ngOnDestroy(): void {
+    this.restoreGlobalChrome();
+  }
+
+  private restoreGlobalChrome() {
+    for (const item of this.hiddenChrome) {
+      item.element.style.display = item.previousDisplay;
+    }
+
+    this.hiddenChrome = [];
+
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+
+  private hideGlobalChrome() {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const elements = [document.querySelector('app-nav-bar'), document.querySelector('footer')];
+
+    for (const element of elements) {
+      if (!(element instanceof HTMLElement)) {
+        continue;
+      }
+
+      this.hiddenChrome.push({
+        element,
+        previousDisplay: element.style.display,
+      });
+
+      element.style.display = 'none';
+    }
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
   }
   
   get currentBetTotal(): number {
@@ -239,7 +289,7 @@ export class RouletteComponent implements OnInit {
     this.animateTrack();
   }
   
-  private animateTrack() {
+  private async animateTrack() {
     const animate = (currentTime: number) => {
       const elapsed = currentTime - this.startTime;
       const progress = Math.min(1, elapsed / this.duration);
@@ -266,7 +316,7 @@ export class RouletteComponent implements OnInit {
     this.animationId = requestAnimationFrame(animate);
   }
   
-  private determineWinner() {
+  private async determineWinner() {
     const segmentWidth = 72;
     const containerWidth = window.innerWidth;
     const centerX = containerWidth / 2;
@@ -365,9 +415,16 @@ export class RouletteComponent implements OnInit {
     if (this.resultsHistory.length > 15) {
       this.resultsHistory.pop();
     }
+
+    const finalBalance = this.balance + totalWin;
+
+    const updatedUser = await firstValueFrom(
+      this.userService.updateCoins(finalBalance)
+    );
+
+    this.balance = updatedUser.coins;
     
     if (totalWin > 0) {
-      this.balance += totalWin;
       this.lastWin = totalWin;
       this.showWinAnimation = true;
       this.lastLoss = 0;

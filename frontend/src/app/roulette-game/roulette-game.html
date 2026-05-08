@@ -1,216 +1,277 @@
 <div class="roulette-shell">
-  <div class="ambient ambient-left"></div>
-  <div class="ambient ambient-right"></div>
-  
-  <div class="roulette-container card-glass">
-    <!-- Header mit Balance -->
-    <div class="roulette-header">
-      <button class="back-btn" (click)="goBack()">
-        ← Back to Games
+  <header class="hero card-glass">
+    <div class="hero-copy">
+      <span class="eyebrow">EduBet Casino</span>
+      <h1>Roulette</h1>
+      <p>Place your bets, spin the track and chase the perfect number.</p>
+    </div>
+
+    <div class="hero-actions">
+      <div class="balance-pill">
+        <span>EC Balance</span>
+        <strong>{{ balance }} EC</strong>
+      </div>
+
+      <button class="exit-button" type="button" (click)="goBack()">
+        Back to Games
       </button>
-      <div class="balance-display">
-        <span>💰 BALANCE</span>
-        <strong>{{ balance | currency:'EUR':'symbol':'1.0-0' }}</strong>
-      </div>
     </div>
+  </header>
 
-    <div class="race-track-section">
-      <div class="track-wrapper" [class.spinning]="isSpinning">
-        <div class="number-track" #trackElement>
-          <div *ngFor="let num of trackNumbers; let i = index" class="track-number" 
-               [style.background]="getNumberColor(num)"
-               [class.highlight]="i === winningIndex">
-            {{ num }}
+  <section class="roulette-playfield">
+    <div class="roulette-main card-glass">
+      <div class="race-track-section">
+        <div class="track-wrapper" [class.spinning]="isSpinning">
+          <div class="number-track" #trackElement>
+            <div
+              *ngFor="let num of trackNumbers; let i = index"
+              class="track-number"
+              [style.background]="getNumberColor(num)"
+              [class.highlight]="i === winningIndex"
+            >
+              {{ num }}
+            </div>
           </div>
-        </div>
-        <div class="indicator-line"></div>
-        <div class="track-speed-lines" *ngIf="isSpinning"></div>
-      </div>
-      
-      <!-- LAST RESULTS HISTORY -->
-      <div class="results-history">
-        <div class="history-header">
-          <span>📜 LAST RESULTS</span>
-          <button class="clear-history" (click)="clearHistory()" *ngIf="resultsHistory.length > 0">Clear</button>
-        </div>
-        <div class="history-balls">
-          <div *ngFor="let result of resultsHistory" class="history-ball" 
-               [style.background]="result.color" [title]="result.number + ' - ' + result.colorName">
-            {{ result.number }}
-          </div>
-          <div class="history-placeholder" *ngIf="resultsHistory.length === 0">
-            No results yet. Place your bets and spin!
-          </div>
-        </div>
-      </div>
 
-      <!-- Aktuelles Ergebnis Highlight -->
-      <div class="current-result-section" *ngIf="lastResult">
-        <div class="current-result-ball" [style.background]="lastResult.color" [class.pulse]="showWinAnimation">
-          {{ lastResult.number }}
+          <div class="indicator-line"></div>
+          <div class="track-speed-lines" *ngIf="isSpinning"></div>
         </div>
-        <div class="current-result-info">
-          <span>🎯 LAST SPIN RESULT</span>
-          <strong>{{ lastResult.number }} • {{ lastResult.colorName }}</strong>
-        </div>
-      </div>
 
-      <!-- GEWINN ANZEIGE - Popup Animation -->
-      <div class="win-animation-overlay" *ngIf="showWinAnimation && lastWin > 0">
-        <div class="win-popup">
-          <span class="win-icon">🎉</span>
-          <div class="win-text">
-            <span>YOU WON!</span>
-            <strong>+{{ lastWin | currency:'EUR':'symbol':'1.0-0' }}</strong>
-          </div>
-        </div>
-      </div>
+        <div class="track-bottom">
+          <div class="results-history">
+            <div class="history-header">
+              <span>Last Results</span>
+              <button class="clear-history" type="button" (click)="clearHistory()" *ngIf="resultsHistory.length > 0">
+                Clear
+              </button>
+            </div>
 
-      <!-- Verlust Anzeige -->
-      <div class="loss-animation-overlay" *ngIf="showLossAnimation">
-        <div class="loss-popup">
-          <span class="loss-icon">💔</span>
-          <div class="loss-text">
-            <span>BETTER LUCK NEXT TIME</span>
-            <strong>-{{ lastLoss | currency:'EUR':'symbol':'1.0-0' }}</strong>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div class="history-balls">
+              <div
+                *ngFor="let result of resultsHistory"
+                class="history-ball"
+                [style.background]="result.color"
+                [title]="result.number + ' - ' + result.colorName"
+              >
+                {{ result.number }}
+              </div>
 
-    <!-- BET RESULT PROTOKOLL - Das wichtigste Feature! -->
-    <div class="bet-result-protocol" *ngIf="lastSpinResults.length > 0">
-      <div class="protocol-header">
-        <span>📊 SPIN RESULTS</span>
-        <button class="close-protocol" (click)="closeProtocol()">✖</button>
-      </div>
-      <div class="protocol-list">
-        <div *ngFor="let result of lastSpinResults" class="protocol-item" [class.won]="result.won" [class.lost]="!result.won">
-          <div class="protocol-bet-label">{{ result.betLabel }}</div>
-          <div class="protocol-bet-amount">{{ result.betAmount | currency:'EUR':'symbol':'1.0-0' }}</div>
-          <div class="protocol-result">
-            <span *ngIf="result.won" class="win-badge">🎉 +{{ result.winAmount | currency:'EUR':'symbol':'1.0-0' }}</span>
-            <span *ngIf="!result.won" class="loss-badge">💔 -{{ result.betAmount | currency:'EUR':'symbol':'1.0-0' }}</span>
+              <div class="history-placeholder" *ngIf="resultsHistory.length === 0">
+                No results yet
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="protocol-total" [class.total-win]="totalSpinWin > 0" [class.total-loss]="totalSpinWin < 0">
-        <span>TOTAL:</span>
-        <strong *ngIf="totalSpinWin > 0">+{{ totalSpinWin | currency:'EUR':'symbol':'1.0-0' }}</strong>
-        <strong *ngIf="totalSpinWin <= 0">{{ totalSpinWin | currency:'EUR':'symbol':'1.0-0' }}</strong>
-      </div>
-    </div>
 
-    <!-- Betting Area -->
-    <div class="betting-area">
-      <!-- Bet Controls -->
-      <div class="bet-controls">
-        <div class="bet-amount-card">
-          <label>🎲 BET AMOUNT</label>
-          <div class="amount-input">
-            <input type="number" [(ngModel)]="currentBet" [disabled]="isSpinning" min="10" [max]="balance" step="10">
-          </div>
-          <div class="quick-chips">
-            <button *ngFor="let chip of quickChips" (click)="setBet(chip)" 
-                    [disabled]="isSpinning" class="chip-btn">
-              {{ chip }}
-            </button>
+          <div class="current-result-section" *ngIf="lastResult">
+            <div class="current-result-ball" [style.background]="lastResult.color" [class.pulse]="showWinAnimation">
+              {{ lastResult.number }}
+            </div>
+
+            <div class="current-result-info">
+              <span>Last Spin</span>
+              <strong>{{ lastResult.number }} • {{ lastResult.colorName }}</strong>
+            </div>
           </div>
         </div>
 
-        <div class="total-bet-card">
-          <span>TOTAL BET</span>
-          <strong>{{ currentBetTotal | currency:'EUR':'symbol':'1.0-0' }}</strong>
-          <span class="bet-count">{{ activeBets.length }} bets placed</span>
-        </div>
-      </div>
-
-      <!-- Active Bets Breakdown -->
-      <div class="active-bets-section" *ngIf="activeBets.length > 0">
-        <div class="section-title">📋 YOUR BETS</div>
-        <div class="bets-grid">
-          <div *ngFor="let bet of activeBets" class="bet-chip" [style.border-color]="getBetColor(bet)">
-            <span class="bet-label">{{ bet.label }}</span>
-            <span class="bet-amount">{{ bet.amount | currency:'EUR':'symbol':'1.0-0' }}</span>
-            <button (click)="removeBet(bet)" class="remove-bet">✖</button>
+        <div class="win-animation-overlay" *ngIf="showWinAnimation && lastWin > 0">
+          <div class="win-popup">
+            <span class="win-icon">🎉</span>
+            <div class="win-text">
+              <span>You won</span>
+              <strong>+{{ lastWin }} EC</strong>
+            </div>
           </div>
         </div>
-        <button class="clear-all-btn" (click)="clearAllBets()" [disabled]="isSpinning">
-          Clear all bets
-        </button>
+
+        <div class="loss-animation-overlay" *ngIf="showLossAnimation">
+          <div class="loss-popup">
+            <span class="loss-icon">💔</span>
+            <div class="loss-text">
+              <span>Better luck next time</span>
+              <strong>-{{ lastLoss }} EC</strong>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Betting Table Grid -->
       <div class="betting-grid">
-        <!-- Numbers 0-36 -->
         <div class="numbers-grid">
-          <div class="number-slot zero-slot" [style.background]="getNumberColor(0)" 
-               (click)="placeNumberBet(0)" [class.active]="hasBetOnNumber(0)">
+          <div
+            class="number-slot zero-slot"
+            [style.background]="getNumberColor(0)"
+            (click)="placeNumberBet(0)"
+            [class.active]="hasBetOnNumber(0)"
+          >
             <span class="num">0</span>
           </div>
-          <div *ngFor="let num of numbers" class="number-slot" 
-               [style.background]="getNumberColor(num)" 
-               (click)="placeNumberBet(num)" [class.active]="hasBetOnNumber(num)">
+
+          <div
+            *ngFor="let num of numbers"
+            class="number-slot"
+            [style.background]="getNumberColor(num)"
+            (click)="placeNumberBet(num)"
+            [class.active]="hasBetOnNumber(num)"
+          >
             <span class="num">{{ num }}</span>
           </div>
         </div>
 
-        <!-- Outside Bets Row 1 -->
         <div class="outside-bets-row">
-          <button class="outside-btn red" (click)="placeColorBet('red')" 
-                  [class.active]="hasBetOnColor('red')">
-            <span>🔴</span> RED
+          <button class="outside-btn red" type="button" (click)="placeColorBet('red')" [class.active]="hasBetOnColor('red')">
+            Red
           </button>
-          <button class="outside-btn black" (click)="placeColorBet('black')" 
-                  [class.active]="hasBetOnColor('black')">
-            <span>⚫</span> BLACK
+
+          <button class="outside-btn black" type="button" (click)="placeColorBet('black')" [class.active]="hasBetOnColor('black')">
+            Black
           </button>
-          <button class="outside-btn" (click)="placeEvenOddBet('even')" 
-                  [class.active]="hasBetOnEvenOdd('even')">
-            EVEN
+
+          <button class="outside-btn" type="button" (click)="placeEvenOddBet('even')" [class.active]="hasBetOnEvenOdd('even')">
+            Even
           </button>
-          <button class="outside-btn" (click)="placeEvenOddBet('odd')" 
-                  [class.active]="hasBetOnEvenOdd('odd')">
-            ODD
+
+          <button class="outside-btn" type="button" (click)="placeEvenOddBet('odd')" [class.active]="hasBetOnEvenOdd('odd')">
+            Odd
           </button>
         </div>
 
-        <!-- Outside Bets Row 2 -->
-        <div class="outside-bets-row">
-          <button class="outside-btn" (click)="placeHighLowBet('low')" 
-                  [class.active]="hasBetOnHighLow('low')">
+        <div class="outside-bets-row outside-bets-row-five">
+          <button class="outside-btn" type="button" (click)="placeHighLowBet('low')" [class.active]="hasBetOnHighLow('low')">
             1-18
           </button>
-          <button class="outside-btn" (click)="placeHighLowBet('high')" 
-                  [class.active]="hasBetOnHighLow('high')">
+
+          <button class="outside-btn" type="button" (click)="placeHighLowBet('high')" [class.active]="hasBetOnHighLow('high')">
             19-36
           </button>
-          <button class="outside-btn dozen" (click)="placeDozenBet(1)" 
-                  [class.active]="hasBetOnDozen(1)">
+
+          <button class="outside-btn dozen" type="button" (click)="placeDozenBet(1)" [class.active]="hasBetOnDozen(1)">
             1st 12
           </button>
-          <button class="outside-btn dozen" (click)="placeDozenBet(2)" 
-                  [class.active]="hasBetOnDozen(2)">
+
+          <button class="outside-btn dozen" type="button" (click)="placeDozenBet(2)" [class.active]="hasBetOnDozen(2)">
             2nd 12
           </button>
-          <button class="outside-btn dozen" (click)="placeDozenBet(3)" 
-                  [class.active]="hasBetOnDozen(3)">
+
+          <button class="outside-btn dozen" type="button" (click)="placeDozenBet(3)" [class.active]="hasBetOnDozen(3)">
             3rd 12
           </button>
         </div>
       </div>
+    </div>
 
-      <!-- Spin Button -->
-      <div class="spin-container">
-        <button class="spin-btn" (click)="spinWheel()" 
-                [disabled]="isSpinning || activeBets.length === 0 || currentBetTotal > balance">
-          <span class="spin-text" *ngIf="!isSpinning">🎯 SPIN & WIN 🎯</span>
-          <span class="spin-text" *ngIf="isSpinning">🌀 SPINNING... 🌀</span>
-          <span class="spin-badge" *ngIf="activeBets.length > 0 && !isSpinning">
-            {{ activeBets.length }} bets
-          </span>
+    <aside class="roulette-panel card-glass">
+      <div class="controls card-glass-soft">
+        <label class="field">
+          <span>Bet Amount</span>
+          <input
+            type="number"
+            [(ngModel)]="currentBet"
+            [disabled]="isSpinning"
+            min="10"
+            [max]="balance"
+            step="10"
+          />
+        </label>
+
+        <div class="quick-chips">
+          <button
+            *ngFor="let chip of quickChips"
+            type="button"
+            (click)="setBet(chip)"
+            [disabled]="isSpinning"
+            class="chip-btn"
+          >
+            {{ chip }}
+          </button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <article>
+          <span>Total Bet</span>
+          <strong>{{ currentBetTotal }} EC</strong>
+        </article>
+
+        <article>
+          <span>Bets</span>
+          <strong>{{ activeBets.length }}</strong>
+        </article>
+
+        <article>
+          <span>Last Win</span>
+          <strong>{{ lastWin }} EC</strong>
+        </article>
+
+        <article>
+          <span>Status</span>
+          <strong>{{ isSpinning ? 'Spinning' : 'Ready' }}</strong>
+        </article>
+      </div>
+
+      <div class="active-bets-section" *ngIf="activeBets.length > 0">
+        <div class="section-title">Your Bets</div>
+
+        <div class="bets-grid">
+          <div
+            *ngFor="let bet of activeBets"
+            class="bet-chip"
+            [style.border-color]="getBetColor(bet)"
+          >
+            <div>
+              <span class="bet-label">{{ bet.label }}</span>
+              <span class="bet-amount">{{ bet.amount }} EC</span>
+            </div>
+
+            <button type="button" (click)="removeBet(bet)" class="remove-bet">×</button>
+          </div>
+        </div>
+
+        <button class="clear-all-btn" type="button" (click)="clearAllBets()" [disabled]="isSpinning">
+          Clear all bets
         </button>
       </div>
-    </div>
-  </div>
-</div>          
+
+      <div class="bet-result-protocol" *ngIf="lastSpinResults.length > 0">
+        <div class="protocol-header">
+          <span>Spin Results</span>
+          <button class="close-protocol" type="button" (click)="closeProtocol()">×</button>
+        </div>
+
+        <div class="protocol-list">
+          <div
+            *ngFor="let result of lastSpinResults"
+            class="protocol-item"
+            [class.won]="result.won"
+            [class.lost]="!result.won"
+          >
+            <div>
+              <span class="protocol-bet-label">{{ result.betLabel }}</span>
+              <span class="protocol-bet-amount">{{ result.betAmount }} EC</span>
+            </div>
+
+            <div class="protocol-result">
+              <span *ngIf="result.won" class="win-badge">+{{ result.winAmount }} EC</span>
+              <span *ngIf="!result.won" class="loss-badge">-{{ result.betAmount }} EC</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="protocol-total" [class.total-win]="totalSpinWin > 0" [class.total-loss]="totalSpinWin < 0">
+          <span>Total</span>
+          <strong *ngIf="totalSpinWin > 0">+{{ totalSpinWin }} EC</strong>
+          <strong *ngIf="totalSpinWin <= 0">{{ totalSpinWin }} EC</strong>
+        </div>
+      </div>
+
+      <button
+        class="spin-btn"
+        type="button"
+        (click)="spinWheel()"
+        [disabled]="isSpinning || activeBets.length === 0 || currentBetTotal > balance"
+      >
+        <span *ngIf="!isSpinning">Spin & Win</span>
+        <span *ngIf="isSpinning">Spinning...</span>
+      </button>
+    </aside>
+  </section>
+</div>
