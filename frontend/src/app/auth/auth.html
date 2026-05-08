@@ -19,16 +19,20 @@
         <input [formField]="loginForm.username" type="text" placeholder="Username">
 
         <div class="error-box">
-          @for(error of loginForm.username().errors(); track error.kind) {
+          @if (loginForm.username().touched() || loginForm.username().dirty()) {
+            @for(error of loginForm.username().errors(); track error.kind) {
             <mat-error>{{ error.message }}</mat-error>
+          }
           }
         </div>
 
         <input [formField]="loginForm.password" type="password" placeholder="Password">
 
         <div class="error-box">
-          @for(error of loginForm.password().errors(); track error.kind) {
+          @if (loginForm.password().touched() || loginForm.password().dirty()) {
+            @for(error of loginForm.password().errors(); track error.kind) {
             <mat-error>{{ error.message }}</mat-error>
+            }
           }
         </div>
 
@@ -75,24 +79,30 @@
         <input [formField]="registerForm.username" type="text" placeholder="Username">
 
         <div class="error-box">
-          @for(error of registerForm.username().errors(); track error.kind) {
-            <mat-error>{{ error.message }}</mat-error>
+          @if (registerForm.username().touched() || registerForm.username().dirty()) {
+            @for(error of registerForm.username().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
           }
         </div>
 
         <input [formField]="registerForm.password" type="password" placeholder="Password">
 
         <div class="error-box">
-          @for(error of registerForm.password().errors(); track error.kind) {
-            <mat-error>{{ error.message }}</mat-error>
+          @if (registerForm.password().touched() || registerForm.password().dirty()) {
+            @for(error of registerForm.password().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
           }
         </div>
 
         <input [formField]="registerForm.confirmPassword" type="password" placeholder="Confirm Password">
 
         <div class="error-box">
-          @for(error of registerForm.confirmPassword().errors(); track error.kind) {
-            <mat-error>{{ error.message }}</mat-error>
+          @if (registerForm.confirmPassword().touched() || registerForm.confirmPassword().dirty()) {
+            @for(error of registerForm.confirmPassword().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
           }
         </div>
 

@@ -90,7 +90,7 @@ export class Leaderboard implements OnInit, OnDestroy {
     this.selectedLossesPeriod = period;
     this.userService.getLeaderboard('losses', period).subscribe({
       next: (users) => this.topLossesRaw.set(users),
-      error: (err) => console.error('Error loading losses leaderboard', err)
+      error: (err) => console.error('Error loading losses leaderboard', err) 
     });
   }
 
