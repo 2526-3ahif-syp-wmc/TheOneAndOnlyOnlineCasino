@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { UserService } from '../services/user-service';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost' | 'cashed-out';
@@ -49,7 +51,10 @@ const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
   styleUrls: ['./mines-game.scss'],
 })
 export class MinesComponent implements OnInit, OnDestroy {
-  balance = 1000;
+  private router = inject(Router);
+  private userService = inject(UserService);
+
+  balance = this.userService.coins();
   bet = 25;
   difficulty: Difficulty = 'medium';
   status: GameStatus = 'idle';
@@ -61,13 +66,15 @@ export class MinesComponent implements OnInit, OnDestroy {
 
   private roundStarted = false;
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
-  private router = inject(Router);
+  private previousBodyOverflow = '';
+  private previousHtmlOverflow = '';
 
   constructor() {
     this.buildBoard();
   }
 
   ngOnInit(): void {
+    this.balance = this.userService.coins();
     this.hideGlobalChrome();
   }
 
@@ -98,7 +105,7 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   get canCashOut(): boolean {
-    return this.roundStarted && this.currentWin > 0 && (this.status === 'playing' || this.status === 'won');
+    return this.roundStarted && this.currentWin > 0 && this.status === 'playing';
   }
 
   get startButtonLabel(): string {
@@ -125,22 +132,46 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   setDifficulty(level: Difficulty) {
+    if (this.status === 'playing') {
+      return;
+    }
+
     this.difficulty = level;
     this.resetRound(false);
   }
 
-  startGame() {
+  async startGame() {
+    if (this.status === 'playing') {
+      this.resetRound(false);
+      return;
+    }
+
     if (this.bet <= 0) {
       this.status = 'idle';
+      alert('Bet must be higher than 0');
       return;
     }
 
     if (this.bet > this.balance) {
       this.status = 'idle';
+      alert('Not enough coins');
       return;
     }
 
-    this.balance -= this.bet;
+    const newBalance = this.balance - this.bet;
+
+    try {
+      const updatedUser = await firstValueFrom(
+        this.userService.updateCoins(newBalance)
+      );
+
+      this.balance = updatedUser.coins;
+    } catch (err) {
+      console.log(err);
+      alert('Could not start game');
+      return;
+    }
+
     this.currentWin = 0;
     this.multiplier = 1;
     this.safeReveals = 0;
@@ -151,22 +182,36 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.placeBombs();
   }
 
-  cashOut() {
+  async cashOut() {
     if (!this.canCashOut) {
       return;
     }
 
-    this.balance += this.currentWin;
+    const newBalance = this.balance + this.currentWin;
+
+    try {
+      const updatedUser = await firstValueFrom(
+        this.userService.updateCoins(newBalance)
+      );
+
+      this.balance = updatedUser.coins;
+    } catch (err) {
+      console.log(err);
+      alert('Cash out failed');
+      return;
+    }
+
     this.status = 'cashed-out';
     this.roundStarted = false;
   }
 
-  reveal(index: number) {
+  async reveal(index: number) {
     if (this.status !== 'playing') {
       return;
     }
 
     const cell = this.cells[index];
+
     if (!cell || cell.revealed) {
       return;
     }
@@ -176,18 +221,47 @@ export class MinesComponent implements OnInit, OnDestroy {
     if (cell.mine) {
       cell.exploded = true;
       this.revealAllBombs();
+
       this.currentWin = 0;
       this.multiplier = 1;
       this.status = 'lost';
       this.roundStarted = false;
+
+      try {
+        const updatedUser = await firstValueFrom(
+          this.userService.updateCoins(this.balance)
+        );
+
+        this.balance = updatedUser.coins;
+      } catch (err) {
+        console.log(err);
+      }
+
       return;
     }
 
     this.safeReveals += 1;
-    this.multiplier = Number((1 + this.safeReveals * this.config.multiplierStep).toFixed(2));
+    this.multiplier = Number(
+      (1 + this.safeReveals * this.config.multiplierStep).toFixed(2)
+    );
+
     this.currentWin = Math.max(1, Math.floor(this.bet * this.multiplier));
 
     if (this.safeReveals >= this.safeTilesTotal) {
+      const newBalance = this.balance + this.currentWin;
+
+      try {
+        const updatedUser = await firstValueFrom(
+          this.userService.updateCoins(newBalance)
+        );
+
+        this.balance = updatedUser.coins;
+      } catch (err) {
+        console.log(err);
+        alert('Could not save win');
+        return;
+      }
+
       this.status = 'won';
       this.roundStarted = false;
     }
@@ -215,17 +289,20 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   private buildBoard() {
-    this.cells = Array.from({ length: this.gridSize * this.gridSize }, (_, idx) => ({
-      idx,
-      mine: false,
-      revealed: false,
-      exploded: false,
-    }));
+    this.cells = Array.from(
+      { length: this.gridSize * this.gridSize },
+      (_, idx) => ({
+        idx,
+        mine: false,
+        revealed: false,
+        exploded: false,
+      })
+    );
   }
 
   private placeBombs() {
-    const safeZone = [...this.cells.keys()];
-    const shuffled = safeZone.sort(() => Math.random() - 0.5);
+    const indexes = [...this.cells.keys()];
+    const shuffled = indexes.sort(() => Math.random() - 0.5);
 
     for (const idx of shuffled.slice(0, this.bombs)) {
       this.cells[idx].mine = true;
@@ -241,7 +318,6 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   exitGame() {
-    // restore chrome and navigate back to games
     this.restoreGlobalChrome();
     this.router.navigate(['/games']);
   }
@@ -251,7 +327,10 @@ export class MinesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const elements = [document.querySelector('app-nav-bar'), document.querySelector('footer')];
+    const elements = [
+      document.querySelector('app-nav-bar'),
+      document.querySelector('footer')
+    ];
 
     for (const element of elements) {
       if (!(element instanceof HTMLElement)) {
@@ -266,22 +345,25 @@ export class MinesComponent implements OnInit, OnDestroy {
       element.style.display = 'none';
     }
 
+    this.previousBodyOverflow = document.body.style.overflow;
+    this.previousHtmlOverflow = document.documentElement.style.overflow;
+
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
   }
 
   private restoreGlobalChrome() {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
     for (const item of this.hiddenChrome) {
       item.element.style.display = item.previousDisplay;
     }
 
     this.hiddenChrome = [];
 
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
+    document.body.style.overflow = this.previousBodyOverflow;
+    document.documentElement.style.overflow = this.previousHtmlOverflow;
   }
 }
