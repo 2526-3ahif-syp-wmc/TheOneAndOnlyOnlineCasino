@@ -67,6 +67,7 @@ export class MinesComponent implements OnInit, OnDestroy {
   private roundStarted = false;
   isStartingGame = false;
   isCashingOut = false;
+  private pendingCashOut: Promise<void> | null = null;
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
   private previousBodyOverflow = '';
   private previousHtmlOverflow = '';
@@ -159,6 +160,14 @@ export class MinesComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.pendingCashOut) {
+      try {
+        await this.pendingCashOut;
+      } catch {
+        return;
+      }
+    }
+
     if (this.status === 'lost' || this.status === 'won') {
       this.resetRound(false);
       return;
@@ -176,6 +185,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     if (this.bet <= 0) {
       this.status = 'idle';
       alert('Bet must be higher than 0');
+      this.isStartingGame = false;
       return;
     }
 
@@ -187,7 +197,9 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     this.isStartingGame = true;
 
-    const newBalance = this.balance - this.bet;
+    const previousBalance = this.balance;
+    const newBalance = previousBalance - this.bet;
+    this.balance = newBalance;
 
     try {
       const updatedUser = await firstValueFrom(
@@ -197,6 +209,7 @@ export class MinesComponent implements OnInit, OnDestroy {
       this.balance = updatedUser.coins;
     } catch (err) {
       console.log(err);
+      this.balance = previousBalance;
       alert('Could not start game');
       return;
     } finally {
@@ -220,7 +233,10 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     this.isCashingOut = true;
     const winnings = this.currentWin;
-    const newBalance = this.balance + winnings;
+    const previousBalance = this.balance;
+    const newBalance = previousBalance + winnings;
+
+    this.balance = newBalance;
 
     this.buildBoard();
     this.currentWin = 0;
@@ -229,18 +245,25 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.status = 'idle';
     this.roundStarted = false;
 
-    try {
-      const updatedUser = await firstValueFrom(
-        this.userService.updateCoins(newBalance)
-      );
+    this.pendingCashOut = (async () => {
+      try {
+        const updatedUser = await firstValueFrom(
+          this.userService.updateCoins(newBalance)
+        );
 
-      this.balance = updatedUser.coins;
-    } catch (err) {
-      console.log(err);
-      alert('Cash out failed');
-    } finally {
-      this.isCashingOut = false;
-    }
+        this.balance = updatedUser.coins;
+      } catch (err) {
+        console.log(err);
+        this.balance = previousBalance;
+        alert('Cash out failed');
+        throw err;
+      } finally {
+        this.isCashingOut = false;
+        this.pendingCashOut = null;
+      }
+    })();
+
+    await this.pendingCashOut;
   }
 
   async reveal(index: number) {
@@ -356,6 +379,10 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   exitGame() {
+    if (this.status === 'playing' && !confirm('Are you sure? You are currently in a round.')) {
+      return;
+    }
+
     this.restoreGlobalChrome();
     this.router.navigate(['/games']);
   }
