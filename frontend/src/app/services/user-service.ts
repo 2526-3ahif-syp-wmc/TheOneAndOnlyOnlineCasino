@@ -1,13 +1,14 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { User } from '../models/user-model';
 
-export type UpdateProfileRequest = {
-  username: string;
-  currentPassword: string;
-  newPassword?: string;
-};
+import { UpdateProfileRequest, User } from '../models/user-model';
+import {
+  getLevelFromXp,
+  getXpForLevel,
+  getXpForNextLevel,
+  getXpPercent
+} from '../utils/level-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -32,17 +33,11 @@ export class UserService {
 
   public xp = computed(() => this.currentUserSignal()?.xp ?? 0);
 
-  public level = computed(() => {
-    return this.getLevelFromXp(this.xp());
-  });
+  public level = computed(() => getLevelFromXp(this.xp()));
 
-  public currentLevelXp = computed(() => {
-    return this.getXpForLevel(this.level());
-  });
+  public currentLevelXp = computed(() => getXpForLevel(this.level()));
 
-  public nextLevelXp = computed(() => {
-    return this.getXpForNextLevel(this.level());
-  });
+  public nextLevelXp = computed(() => getXpForNextLevel(this.level()));
 
   public xpProgress = computed(() => {
     return this.xp() - this.currentLevelXp();
@@ -53,13 +48,7 @@ export class UserService {
   });
 
   public xpPercent = computed(() => {
-    const needed = this.xpNeeded();
-
-    if (needed <= 0) {
-      return 100;
-    }
-
-    return Math.min(100, Math.round((this.xpProgress() / needed) * 100));
+    return getXpPercent(this.xpProgress(), this.xpNeeded());
   });
 
   public logIn(username: string, password: string) {
@@ -69,60 +58,41 @@ export class UserService {
         password
       })
       .pipe(
-        tap(user => {
-          this.saveUser(user);
-        })
+        tap(user => this.saveUser(user))
       );
   }
 
   public register(username: string, password: string) {
     return this.httpClient.post<User>(`${this.apiUrl}/users`, {
       username,
-      password,
+      password
     });
   }
 
   public updateProfile(request: UpdateProfileRequest) {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
+    const user = this.getLoggedInUser();
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}`, request)
       .pipe(
-        tap(updatedUser => {
-          this.saveUser(updatedUser);
-        })
+        tap(updatedUser => this.saveUser(updatedUser))
       );
   }
 
   public updateCoins(coins: number) {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
+    const user = this.getLoggedInUser();
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
         coins
       })
       .pipe(
-        tap(updatedUser => {
-          this.saveUser(updatedUser);
-        })
+        tap(updatedUser => this.saveUser(updatedUser))
       );
   }
 
   public decreaseCoins(amount: number) {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
-
+    const user = this.getLoggedInUser();
     const newCoins = user.coins - amount;
 
     if (newCoins < 0) {
@@ -133,56 +103,42 @@ export class UserService {
   }
 
   public updateXp(xp: number) {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
+    const user = this.getLoggedInUser();
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/xp`, {
         xp
       })
       .pipe(
-        tap(updatedUser => {
-          this.saveUser(updatedUser);
-        })
+        tap(updatedUser => this.saveUser(updatedUser))
       );
   }
 
-  public buyPremium() {
-    const user = this.currentUserSignal();
+  public addXp(amount: number) {
+    return this.updateXp(this.xp() + amount);
+  }
 
-    if (!user) {
-      throw new Error('No user logged in');
-    }
+  public buyPremium() {
+    const user = this.getLoggedInUser();
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/premium`, {
         premium: 1
       })
       .pipe(
-        tap(updatedUser => {
-          this.saveUser(updatedUser);
-        })
+        tap(updatedUser => this.saveUser(updatedUser))
       );
   }
 
   public unbuyPremium() {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
+    const user = this.getLoggedInUser();
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/premium`, {
         premium: 0
       })
       .pipe(
-        tap(updatedUser => {
-          this.saveUser(updatedUser);
-        })
+        tap(updatedUser => this.saveUser(updatedUser))
       );
   }
 
@@ -196,9 +152,19 @@ export class UserService {
     return this.httpClient.get<User[]>(`${this.apiUrl}/top-players`);
   }
 
-  public logOut() {
+  public logOut(): void {
     localStorage.removeItem('user');
     this.currentUserSignal.set(null);
+  }
+
+  private getLoggedInUser(): User {
+    const user = this.currentUserSignal();
+
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    return user;
   }
 
   private saveUser(user: User): void {
@@ -218,23 +184,16 @@ export class UserService {
       return null;
     }
 
-    const parsedUser = JSON.parse(user) as User;
+    try {
+      const parsedUser = JSON.parse(user) as User;
 
-    return {
-      ...parsedUser,
-      xp: parsedUser.xp ?? 0
-    };
-  }
-
-  private getLevelFromXp(xp: number): number {
-    return Math.floor(Math.sqrt(xp / 100)) + 1;
-  }
-
-  private getXpForLevel(level: number): number {
-    return Math.pow(level - 1, 2) * 100;
-  }
-
-  private getXpForNextLevel(level: number): number {
-    return Math.pow(level, 2) * 100;
+      return {
+        ...parsedUser,
+        xp: parsedUser.xp ?? 0
+      };
+    } catch {
+      localStorage.removeItem('user');
+      return null;
+    }
   }
 }

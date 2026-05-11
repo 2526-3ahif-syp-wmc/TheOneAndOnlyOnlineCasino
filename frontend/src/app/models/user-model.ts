@@ -5,3 +5,9 @@ export type User = {
   premium: number;
   xp: number;
 };
+
+export type UpdateProfileRequest = {
+  username: string;
+  currentPassword: string;
+  newPassword?: string;
+};
