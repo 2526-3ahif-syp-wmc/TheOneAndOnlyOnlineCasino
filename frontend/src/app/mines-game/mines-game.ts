@@ -57,6 +57,7 @@ export class MinesComponent implements OnInit, OnDestroy {
   private alertService = inject(AlertService);
 
   balance = this.userService.coins();
+  xp = this.userService.xp();
 
   bet = 25;
   difficulty: Difficulty = 'medium';
@@ -185,7 +186,7 @@ export class MinesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.userService.addXp(10);
+    await firstValueFrom(this.userService.updateXp(this.xp + 10));
 
     if (this.bet <= 0) {
       this.status = 'idle';

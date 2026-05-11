@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
-import { firstValueFrom } from 'rxjs';
+import { first, firstValueFrom } from 'rxjs';
 
 interface Bet {
   type: 'number' | 'color' | 'evenodd' | 'highlow' | 'dozen';
@@ -36,6 +36,7 @@ export class RouletteComponent implements OnInit {
   @ViewChild('trackElement') trackElement!: ElementRef;
 
   protected userService = inject(UserService);
+  private xp = this.userService.xp();
   
   balance: number = this.userService.coins();
   currentBet: number = 50;
@@ -271,7 +272,7 @@ export class RouletteComponent implements OnInit {
     this.cdr.detectChanges();
   }
   
-  spinWheel() {
+  async spinWheel() {
     if (this.isSpinning || this.activeBets.length === 0) return;
     if (this.currentBetTotal > this.balance) return;
     
@@ -286,7 +287,8 @@ export class RouletteComponent implements OnInit {
     this.targetPosition = this.startPosition - scrollDistance;
     this.startTime = performance.now();
     
-    this.userService.addXp(10);
+    await firstValueFrom(this.userService.updateXp(this.xp + 10));
+
     this.animateTrack();
   }
   

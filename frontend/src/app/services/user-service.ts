@@ -116,18 +116,6 @@ export class UserService {
       );
   }
 
-  public addCoins(amount: number) {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
-
-    const newCoins = user.coins + amount;
-
-    return this.updateCoins(newCoins);
-  }
-
   public decreaseCoins(amount: number) {
     const user = this.currentUserSignal();
 
@@ -160,18 +148,6 @@ export class UserService {
           this.saveUser(updatedUser);
         })
       );
-  }
-
-  public addXp(amount: number) {
-    const user = this.currentUserSignal();
-
-    if (!user) {
-      throw new Error('No user logged in');
-    }
-
-    const newXp = user.xp + amount;
-
-    return this.updateXp(newXp);
   }
 
   public buyPremium() {
