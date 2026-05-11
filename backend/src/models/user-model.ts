@@ -4,6 +4,8 @@ export type User = {
   passoword: string;
   premium: number;
   coins: number;
+  wins: number;
+  losses: number;
   xp: number;
 };
 

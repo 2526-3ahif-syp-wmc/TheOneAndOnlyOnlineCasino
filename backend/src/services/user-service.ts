@@ -4,7 +4,7 @@ import { ProfileUserRow, User } from '../models/user-model';
 export function getPublicUserById(id: number): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, xp
+      SELECT id, username, coins, premium, wins, losses, xp
       FROM users
       WHERE id = ?
     `)
@@ -49,7 +49,7 @@ export function createUser(username: string, password: string, coins: number = 1
 export function findUserByLogin(username: string, password: string): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, xp
+      SELECT id, username, coins, premium, wins, losses, xp
       FROM users
       WHERE username = ? AND password = ?
     `)
@@ -59,7 +59,7 @@ export function findUserByLogin(username: string, password: string): User | unde
 export function getProfileUserById(id: number): ProfileUserRow | undefined {
   return db
     .prepare(`
-      SELECT id, username, password, coins, premium, xp
+      SELECT id, username, password, coins, premium, wins, losses, xp
       FROM users
       WHERE id = ?
     `)
@@ -143,7 +143,7 @@ export function getLeaderboard(type: unknown): User[] {
 
   return db
     .prepare(`
-      SELECT id, username, coins, premium, xp
+      SELECT id, username, coins, premium, wins, losses, xp
       FROM users
       ORDER BY ${orderBy}
       LIMIT 10
@@ -154,7 +154,7 @@ export function getLeaderboard(type: unknown): User[] {
 export function getTopPlayers(): User[] {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, xp
+      SELECT id, username, coins, premium, wins, losses, xp
       FROM users
       ORDER BY coins DESC
       LIMIT 10

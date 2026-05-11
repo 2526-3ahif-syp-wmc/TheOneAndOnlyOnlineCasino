@@ -3,6 +3,8 @@ export type User = {
   username: string;
   coins: number;
   premium: number;
+  wins: number;
+  losses: number;
   xp: number;
 };
 

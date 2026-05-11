@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../services/user-service';
@@ -10,13 +10,34 @@ import { UserService } from '../services/user-service';
   styleUrl: './user-profile.scss',
 })
 export class UserProfile {
-   userService = inject(UserService);
+  userService = inject(UserService);
   protected router = inject(Router);
 
-  totalGamesPlayed = 47;
-  totalWins = 28;
-  winRate = 59;
-  totalCoinsWon = 2450;
+  private currentUser = this.userService.currentUser;
+
+  totalGamesPlayed = computed(() => {
+    const user = this.currentUser();
+
+    return (user?.wins ?? 0) + (user?.losses ?? 0);
+  });
+
+  totalWins = computed(() => this.currentUser()?.wins ?? 0);
+
+  winRate = computed(() => {
+    const gamesPlayed = this.totalGamesPlayed();
+
+    if (gamesPlayed === 0) {
+      return 0;
+    }
+
+    return Math.round((this.totalWins() / gamesPlayed) * 100);
+  });
+
+  totalCoinsWon = computed(() => {
+    const startingCoins = 1000;
+
+    return Math.max(0, this.userService.coins() - startingCoins);
+  });
 
   logout() {
     this.userService.logOut();
