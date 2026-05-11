@@ -262,7 +262,7 @@ h3 {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }
@@ -499,4 +499,25 @@ h3 {
   to {
     transform: translateX(100%);
   }
+}
+
+.balance-progress {
+  height: 0.55rem;
+  margin-top: 1rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.balance-progress div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d4af37, #a855f7);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.6);
+}
+
+.coin-box small {
+  display: block;
+  margin-top: 0.6rem;
+  color: rgba(255, 255, 255, 0.55);
 }
