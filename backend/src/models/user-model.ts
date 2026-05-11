@@ -6,3 +6,7 @@ export type User = {
   coins: number;
   xp: number;
 };
+
+export type ProfileUserRow = User & {
+  password: string;
+};
