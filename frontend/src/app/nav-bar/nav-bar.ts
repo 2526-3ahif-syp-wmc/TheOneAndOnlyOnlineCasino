@@ -1,7 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../services/user-service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-nav-bar',

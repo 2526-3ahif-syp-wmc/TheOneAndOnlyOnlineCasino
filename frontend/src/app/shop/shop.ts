@@ -70,27 +70,27 @@ export class Shop {
   }
 
   protected async buyCustomCoins(value: string) {
-  const coins = Number(value);
+    const coins = Number(value);
 
-  if (!coins || coins <= 0) {
-    this.alertService.error('Please enter a valid coin amount');
-    return;
+    if (!coins || coins <= 0) {
+      this.alertService.error('Please enter a valid coin amount');
+      return;
+    }
+
+    const price = coins / 100;
+    const currentCoins = this.service.currentUser()?.coins ?? 0;
+
+    try {
+      await firstValueFrom(
+        this.service.updateCoins(currentCoins + coins)
+      );
+
+      this.alertService.info(`You bought ${coins} Coins for ${price.toFixed(2)}€`);
+    } catch (err) {
+      console.log(err);
+      this.alertService.error('Buying custom coins failed');
+    }
   }
-
-  const price = coins / 100;
-  const currentCoins = this.service.currentUser()?.coins ?? 0;
-
-  try {
-    await firstValueFrom(
-      this.service.updateCoins(currentCoins + coins)
-    );
-
-    this.alertService.info(`You bought ${coins} Coins for ${price.toFixed(2)}€`);
-  } catch (err) {
-    console.log(err);
-    this.alertService.error('Buying custom coins failed');
-  }
- }
 
   protected async buySubscription() {
     if(this.service.premium() === 1) {

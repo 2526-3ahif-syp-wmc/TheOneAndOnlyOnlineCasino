@@ -113,4 +113,3 @@ type RegisterFormModel = {
   password: string;
   confirmPassword: string;
 }
-
