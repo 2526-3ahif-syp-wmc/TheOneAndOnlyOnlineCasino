@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from '../services/user-service';
+import { AlertService } from '../services/alert-service';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost' | 'cashed-out';
@@ -53,6 +54,7 @@ const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
 export class MinesComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private userService = inject(UserService);
+  private alertService = inject(AlertService);
 
   balance = this.userService.coins();
   bet = 25;
@@ -184,14 +186,14 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     if (this.bet <= 0) {
       this.status = 'idle';
-      alert('Bet must be higher than 0');
+      this.alertService.info('Bet must be higher than 0');
       this.isStartingGame = false;
       return;
     }
 
     if (this.bet > this.balance) {
       this.status = 'idle';
-      alert('Not enough coins');
+      this.alertService.error('Not enough coins');
       return;
     }
 
@@ -210,7 +212,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.log(err);
       this.balance = previousBalance;
-      alert('Could not start game');
+      this.alertService.error('Could not start game');
       return;
     } finally {
       this.isStartingGame = false;
@@ -255,7 +257,7 @@ export class MinesComponent implements OnInit, OnDestroy {
       } catch (err) {
         console.log(err);
         this.balance = previousBalance;
-        alert('Cash out failed');
+        this.alertService.error('Cash out failed');
         throw err;
       } finally {
         this.isCashingOut = false;
@@ -319,7 +321,7 @@ export class MinesComponent implements OnInit, OnDestroy {
         this.balance = updatedUser.coins;
       } catch (err) {
         console.log(err);
-        alert('Could not save win');
+        this.alertService.error('Could not save win');
         return;
       }
 
