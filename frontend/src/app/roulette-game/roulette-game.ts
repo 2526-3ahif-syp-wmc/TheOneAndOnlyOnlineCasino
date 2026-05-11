@@ -286,6 +286,7 @@ export class RouletteComponent implements OnInit {
     this.targetPosition = this.startPosition - scrollDistance;
     this.startTime = performance.now();
     
+    this.userService.addXp(10);
     this.animateTrack();
   }
   
