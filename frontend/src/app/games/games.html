@@ -1,21 +1,49 @@
 <div class="games-lobby-shell">
-  <div class="ambient ambient-left"></div>
-  <div class="ambient ambient-right"></div>
+  <section class="featured-game card-glass">
+  <div class="featured-content">
+    <span class="featured-label">Featured Game</span>
 
-  <header class="lobby-header card-glass">
-    <div>
-      <span class="eyebrow">EduBet Games</span>
-      <h1>Choose your game</h1>
-      <p>
-        Pick a table, start a quick round and build your balance. Your next win is one click away.
-      </p>
+    <h2>Roulette Royale</h2>
+
+    <p>
+      Pick red or black, choose your number and let the wheel decide. A classic casino game with a premium EduBet feel.
+    </p>
+
+    <div class="featured-stats">
+      <div>
+        <strong>36x</strong>
+        <span>Number win</span>
+      </div>
+
+      <div>
+        <strong>912</strong>
+        <span>Players today</span>
+      </div>
+
+      <div>
+        <strong>HOT</strong>
+        <span>Trending now</span>
+      </div>
     </div>
 
-    <div class="search-card">
-      <input type="text" placeholder="Search games..." />
-      <button type="button">Search</button>
+    <a routerLink="/games/roulette" class="featured-btn">
+      Play Roulette
+    </a>
+  </div>
+
+  <div class="featured-wheel roulette-wheel">
+    <div class="wheel-ring">
+      <span>7</span>
+      <span>●</span>
+      <span>21</span>
+      <span>◆</span>
     </div>
-  </header>
+
+    <div class="wheel-center">
+      0
+    </div>
+  </div>
+</section>
 
   <section class="category-pills">
     <button type="button" class="active">All</button>
@@ -48,12 +76,13 @@
               <div class="tile-glow"></div>
 
               <span class="tile-badge">{{ game.badge }}</span>
+
               <button
                 type="button"
                 class="favorite-star"
                 [class.favorited]="isFavorite(game)"
                 (click)="toggleFavorite(game, $event)"
-                aria-pressed="{{ isFavorite(game) }}"
+                [attr.aria-pressed]="isFavorite(game)"
                 title="Toggle favorite"
               >
                 {{ isFavorite(game) ? '★' : '☆' }}
