@@ -521,3 +521,57 @@ h3 {
   margin-top: 0.6rem;
   color: rgba(255, 255, 255, 0.55);
 }
+
+.level-box {
+  padding: 1.2rem;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(248, 215, 107, 0.12), transparent 45%),
+    rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(248, 215, 107, 0.16);
+}
+
+.level-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.level-top span {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.level-top strong {
+  color: var(--gold-light, #f8d76b);
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.xp-bar {
+  height: 0.65rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.xp-bar div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold, #d4af37), #a855f7);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.55);
+  transition: width 250ms ease;
+}
+
+.xp-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.65rem;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.85rem;
+}

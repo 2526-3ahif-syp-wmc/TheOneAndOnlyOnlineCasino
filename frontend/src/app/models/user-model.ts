@@ -1,4 +1,7 @@
 export type User = {
-    username: string,
-    password: number
-}
+  id: number;
+  username: string;
+  coins: number;
+  premium: number;
+  xp: number;
+};

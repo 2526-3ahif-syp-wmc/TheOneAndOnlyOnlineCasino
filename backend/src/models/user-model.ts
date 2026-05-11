@@ -4,4 +4,5 @@ export type User = {
   passoword: string;
   premium: number;
   coins: number;
+  xp: number;
 };

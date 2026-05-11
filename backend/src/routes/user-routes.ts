@@ -3,11 +3,30 @@ import { db } from '../databases/db';
 
 export const authRouter = Router();
 
+type PublicUser = {
+  id: number;
+  username: string;
+  coins: number;
+  premium: number;
+  xp: number;
+};
+
+// helper so you don't repeat SELECT everywhere
+function getPublicUserById(id: number) {
+  return db
+    .prepare(`
+      SELECT id, username, coins, premium, xp
+      FROM users
+      WHERE id = ?
+    `)
+    .get(id) as PublicUser | undefined;
+}
+
 // REGISTER
 authRouter.post('/users', (req, res) => {
-   const { username, password, coins } = req.body;
+  const { username, password, coins } = req.body;
 
-    const existingUser = db
+  const existingUser = db
     .prepare(`
       SELECT id
       FROM users
@@ -21,20 +40,14 @@ authRouter.post('/users', (req, res) => {
     });
   }
 
-   const result = db
+  const result = db
     .prepare(`
       INSERT INTO users (username, password, coins)
       VALUES (?, ?, ?)
     `)
     .run(username, password, coins ?? 1000);
 
-  const newUser = db
-    .prepare(`
-      SELECT id, username, coins, premium
-      FROM users
-      WHERE id = ?
-    `)
-    .get(result.lastInsertRowid);
+  const newUser = getPublicUserById(Number(result.lastInsertRowid));
 
   return res.status(201).json(newUser);
 });
@@ -45,11 +58,11 @@ authRouter.post('/login', (req, res) => {
 
   const user = db
     .prepare(`
-      SELECT id, username, coins, premium
+      SELECT id, username, coins, premium, xp
       FROM users
       WHERE username = ? AND password = ?
     `)
-    .get(username, password);
+    .get(username, password) as PublicUser | undefined;
 
   if (!user) {
     return res.status(401).json({
@@ -68,7 +81,7 @@ authRouter.patch('/users/:id/coins', (req, res) => {
   const result = db
     .prepare(`
       UPDATE users
-      SET coins = ?
+      SET coins = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `)
     .run(coins, userId);
@@ -79,13 +92,31 @@ authRouter.patch('/users/:id/coins', (req, res) => {
     });
   }
 
-  const updatedUser = db
+  const updatedUser = getPublicUserById(userId);
+
+  return res.json(updatedUser);
+});
+
+// UPDATE XP
+authRouter.patch('/users/:id/xp', (req, res) => {
+  const userId = Number(req.params.id);
+  const { xp } = req.body;
+
+  const result = db
     .prepare(`
-      SELECT id, username, coins, premium
-      FROM users
+      UPDATE users
+      SET xp = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `)
-    .get(userId);
+    .run(xp, userId);
+
+  if (result.changes === 0) {
+    return res.status(404).json({
+      message: 'User not found'
+    });
+  }
+
+  const updatedUser = getPublicUserById(userId);
 
   return res.json(updatedUser);
 });
@@ -101,11 +132,12 @@ authRouter.patch('/users/:id', (req, res) => {
     password: string;
     coins: number;
     premium: number;
+    xp: number;
   };
 
   const user = db
     .prepare(`
-      SELECT id, username, password, coins, premium
+      SELECT id, username, password, coins, premium, xp
       FROM users
       WHERE id = ?
     `)
@@ -139,41 +171,38 @@ authRouter.patch('/users/:id', (req, res) => {
     }
   }
 
-  const passwordToSave = newPassword && newPassword.length > 0 ? newPassword : user.password;
+  const passwordToSave =
+    newPassword && newPassword.length > 0 ? newPassword : user.password;
 
   db.prepare(`
     UPDATE users
-    SET username = ?, password = ?
+    SET username = ?, password = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
   `).run(username, passwordToSave, userId);
 
-  const updatedUser = db
-    .prepare(`
-      SELECT id, username, coins, premium
-      FROM users
-      WHERE id = ?
-    `)
-    .get(userId);
+  const updatedUser = getPublicUserById(userId);
 
   return res.json(updatedUser);
 });
 
 // PREMIUM
 authRouter.patch('/users/:id/premium', (req, res) => {
-  const id = Number(req.params.id);
+  const userId = Number(req.params.id);
   const { premium } = req.body;
 
-  db.prepare(`
+  const result = db.prepare(`
     UPDATE users
-    SET premium = ?
+    SET premium = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
-  `).run(premium, id);
+  `).run(premium, userId);
 
-  const updatedUser = db.prepare(`
-    SELECT id, username, coins, premium
-    FROM users
-    WHERE id = ?
-  `).get(id);
+  if (result.changes === 0) {
+    return res.status(404).json({
+      message: 'User not found'
+    });
+  }
+
+  const updatedUser = getPublicUserById(userId);
 
   return res.json(updatedUser);
 });
@@ -182,14 +211,15 @@ authRouter.patch('/users/:id/premium', (req, res) => {
 authRouter.get('/leaderboard', (req, res) => {
   const { type } = req.query;
 
-  let orderBy = 'coins DESC'; // for wins, highest coins
+  let orderBy = 'coins DESC';
+
   if (type === 'losses') {
-    orderBy = 'coins ASC'; // for losses, lowest coins (most spent)
+    orderBy = 'coins ASC';
   }
 
   const users = db
     .prepare(`
-      SELECT id, username, coins
+      SELECT id, username, coins, premium, xp
       FROM users
       ORDER BY ${orderBy}
       LIMIT 10
@@ -203,7 +233,7 @@ authRouter.get('/leaderboard', (req, res) => {
 authRouter.get('/top-players', (_, res) => {
   const users = db
     .prepare(`
-      SELECT id, username, coins
+      SELECT id, username, coins, premium, xp
       FROM users
       ORDER BY coins DESC
       LIMIT 10

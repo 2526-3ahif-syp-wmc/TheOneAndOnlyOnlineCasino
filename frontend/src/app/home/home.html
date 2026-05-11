@@ -44,11 +44,11 @@
         <span>Your balance</span>
         <strong>{{ coins() }} EC</strong>
 
-        <div class="balance-progress">
-          <div style="width: 64%"></div>
+        <div class="xp-bar">
+          <div [style.width.%]="xpPercent()"></div>
         </div>
 
-        <small>64% to next VIP level</small>
+        <span>{{ xpProgress() }} / {{ xpNeeded() }} XP</span>
       </div>
 
       <div class="player-actions">
@@ -60,21 +60,21 @@
 
   <section class="quick-grid">
     <article class="quick-card card-glass daily-bonus">
-  <span class="quick-icon">🎁</span>
-  <h3>Daily Bonus</h3>
+      <span class="quick-icon">🎁</span>
+      <h3>Daily Bonus</h3>
 
-  @if (canClaimDailyBonus()) {
-    <p>Claim {{ dailyBonusAmount }} free EduCoins today.</p>
-    <button class="bonus-btn" (click)="claimDailyBonus()">
-      Claim bonus
-    </button>
-  } @else {
-    <p>You already claimed your daily bonus today.</p>
-    <button class="bonus-btn" disabled>
-      Come back tomorrow
-    </button>
-  }
-</article>
+      @if (canClaimDailyBonus()) {
+        <p>Claim {{ dailyBonusAmount }} free EduCoins today.</p>
+        <button class="bonus-btn" (click)="claimDailyBonus()">
+          Claim bonus
+        </button>
+      } @else {
+      <p>You already claimed your daily bonus today.</p>
+      <button class="bonus-btn" disabled>
+        Come back tomorrow
+      </button>
+        }
+    </article>
 
     <article class="quick-card card-glass">
       <span class="quick-icon">♠</span>

@@ -16,6 +16,11 @@ export class Home {
 
   protected username = this.service.username;
   protected coins = this.service.coins;
+  protected xp = this.service.xp;
+  protected level = this.service.level;
+  protected xpProgress = this.service.xpProgress;
+  protected xpNeeded = this.service.xpNeeded;
+  protected xpPercent = this.service.xpPercent;
 
   protected dailyBonusAmount = 1000;
 
