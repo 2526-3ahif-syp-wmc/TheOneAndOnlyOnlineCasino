@@ -1,12 +1,12 @@
-<div class="jackpot-strip card-glass">
-  <span>LIVE JACKPOT</span>
-  <strong>2,847,500 EC</strong>
-  <small>Next winner could be you</small>
-</div>
-
 <div class="home-shell">
   <div class="ambient ambient-left"></div>
   <div class="ambient ambient-right"></div>
+
+  <div class="jackpot-strip card-glass">
+    <span>LIVE JACKPOT</span>
+    <strong>2,847,500 EC</strong>
+    <small>Next winner could be you</small>
+  </div>
 
   <section class="hero card-glass">
     <div class="hero-content">
@@ -18,8 +18,8 @@
       </h1>
 
       <p>
-        Choose your favorite casino games, collect coins, climb the leaderboard
-        and enjoy a clean modern gaming experience.
+        Choose your favorite casino games, collect coins, level up your profile
+        and climb the leaderboard with a clean modern gaming experience.
       </p>
 
       <div class="hero-actions">
@@ -40,15 +40,27 @@
         </div>
       </div>
 
-      <div class="coin-box">
-        <span>Your balance</span>
-        <strong>{{ coins() }} EC</strong>
-
-        <div class="xp-bar">
-          <div [style.width.%]="xpPercent()"></div>
+      <div class="account-stack">
+        <div class="coin-box">
+          <span>Your balance</span>
+          <strong>{{ coins() }} EC</strong>
         </div>
 
-        <span>{{ xpProgress() }} / {{ xpNeeded() }} XP</span>
+        <div class="level-box">
+          <div class="level-top">
+            <span>Player Level</span>
+            <strong>Level {{ level() }}</strong>
+          </div>
+
+          <div class="xp-bar">
+            <div [style.width.%]="xpPercent()"></div>
+          </div>
+
+          <div class="xp-info">
+            <span>{{ xpProgress() }} / {{ xpNeeded() }} XP</span>
+            <span>{{ xpPercent() }}%</span>
+          </div>
+        </div>
       </div>
 
       <div class="player-actions">
@@ -58,68 +70,149 @@
     </aside>
   </section>
 
-  <section class="quick-grid">
-    <article class="quick-card card-glass daily-bonus">
-      <span class="quick-icon">🎁</span>
+  <section class="reward-grid">
+    <article class="reward-card card-glass daily-bonus">
+      <div class="reward-icon icon-gold">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 12v9H4v-9"></path>
+          <path d="M2 7h20v5H2z"></path>
+          <path d="M12 22V7"></path>
+          <path d="M12 7H8.5A2.5 2.5 0 1 1 12 4.5V7z"></path>
+          <path d="M12 7h3.5A2.5 2.5 0 1 0 12 4.5V7z"></path>
+        </svg>
+      </div>
+
+      <span class="card-kicker">Free reward</span>
       <h3>Daily Bonus</h3>
 
       @if (canClaimDailyBonus()) {
-        <p>Claim {{ dailyBonusAmount }} free EduCoins today.</p>
-        <button class="bonus-btn" (click)="claimDailyBonus()">
+        <p>Claim {{ dailyBonusAmount }} free EduCoins today and keep your balance growing.</p>
+
+        <button class="bonus-btn" type="button" (click)="claimDailyBonus()">
           Claim bonus
         </button>
       } @else {
-      <p>You already claimed your daily bonus today.</p>
-      <button class="bonus-btn" disabled>
-        Come back tomorrow
-      </button>
-        }
+        <p>You already claimed your daily bonus today. Come back tomorrow for more.</p>
+
+        <button class="bonus-btn" type="button" disabled>
+          Claimed today
+        </button>
+      }
     </article>
 
-    <article class="quick-card card-glass">
-      <span class="quick-icon">♠</span>
-      <h3>Blackjack</h3>
-      <p>Play smart, beat the dealer and build your coin balance.</p>
-      <a routerLink="/games">Play now</a>
+    <article class="reward-card card-glass">
+      <div class="reward-icon icon-premium">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 7l5 5 4-8 4 8 5-5-2 11H5L3 7z"></path>
+          <path d="M5 21h14"></path>
+        </svg>
+      </div>
+
+      <span class="card-kicker">VIP status</span>
+      <h3>EduBet+</h3>
+      <p>Unlock premium style, bonus rewards and a stronger player profile.</p>
+
+      <a routerLink="/user-profile">Upgrade profile</a>
     </article>
 
-    <article class="quick-card card-glass">
-      <span class="quick-icon">●</span>
-      <h3>Roulette</h3>
-      <p>Pick your number, choose your color and let the wheel decide.</p>
-      <a routerLink="/games">Try roulette</a>
+    <article class="reward-card card-glass">
+      <div class="reward-icon icon-violet">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 3v3"></path>
+          <path d="M12 18v3"></path>
+          <path d="M3 12h3"></path>
+          <path d="M18 12h3"></path>
+        </svg>
+      </div>
+
+      <span class="card-kicker">Recommended</span>
+      <h3>Lucky Game</h3>
+      <p>Jump into the game lobby and find today’s best table for your next run.</p>
+
+      <a routerLink="/games">Explore games</a>
     </article>
 
-    <article class="quick-card card-glass">
-      <span class="quick-icon">★</span>
-      <h3>Slots</h3>
-      <p>Fast, simple and full of casino energy. Spin for big wins.</p>
-      <a routerLink="/games">Spin now</a>
+    <article class="reward-card card-glass">
+      <div class="reward-icon icon-cyan">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+
+      <span class="card-kicker">Competition</span>
+      <h3>Friend Battle</h3>
+      <p>Compare your balance with other players and fight for a better rank.</p>
+
+      <a routerLink="/leaderboard">View rankings</a>
     </article>
+  </section>
+
+  <section class="mission-section card-glass">
+    <div class="mission-content">
+      <span class="eyebrow">Today’s Progress</span>
+      <h2>Small missions. Bigger rewards.</h2>
+      <p>
+        Complete simple actions, build your level and keep your EduCoin balance moving.
+      </p>
+    </div>
+
+    <div class="mission-list">
+      <div class="mission-item">
+        <div class="mission-marker"></div>
+        <div>
+          <strong>Claim your daily bonus</strong>
+          <span>Start the day with free EduCoins.</span>
+        </div>
+        <small>+{{ dailyBonusAmount }} EC</small>
+      </div>
+
+      <div class="mission-item">
+        <div class="mission-marker"></div>
+        <div>
+          <strong>Play one game round</strong>
+          <span>Keep your profile active and gain experience.</span>
+        </div>
+        <small>+XP</small>
+      </div>
+
+      <div class="mission-item">
+        <div class="mission-marker"></div>
+        <div>
+          <strong>Reach the next level</strong>
+          <span>You are {{ xpPercent() }}% through this level.</span>
+        </div>
+        <small>{{ xpNeeded() - xpProgress() }} XP left</small>
+      </div>
+    </div>
   </section>
 
   <section class="stats-section card-glass">
     <div class="section-heading">
       <div>
         <span class="eyebrow">Lobby Stats</span>
-        <h2>Everything in one place</h2>
+        <h2>Your casino dashboard</h2>
       </div>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <strong>6</strong>
-        <span>Team members</span>
+        <strong>{{ coins() }}</strong>
+        <span>Current EC balance</span>
       </div>
 
       <div class="stat-card">
-        <strong>5+</strong>
-        <span>Casino games</span>
+        <strong>{{ level() }}</strong>
+        <span>Current level</span>
       </div>
 
       <div class="stat-card">
-        <strong>1000</strong>
-        <span>Starting coins</span>
+        <strong>{{ xpPercent() }}%</strong>
+        <span>Level progress</span>
       </div>
 
       <div class="stat-card">
@@ -132,9 +225,9 @@
   <section class="cta card-glass">
     <div>
       <span class="eyebrow">Ready?</span>
-      <h2>Jump into the EduBet casino lobby.</h2>
+      <h2>Build your balance and climb the leaderboard.</h2>
       <p>
-        Start with free coins, explore the games and try to reach the top of the leaderboard.
+        Start with your current coins, explore the games and try to become one of the top EduBet players.
       </p>
     </div>
 
