@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs';
 import { UserService } from '../services/user-service';
 
 @Component({
@@ -15,6 +16,7 @@ export class UserEditPage implements OnInit {
   private userService = inject(UserService);
   private router = inject(Router);
 
+  isPremium = this.userService.premium;
   editForm!: FormGroup;
   isSubmitting = false;
   successMessage = '';
@@ -63,18 +65,26 @@ export class UserEditPage implements OnInit {
       username,
       currentPassword,
       newPassword: newPassword?.trim() || undefined
-    }).subscribe({
+    }).pipe(
+      finalize(() => {
+        this.isSubmitting = false;
+      })
+    ).subscribe({
       next: () => {
         this.successMessage = 'Profile updated successfully!';
-        this.isSubmitting = false;
 
         setTimeout(() => {
           this.router.navigate(['/user-profile']);
         }, 1500);
       },
       error: (error) => {
-        this.errorMessage = error?.error?.message ?? 'Failed to update profile. Please try again.';
-        this.isSubmitting = false;
+        const message = error?.error?.message ?? 'Failed to update profile. Please try again.';
+
+        if (error?.status === 401 || message === 'Current password is incorrect') {
+          alert('The old password you entered is incorrect.');
+        }
+
+        this.errorMessage = message;
       }
     });
   }
