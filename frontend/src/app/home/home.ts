@@ -48,7 +48,7 @@ export class Home {
         this.service.updateCoins(this.coins() + this.dailyBonusAmount)
       );
 
-      this.alertService.info(`You claimed today's daily bonus!`);
+      this.alertService.info(`+500`);
     } catch (err) {
       console.log(err);
       this.alertService.error('Claiming daily bonus failed');

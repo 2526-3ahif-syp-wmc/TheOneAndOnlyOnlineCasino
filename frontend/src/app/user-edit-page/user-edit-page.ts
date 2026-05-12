@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs';
 import { UserService } from '../services/user-service';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-user-edit-page',
@@ -14,6 +15,7 @@ import { UserService } from '../services/user-service';
 export class UserEditPage implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UserService);
+  private alertService = inject(AlertService);
   private router = inject(Router);
 
   isPremium = this.userService.premium;
@@ -81,7 +83,7 @@ export class UserEditPage implements OnInit {
         const message = error?.error?.message ?? 'Failed to update profile. Please try again.';
 
         if (error?.status === 401 || message === 'Current password is incorrect') {
-          alert('The old password you entered is incorrect.');
+          this.alertService.error('The old password you entered is incorrect.');
         }
 
         this.errorMessage = message;
@@ -101,7 +103,7 @@ export class UserEditPage implements OnInit {
     this.userService.unbuyPremium().subscribe({
       next: () => {
         // show alert as requested and update UI
-        alert('Succesfully unsubscribed');
+        this.alertService.info('Succesfully unsubscribed');
         this.successMessage = 'You have been unsubscribed from EduBet+';
         this.isSubmitting = false;
       },

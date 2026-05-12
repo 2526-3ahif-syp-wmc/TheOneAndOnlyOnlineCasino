@@ -32,8 +32,6 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* HERO */
-
 .hero {
   height: 96px;
   display: flex;
@@ -123,8 +121,6 @@
   box-shadow: 0 14px 34px rgba(168, 85, 247, 0.36);
 }
 
-/* MAIN LAYOUT */
-
 .roulette-playfield {
   height: calc(100dvh - 96px - 1.5rem);
   display: grid;
@@ -154,8 +150,6 @@
   gap: 0.75rem;
 }
 
-/* TRACK */
-
 .race-track-section {
   position: relative;
   min-height: 0;
@@ -183,7 +177,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.55rem;
-  transition: transform 4s cubic-bezier(0.12, 0.8, 0.16, 1);
+  will-change: transform;
 }
 
 .track-number {
@@ -341,8 +335,6 @@
   font-size: 0.95rem;
 }
 
-/* BETTING TABLE */
-
 .betting-grid {
   min-height: 0;
   overflow: hidden;
@@ -434,8 +426,6 @@
 .outside-btn.black {
   background: linear-gradient(135deg, rgba(20, 20, 28, 0.95), rgba(5, 5, 9, 0.95));
 }
-
-/* PANEL */
 
 .controls {
   border-radius: 20px;
@@ -573,10 +563,31 @@
   font-size: 0.75rem;
 }
 
+.remove-bet,
+.close-protocol {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+
 .remove-bet {
-  width: 26px;
-  height: 26px;
-  font-size: 1rem;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.remove-bet:hover {
+  color: #fff;
+  background: rgba(255, 96, 96, 0.18);
+  border-color: rgba(255, 96, 96, 0.35);
 }
 
 .clear-all-btn {
@@ -705,8 +716,6 @@
   box-shadow: 0 18px 42px rgba(168, 85, 247, 0.42);
 }
 
-/* WIN / LOSS POPUPS */
-
 .win-animation-overlay,
 .loss-animation-overlay {
   position: absolute;
@@ -768,8 +777,6 @@
   font-size: 1.4rem;
 }
 
-/* SCROLLBARS INSIDE SMALL AREAS ONLY */
-
 .bets-grid::-webkit-scrollbar,
 .protocol-list::-webkit-scrollbar {
   width: 6px;
@@ -780,8 +787,6 @@
   background: rgba(168, 85, 247, 0.35);
   border-radius: 999px;
 }
-
-/* ANIMATIONS */
 
 @keyframes speedLines {
   from {
@@ -814,8 +819,6 @@
     transform: scale(1) translateY(0);
   }
 }
-
-/* RESPONSIVE */
 
 @media (max-width: 1200px) {
   .roulette-playfield {
@@ -878,31 +881,4 @@
   .quick-chips {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-
-.remove-bet,
-.close-protocol {
-  display: grid;
-  place-items: center;
-  padding: 0;
-  line-height: 1;
-  text-align: center;
-}
-
-.remove-bet {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border-radius: 50%;
-  font-size: 1.15rem;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.remove-bet:hover {
-  color: #fff;
-  background: rgba(255, 96, 96, 0.18);
-  border-color: rgba(255, 96, 96, 0.35);
 }
