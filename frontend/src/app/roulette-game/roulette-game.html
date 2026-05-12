@@ -243,6 +243,9 @@
           >
             {{ chip }}
           </button>
+          <button type="button" (click)="setBet(balance)" [disabled]="isSpinning" class="chip-btn">
+            All In
+          </button>
         </div>
       </div>
 

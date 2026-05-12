@@ -66,7 +66,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   numbers: number[] = Array.from({ length: 36 }, (_, i) => i + 1);
   trackNumbers: number[] = [];
-  quickChips: number[] = [50, 100, 250, 500, 1000];
+  quickChips: number[] = [50, 100];
 
   trackPosition: number = 0;
 
