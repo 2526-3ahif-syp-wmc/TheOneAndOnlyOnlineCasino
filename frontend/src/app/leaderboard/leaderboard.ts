@@ -2,11 +2,13 @@ import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular
 import { CommonModule, NgClass, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
+import { getLevelFromXp } from '../utils/level-utils';
 
 interface LeaderboardEntry {
   id: number;
   username: string;
   coins: number;
+  xp?: number;
 }
 
 @Component({
@@ -29,8 +31,8 @@ export class Leaderboard implements OnInit, OnDestroy {
   topPlayersRaw = signal<LeaderboardEntry[]>([]);
 
   topWins = computed(() => this.limitTop(this.sortByCoinsDesc(this.topWinsRaw())));
-  topLosses = computed(() => this.limitTop(this.sortByCoinsAsc(this.topLossesRaw())));
-  topPlayers = computed(() => this.limitTop(this.sortByCoinsDesc(this.topPlayersRaw())));
+  topLosses = computed(() => this.limitTop(this.sortByCoinsDesc(this.topLossesRaw())));
+  topPlayers = computed(() => this.limitTop(this.sortByXpDesc(this.topPlayersRaw())));
 
   periods = [
     { value: 'today', label: 'Today' },
@@ -98,6 +100,10 @@ export class Leaderboard implements OnInit, OnDestroy {
     return entries.slice(0, this.TOP_LIMIT);
   }
 
+  getLevelFromXp(xp: number): number {
+    return getLevelFromXp(xp);
+  }
+
   // Sorting methods
   sortByCoinsAsc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
     return [...entries].sort((a, b) => a.coins - b.coins);
@@ -105,6 +111,10 @@ export class Leaderboard implements OnInit, OnDestroy {
 
   sortByCoinsDesc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
     return [...entries].sort((a, b) => b.coins - a.coins);
+  }
+
+  sortByXpDesc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
+    return [...entries].sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0));
   }
 
   sortByUsernameAsc(entries: LeaderboardEntry[]): LeaderboardEntry[] {

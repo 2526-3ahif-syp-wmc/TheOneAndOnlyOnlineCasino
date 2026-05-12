@@ -254,7 +254,11 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.pendingCashOut = (async () => {
       try {
         const updatedUser = await firstValueFrom(
-          this.userService.updateCoins(newBalance)
+          this.userService.updateCoinsWithTransaction(
+            newBalance,
+            'win',
+            Math.max(0, winnings - this.bet)
+          )
         );
 
         this.balance = updatedUser.coins;
@@ -296,7 +300,7 @@ export class MinesComponent implements OnInit, OnDestroy {
 
       try {
         const updatedUser = await firstValueFrom(
-          this.userService.updateCoins(this.balance)
+          this.userService.updateCoinsWithTransaction(this.balance, 'loss', this.bet)
         );
 
         this.balance = updatedUser.coins;
@@ -319,7 +323,11 @@ export class MinesComponent implements OnInit, OnDestroy {
 
       try {
         const updatedUser = await firstValueFrom(
-          this.userService.updateCoins(newBalance)
+          this.userService.updateCoinsWithTransaction(
+            newBalance,
+            'win',
+            Math.max(0, this.currentWin - this.bet)
+          )
         );
 
         this.balance = updatedUser.coins;

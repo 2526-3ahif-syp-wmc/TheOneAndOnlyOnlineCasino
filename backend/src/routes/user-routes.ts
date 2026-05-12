@@ -48,9 +48,9 @@ authRouter.post('/login', (req, res) => {
 // UPDATE COINS
 authRouter.patch('/users/:id/coins', (req, res) => {
   const userId = Number(req.params.id);
-  const { coins } = req.body;
+  const { coins, transactionType, transactionAmount } = req.body;
 
-  const updatedUser = updateCoins(userId, coins);
+  const updatedUser = updateCoins(userId, coins, transactionType, transactionAmount);
 
   if (!updatedUser) {
     return res.status(404).json({
@@ -128,9 +128,9 @@ authRouter.patch('/users/:id/premium', (req, res) => {
 
 // LEADERBOARD
 authRouter.get('/leaderboard', (req, res) => {
-  const { type } = req.query;
+  const { type, period } = req.query;
 
-  const users = getLeaderboard(type);
+  const users = getLeaderboard(type, period);
 
   return res.json(users);
 });

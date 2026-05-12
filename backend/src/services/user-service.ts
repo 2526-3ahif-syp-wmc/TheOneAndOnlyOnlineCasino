@@ -66,7 +66,20 @@ export function getProfileUserById(id: number): ProfileUserRow | undefined {
     .get(id) as ProfileUserRow | undefined;
 }
 
-export function updateCoins(userId: number, coins: number): User | undefined {
+export function createGameTransaction(userId: number, amount: number, type: 'win' | 'loss'): void {
+  db.prepare(`
+      INSERT INTO game_transactions (user_id, amount, type)
+      VALUES (?, ?, ?)
+    `)
+    .run(userId, amount, type);
+}
+
+export function updateCoins(
+  userId: number,
+  coins: number,
+  transactionType?: 'win' | 'loss',
+  transactionAmount?: number
+): User | undefined {
   const result = db
     .prepare(`
       UPDATE users
@@ -77,6 +90,10 @@ export function updateCoins(userId: number, coins: number): User | undefined {
 
   if (result.changes === 0) {
     return undefined;
+  }
+
+  if (transactionType && transactionAmount && transactionAmount > 0) {
+    createGameTransaction(userId, transactionAmount, transactionType);
   }
 
   return getPublicUserById(userId);
@@ -134,21 +151,37 @@ export function updateProfile(
   return getPublicUserById(userId);
 }
 
-export function getLeaderboard(type: unknown): User[] {
-  let orderBy = 'coins DESC';
+export function getLeaderboard(type: unknown, period: unknown = 'all'): User[] {
+  const leaderboardType = type === 'losses' ? 'loss' : 'win';
+  let periodFilter = '';
 
-  if (type === 'losses') {
-    orderBy = 'coins ASC';
+  switch (period) {
+    case 'today':
+      periodFilter = "AND gt.created_at >= date('now','localtime','start of day')";
+      break;
+    case 'last-week':
+      periodFilter = "AND gt.created_at >= date('now','localtime','-6 days')";
+      break;
+    case 'last-month':
+      periodFilter = "AND gt.created_at >= datetime('now','localtime','-30 days')";
+      break;
+    case 'all':
+    default:
+      periodFilter = '';
+      break;
   }
 
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
-      FROM users
-      ORDER BY ${orderBy}
+      SELECT u.id, u.username, SUM(gt.amount) AS coins, u.premium, u.wins, u.losses, u.xp
+      FROM game_transactions gt
+      JOIN users u ON u.id = gt.user_id
+      WHERE gt.type = ? ${periodFilter}
+      GROUP BY u.id
+      ORDER BY coins DESC
       LIMIT 10
     `)
-    .all() as User[];
+    .all([leaderboardType]) as User[];
 }
 
 export function getTopPlayers(): User[] {
@@ -156,7 +189,7 @@ export function getTopPlayers(): User[] {
     .prepare(`
       SELECT id, username, coins, premium, wins, losses, xp
       FROM users
-      ORDER BY coins DESC
+      ORDER BY xp DESC
       LIMIT 10
     `)
     .all() as User[];

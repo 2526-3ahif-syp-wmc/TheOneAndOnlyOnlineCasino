@@ -576,8 +576,15 @@ export class RouletteComponent implements OnInit, OnDestroy {
     }
 
     const finalBalance = this.balance + totalWin;
+    const netResult = totalWin - totalBet;
 
-    const updatedUser = await firstValueFrom(this.userService.updateCoins(finalBalance));
+    const updatedUser = await firstValueFrom(
+      this.userService.updateCoinsWithTransaction(
+        finalBalance,
+        netResult >= 0 ? 'win' : 'loss',
+        Math.abs(netResult)
+      )
+    );
     this.balance = updatedUser.coins;
 
     if (totalWin > 0) {

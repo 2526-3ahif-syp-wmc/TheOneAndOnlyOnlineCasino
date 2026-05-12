@@ -91,6 +91,24 @@ export class UserService {
       );
   }
 
+  public updateCoinsWithTransaction(
+    coins: number,
+    transactionType: 'win' | 'loss',
+    transactionAmount: number
+  ) {
+    const user = this.getLoggedInUser();
+
+    return this.httpClient
+      .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
+        coins,
+        transactionType,
+        transactionAmount
+      })
+      .pipe(
+        tap(updatedUser => this.saveUser(updatedUser))
+      );
+  }
+
   public decreaseCoins(amount: number) {
     const user = this.getLoggedInUser();
     const newCoins = user.coins - amount;
