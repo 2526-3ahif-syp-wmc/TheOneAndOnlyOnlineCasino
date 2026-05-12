@@ -1,0 +1,149 @@
+<div class="slot-shell">
+	@if (confettiParticles.length > 0) {
+		<div class="confetti-layer" aria-hidden="true">
+			@for (particle of confettiParticles; track particle.id) {
+				<span
+					class="confetti-piece"
+					[style.left.%]="particle.left"
+					[style.--delay.ms]="particle.delay"
+					[style.--duration.ms]="particle.duration"
+					[style.--x]="particle.offsetX + 'px'"
+					[style.--y]="particle.offsetY + 'px'"
+					[style.--rotate]="particle.rotate + 'deg'"
+					[style.--size]="particle.size + 'px'"
+					[style.background]="particle.color"
+				></span>
+			}
+		</div>
+	}
+	<div class="ambient ambient-left"></div>
+	<div class="ambient ambient-right"></div>
+
+	<header class="hero card-glass">
+		<div class="hero-copy">
+			<span class="eyebrow">EduBet Casino</span>
+			<h1>Slot Machine</h1>
+			<p>
+				Spin the reels, chase matching lines and build your balance with a fast arcade-style slot round.
+			</p>
+		</div>
+
+		<div class="hero-actions">
+			<div class="balance-pill">
+				<span>Balance</span>
+				<strong>{{ balance }} EC</strong>
+			</div>
+
+			<a routerLink="/games" class="back-button">Back to Games</a>
+		</div>
+	</header>
+
+	<section class="slot-layout">
+		<article class="machine card-glass">
+			<div class="machine-top">
+				<div>
+					<span class="machine-label">Current round</span>
+					<h2>{{ isSpinning ? 'Reels spinning' : 'Ready to spin' }}</h2>
+				</div>
+
+				<div class="status-chip" [class.status-chip-win]="(lastSpin?.payout ?? 0) > 0">
+					<span>Win rate</span>
+					<strong>{{ winRatePercent }}%</strong>
+				</div>
+			</div>
+
+			<div class="reel-stage">
+				<div class="reel-window">
+					@for (column of reels; track $index; let columnIndex = $index) {
+						<div class="reel" [class.reel-spinning]="isSpinning" [style.animation-delay.ms]="columnIndex * 90">
+							@for (symbol of column; track $index; let rowIndex = $index) {
+								<div
+									class="symbol-cell"
+									[class.symbol-cell-winning]="isWinningCell(columnIndex, rowIndex)"
+									[style.background]="symbol.background"
+									[style.box-shadow]="'0 0 0 1px rgba(255,255,255,0.08), 0 16px 30px ' + symbol.glow"
+								>
+									<span class="symbol-icon">{{ symbol.icon }}</span>
+									<span class="symbol-label">{{ symbol.label }}</span>
+								</div>
+							}
+						</div>
+					}
+				</div>
+
+				<div class="payline-hint">
+					<span>8 paylines</span>
+					<strong>Rows, columns and diagonals all pay</strong>
+				</div>
+			</div>
+
+			<div class="result-grid">
+				<div class="result-card">
+					<span>Bet</span>
+					<strong>{{ bet }} EC</strong>
+				</div>
+
+				<div class="result-card">
+					<span>Payout</span>
+					<strong>{{ lastSpin?.payout ?? 0 }} EC</strong>
+				</div>
+
+				<div class="result-card">
+					<span>Status</span>
+					<strong>{{ currentStatusLabel }}</strong>
+				</div>
+
+				<div class="result-card">
+					<span>Lines</span>
+					<strong>{{ lastSpin ? lastSpin.winningLines.length : 0 }}</strong>
+				</div>
+			</div>
+		</article>
+
+		<aside class="side-panel">
+			<section class="control-card card-glass-soft">
+				<div class="field">
+					<label for="slotBet">Bet amount</label>
+					<input id="slotBet" type="number" [(ngModel)]="bet" min="1" [max]="balance" [disabled]="isSpinning" />
+				</div>
+
+				<div class="quick-bets">
+					@for (amount of quickBets; track amount) {
+						<button type="button" class="quick-bet" (click)="setQuickBet(amount)" [disabled]="isSpinning">
+							{{ amount }}
+						</button>
+					}
+				</div>
+
+				<button type="button" class="spin-button" (click)="spinSlots()" [disabled]="!canSpin">
+					<span>{{ isSpinning ? 'Spinning...' : 'Spin Now' }}</span>
+				</button>
+			</section>
+
+			<section class="detail-card card-glass-soft">
+				<div class="detail-heading">
+					<span>Last result</span>
+					<strong>{{ topPayoutHint }}</strong>
+				</div>
+
+				@if (lastSpin) {
+					<div class="detail-lines">
+						@for (line of lastSpin.winningLines; track line.label) {
+							<article class="line-chip">
+								<div>
+									<span>{{ line.label }}</span>
+									<strong>{{ line.symbol.label }}</strong>
+								</div>
+								<small>+{{ line.payout }} EC</small>
+							</article>
+						}
+					</div>
+				} @else {
+					<p class="detail-empty">
+						No spin yet. Pick a stake and hit the reels.
+					</p>
+				}
+			</section>
+		</aside>
+	</section>
+</div>

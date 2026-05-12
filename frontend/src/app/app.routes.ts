@@ -21,6 +21,7 @@ export const routes: Routes = [
   { path: 'user-edit-page', component: UserEditPage, canActivate: [authGuard] },
   { path: 'leaderboard', component: Leaderboard, canActivate: [authGuard] },
   { path: 'shop', component: Shop, canActivate: [authGuard] },
+  { path: 'games/slotmachine', loadComponent: () => import('./slot-machine/slot-machine').then(m => m.SlotMachineComponent), canActivate: [authGuard] },
   {path : 'games/roulette', loadComponent: () => import('./roulette-game/roulette-game').then(m => m.RouletteComponent), canActivate: [authGuard]},
   {path : 'games/mines', loadComponent: () => import('./mines-game/mines-game').then(m => m.MinesComponent), canActivate: [authGuard]},
   { path: '**', redirectTo: 'home' }

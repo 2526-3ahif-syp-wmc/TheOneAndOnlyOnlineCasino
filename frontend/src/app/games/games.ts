@@ -55,7 +55,7 @@ export class Games {
     players: 211,
     accent: 'cyan',
     coverImage: '/slot-mashine.jpeg',
-    route: '/games/slots',
+    route: '/games/slotmachine',
   };
 
   readonly roulette: GameTile = {
