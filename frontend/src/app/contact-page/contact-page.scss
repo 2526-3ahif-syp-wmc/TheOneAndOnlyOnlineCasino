@@ -479,3 +479,205 @@ h2 {
     min-height: 320px;
   }
 }
+
+.form-card {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  min-height: 100%;
+  padding: 2.5rem;
+
+  border-radius: 30px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(168, 85, 247, 0.22),
+      transparent 40%
+    ),
+
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 214, 255, 0.12),
+      transparent 38%
+    ),
+
+    linear-gradient(
+      160deg,
+      rgba(18, 18, 25, 0.95),
+      rgba(10, 10, 16, 0.88)
+    );
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.45);
+
+  isolation: isolate;
+}
+
+.form-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.06),
+      transparent 35%
+    );
+
+  pointer-events: none;
+}
+
+.form-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  right: -120px;
+  top: -120px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(168,85,247,0.22),
+      transparent 70%
+    );
+
+  filter: blur(10px);
+
+  pointer-events: none;
+}
+
+.form-card .eyebrow {
+  display: inline-flex;
+
+  padding: 0.45rem 0.8rem;
+
+  border-radius: 999px;
+
+  background: rgba(168,85,247,0.12);
+
+  border: 1px solid rgba(168,85,247,0.2);
+
+  color: #f8d76b;
+
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+
+  margin-bottom: 1rem;
+}
+
+.form-card h2 {
+  font-size: clamp(2rem, 3vw, 2.8rem);
+
+  line-height: 1.05;
+
+  margin-bottom: 1rem;
+
+  color: white;
+
+  max-width: 10ch;
+}
+
+.form-card p {
+  max-width: 40ch;
+
+  margin-bottom: 2rem;
+
+  line-height: 1.8;
+
+  color: rgba(255,255,255,0.72);
+
+  font-size: 1rem;
+}
+
+.contact-mail-btn {
+  position: relative;
+  overflow: hidden;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.7rem;
+
+  padding: 1rem 1.7rem;
+
+  border-radius: 18px;
+
+  text-decoration: none;
+
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #7c3aed
+    );
+
+  box-shadow:
+    0 14px 38px rgba(124,58,237,0.4);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+.contact-mail-btn::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.22),
+      transparent
+    );
+
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.contact-mail-btn:hover {
+  transform:
+    translateY(-4px)
+    scale(1.02);
+
+  filter: brightness(1.05);
+
+  box-shadow:
+    0 20px 48px rgba(124,58,237,0.5);
+}
+
+.contact-mail-btn:hover::before {
+  transform: translateX(120%);
+}
+
+.contact-mail-btn span {
+  position: relative;
+  z-index: 1;
+}
