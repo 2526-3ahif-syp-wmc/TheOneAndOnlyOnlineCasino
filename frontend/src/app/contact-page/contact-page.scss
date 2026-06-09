@@ -55,11 +55,14 @@
 
 .contact-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  grid-template-columns: 1fr;
   gap: clamp(1.25rem, 3vw, 2rem);
-  align-items: stretch;
   border-radius: 28px;
-  padding: clamp(1.25rem, 2.8vw, 2.5rem);
+  padding: clamp(1.25rem, 2.8vw, 2rem);
+}
+
+.contact-hero .contact-card {
+  width: 100%;
 }
 
 .hero-copy {
@@ -135,13 +138,42 @@ h2 {
 .contact-card {
   border-radius: 24px;
   padding: 1.35rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(300px, 1.25fr) minmax(260px, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: start;
+  justify-items: stretch;
   background:
     radial-gradient(circle at top right, rgba(168, 85, 247, 0.16), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
   border: 1px solid rgba(168, 85, 247, 0.16);
+}
+
+.contact-card .contact-action {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  justify-self: start;
+  width: min(100%, 360px);
+}
+
+.contact-card .contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 38rem;
+}
+
+.contact-card .contact-action p,
+.contact-card .contact-details p {
+  max-width: 48ch;
+  margin: 0;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1rem;
 }
 
 .contact-badge,
@@ -161,11 +193,13 @@ h2 {
 
 .contact-info-list {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.85rem;
-  margin-top: auto;
+  margin-top: 1rem;
 }
 
 .contact-info-item {
+  min-width: 0;
   padding: 1rem;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.04);
@@ -190,9 +224,13 @@ h2 {
 
 .contact-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.map-card.wide-map {
+  width: 100%;
 }
 
 .form-card,
@@ -224,7 +262,7 @@ h2 {
 .map-frame {
   overflow: hidden;
   border-radius: 24px;
-  min-height: 390px;
+  min-height: 520px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
 }
@@ -232,7 +270,7 @@ h2 {
 .map-frame iframe {
   width: 100%;
   height: 100%;
-  min-height: 390px;
+  min-height: 520px;
   border: 0;
   filter: grayscale(0.25) contrast(1.05) brightness(0.82);
 }
@@ -388,6 +426,10 @@ h2 {
 
   .avatar-placeholder {
     height: 240px;
+  }
+
+  .contact-card {
+    grid-template-columns: 1fr;
   }
 
   .map-frame,
