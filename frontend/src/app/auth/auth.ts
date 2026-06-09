@@ -11,7 +11,7 @@ import { AlertService } from '../services/alert-service';
   selector: 'app-auth',
   imports: [ FormField, MatError, MatButton],
   templateUrl: './auth.html',
-  styleUrl: './auth.scss',
+  styleUrls: ['./auth.scss'],
 })
 export class Auth {
   protected alertService = inject(AlertService);

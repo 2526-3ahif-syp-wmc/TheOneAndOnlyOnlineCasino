@@ -16,7 +16,7 @@ type CoinPack = {
   selector: 'app-shop',
   imports: [],
   templateUrl: './shop.html',
-  styleUrl: './shop.scss'
+  styleUrls: ['./shop.scss']
 })
 export class Shop {
   private service = inject(UserService);

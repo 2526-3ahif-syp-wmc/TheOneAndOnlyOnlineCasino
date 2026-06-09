@@ -7,12 +7,15 @@ import { UserService } from '../services/user-service';
   selector: 'app-user-profile',
   imports: [CommonModule, RouterModule],
   templateUrl: './user-profile.html',
-  styleUrl: './user-profile.scss',
+  styleUrls: ['./user-profile.scss'],
 })
 export class UserProfile {
-  userService = inject(UserService);
+  private userService = inject(UserService);
   protected router = inject(Router);
 
+  protected username = computed(() => this.userService.username());
+  protected profileInitial = computed(() => (this.username().charAt(0) || 'U').toUpperCase());
+  protected balance = computed(() => this.userService.coins());
   private currentUser = this.userService.currentUser;
 
   totalGamesPlayed = computed(() => {
@@ -36,7 +39,7 @@ export class UserProfile {
   totalCoinsWon = computed(() => {
     const startingCoins = 1000;
 
-    return Math.max(0, this.userService.coins() - startingCoins);
+    return Math.max(0, this.balance() - startingCoins);
   });
 
   logout() {

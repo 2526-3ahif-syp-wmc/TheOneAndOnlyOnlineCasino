@@ -129,7 +129,7 @@ const SLOT_LINE_DEFS: SlotLine[] = [
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './slot-machine.html',
-  styleUrl: './slot-machine.scss',
+  styleUrls: ['./slot-machine.scss'],
 })
 export class SlotMachineComponent implements OnInit {
   private readonly userService = inject(UserService);

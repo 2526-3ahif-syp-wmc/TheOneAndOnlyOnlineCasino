@@ -6,7 +6,7 @@ import { UserService } from '../services/user-service';
   selector: 'app-nav-bar',
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './nav-bar.html',
-  styleUrl: './nav-bar.scss',
+  styleUrls: ['./nav-bar.scss'],
 })
 export class NavBar {
   private service = inject(UserService);

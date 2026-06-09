@@ -14,20 +14,20 @@
     <section class="profile-card card-glass">
       <div class="card-content">
         <div class="profile-avatar">
-          <span>{{ userService.username().charAt(0).toUpperCase() }}</span>
+          <span>{{ profileInitial() }}</span>
         </div>
 
         <div class="profile-info">
           <div>
             <span class="info-label">Username</span>
-            <h2>{{ userService.username() }}</h2>
+            <h2>{{ username() }}</h2>
           </div>
 
           <div class="coin-display">
             <span class="info-label">Current Balance</span>
             <div class="coin-amount">
               <span class="coin-icon"></span>
-              <strong>{{ userService.coins() }} EC</strong>
+              <strong>{{ balance() }} EC</strong>
             </div>
           </div>
         </div>

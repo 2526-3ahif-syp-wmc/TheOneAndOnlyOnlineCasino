@@ -4,7 +4,6 @@ import { Home } from './home/home';
 import { Auth } from './auth/auth';
 import { UserProfile } from './user-profile/user-profile';
 import { UserEditPage } from './user-edit-page/user-edit-page';
-import { Games } from './games/games';
 import { Leaderboard } from './leaderboard/leaderboard';
 import { Shop } from './shop/shop';
 import { authGuard, guestGuard } from '../auth-guard';
@@ -15,7 +14,7 @@ export const routes: Routes = [
   { path: 'auth', component: Auth, canActivate: [guestGuard] },
 
   { path: 'home', component: Home, canActivate: [authGuard] },
-  { path: 'games', component: Games, canActivate: [authGuard] },
+  { path: 'games', redirectTo: 'home', pathMatch: 'full' },
   { path: 'contact-page', component: ContactPage, canActivate: [authGuard] },
   { path: 'user-profile', component: UserProfile, canActivate: [authGuard] },
   { path: 'user-edit-page', component: UserEditPage, canActivate: [authGuard] },

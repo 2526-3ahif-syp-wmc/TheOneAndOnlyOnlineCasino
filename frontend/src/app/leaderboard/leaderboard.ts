@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, NgClass, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
 
@@ -12,7 +12,7 @@ interface LeaderboardEntry {
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [CommonModule, DecimalPipe, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './leaderboard.html',
   styleUrls: ['./leaderboard.scss']
 })
@@ -62,16 +62,8 @@ export class Leaderboard implements OnInit, OnDestroy {
   }
 
   loadLeaderboard() {
-    this.userService.getLeaderboard('wins', this.selectedWinsPeriod).subscribe({
-      next: (users) => this.topWinsRaw.set(users),
-      error: (err) => console.error('Error loading wins leaderboard', err)
-    });
-
-    this.userService.getLeaderboard('losses', this.selectedLossesPeriod).subscribe({
-      next: (users) => this.topLossesRaw.set(users),
-      error: (err) => console.error('Error loading losses leaderboard', err)
-    });
-
+    this.loadLeaderboardType('wins', this.selectedWinsPeriod, (users) => this.topWinsRaw.set(users));
+    this.loadLeaderboardType('losses', this.selectedLossesPeriod, (users) => this.topLossesRaw.set(users));
     this.userService.getTopPlayers().subscribe({
       next: (users) => this.topPlayersRaw.set(users),
       error: (err) => console.error('Error loading top players', err)
@@ -80,17 +72,18 @@ export class Leaderboard implements OnInit, OnDestroy {
 
   onWinsPeriodChange(period: string) {
     this.selectedWinsPeriod = period;
-    this.userService.getLeaderboard('wins', period).subscribe({
-      next: (users) => this.topWinsRaw.set(users),
-      error: (err) => console.error('Error loading wins leaderboard', err)
-    });
+    this.loadLeaderboardType('wins', period, (users) => this.topWinsRaw.set(users));
   }
 
   onLossesPeriodChange(period: string) {
     this.selectedLossesPeriod = period;
-    this.userService.getLeaderboard('losses', period).subscribe({
-      next: (users) => this.topLossesRaw.set(users),
-      error: (err) => console.error('Error loading losses leaderboard', err) 
+    this.loadLeaderboardType('losses', period, (users) => this.topLossesRaw.set(users));
+  }
+
+  private loadLeaderboardType(type: 'wins' | 'losses', period: string, setter: (users: LeaderboardEntry[]) => void) {
+    this.userService.getLeaderboard(type, period).subscribe({
+      next: (users) => setter(users),
+      error: (err) => console.error(`Error loading ${type} leaderboard`, err)
     });
   }
 

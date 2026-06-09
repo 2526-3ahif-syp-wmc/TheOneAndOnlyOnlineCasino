@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
+import { AlertService } from '../services/alert-service';
 import { firstValueFrom } from 'rxjs';
 
 interface Bet {
@@ -78,7 +79,11 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.initTrackNumbers();
@@ -201,6 +206,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   placeNumberBet(number: number): void {
     if (!this.canPlaceBet()) {
+      this.notifyBetBlocked();
       return;
     }
 
@@ -223,6 +229,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   placeColorBet(color: string): void {
     if (!this.canPlaceBet()) {
+      this.notifyBetBlocked();
       return;
     }
 
@@ -245,6 +252,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   placeEvenOddBet(type: string): void {
     if (!this.canPlaceBet()) {
+      this.notifyBetBlocked();
       return;
     }
 
@@ -267,6 +275,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   placeHighLowBet(type: string): void {
     if (!this.canPlaceBet()) {
+      this.notifyBetBlocked();
       return;
     }
 
@@ -289,6 +298,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   placeDozenBet(dozen: number): void {
     if (!this.canPlaceBet()) {
+      this.notifyBetBlocked();
       return;
     }
 
@@ -318,6 +328,15 @@ export class RouletteComponent implements OnInit, OnDestroy {
     }
 
     return this.currentBet <= this.balance - this.currentBetTotal;
+  }
+
+  private notifyBetBlocked(): void {
+    if (this.isSpinning) {
+      this.alertService.info('Wait for the current spin to finish before placing more bets.');
+      return;
+    }
+
+    this.alertService.error('Not enough coins available to place that bet.');
   }
 
   removeBet(bet: Bet): void {
@@ -351,11 +370,18 @@ export class RouletteComponent implements OnInit, OnDestroy {
   }
 
   async spinWheel(): Promise<void> {
-    if (this.isSpinning || this.activeBets.length === 0) {
+    if (this.isSpinning) {
+      this.alertService.info('The roulette is already spinning.');
+      return;
+    }
+
+    if (this.activeBets.length === 0) {
+      this.alertService.info('Place at least one bet before spinning.');
       return;
     }
 
     if (this.currentBetTotal > this.balance) {
+      this.alertService.error('Not enough coins to cover your current bets.');
       return;
     }
 
@@ -584,6 +610,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       this.lastWin = totalWin;
       this.lastLoss = 0;
       this.showWinAnimation = true;
+      this.alertService.success(`You won ${totalWin} EC!`);
 
       setTimeout(() => {
         this.showWinAnimation = false;
@@ -593,6 +620,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       this.lastLoss = totalBet;
       this.lastWin = 0;
       this.showLossAnimation = true;
+      this.alertService.error(`You lost ${totalBet} EC.`);
 
       setTimeout(() => {
         this.showLossAnimation = false;
@@ -625,6 +653,6 @@ export class RouletteComponent implements OnInit, OnDestroy {
       cancelAnimationFrame(this.animationId);
     }
 
-    this.router.navigate(['/games']);
+    this.router.navigate(['/home']);
   }
 }

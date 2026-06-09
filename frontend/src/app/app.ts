@@ -8,7 +8,7 @@ import { AlertService } from './services/alert-service';
   selector: 'app-root',
   imports: [RouterOutlet, NavBar],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
 export class App {
   protected alertService = inject(AlertService);

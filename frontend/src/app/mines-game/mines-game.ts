@@ -390,7 +390,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     }
 
     this.restoreGlobalChrome();
-    this.router.navigate(['/games']);
+    this.router.navigate(['/home']);
   }
 
   private hideGlobalChrome() {

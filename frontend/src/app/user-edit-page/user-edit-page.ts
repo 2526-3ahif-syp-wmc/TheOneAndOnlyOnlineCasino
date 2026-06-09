@@ -10,7 +10,7 @@ import { AlertService } from '../services/alert-service';
   selector: 'app-user-edit-page',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './user-edit-page.html',
-  styleUrl: './user-edit-page.scss',
+  styleUrls: ['./user-edit-page.scss'],
 })
 export class UserEditPage implements OnInit {
   private formBuilder = inject(FormBuilder);

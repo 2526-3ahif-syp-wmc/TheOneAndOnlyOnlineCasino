@@ -13,7 +13,7 @@
       </div>
 
       <button class="exit-button" type="button" (click)="goBack()">
-        Back to Games
+        Back to Home
       </button>
     </div>
   </header>
@@ -82,28 +82,6 @@
             <div class="current-result-info">
               <span>Last Spin</span>
               <strong>{{ lastResult.number }} • {{ lastResult.colorName }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="win-animation-overlay" *ngIf="showWinAnimation && lastWin > 0">
-          <div class="win-popup">
-            <span class="win-icon">🎉</span>
-
-            <div class="win-text">
-              <span>You won</span>
-              <strong>+{{ lastWin }} EC</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="loss-animation-overlay" *ngIf="showLossAnimation">
-          <div class="loss-popup">
-            <span class="loss-icon">💔</span>
-
-            <div class="loss-text">
-              <span>Better luck next time</span>
-              <strong>-{{ lastLoss }} EC</strong>
             </div>
           </div>
         </div>

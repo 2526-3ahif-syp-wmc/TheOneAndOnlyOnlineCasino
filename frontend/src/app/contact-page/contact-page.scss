@@ -208,80 +208,6 @@ h2 {
   gap: 1rem;
 }
 
-.contact-form {
-  display: grid;
-  gap: 0.9rem;
-  margin-top: 0.4rem;
-}
-
-.input-group {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.input-group label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.input-group input,
-.input-group select,
-.input-group textarea {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  outline: none;
-  border-radius: 16px;
-  padding: 0.95rem 1rem;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.045);
-  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
-}
-
-.input-group textarea {
-  resize: vertical;
-  min-height: 140px;
-}
-
-.input-group input::placeholder,
-.input-group textarea::placeholder {
-  color: rgba(255, 255, 255, 0.38);
-}
-
-.input-group input:focus,
-.input-group select:focus,
-.input-group textarea:focus {
-  border-color: rgba(168, 85, 247, 0.55);
-  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.12);
-  background: rgba(255, 255, 255, 0.065);
-}
-
-.input-group select {
-  cursor: pointer;
-}
-
-.input-group option {
-  color: #111;
-}
-
-.submit-button {
-  min-height: 3.2rem;
-  border: 0;
-  border-radius: 999px;
-  cursor: pointer;
-  color: #0b0b0f;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  background: linear-gradient(135deg, var(--gold, #d4af37), #7c3aed);
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.26);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-
-.submit-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 38px rgba(168, 85, 247, 0.34);
-}
-
 .map-card {
   display: flex;
   flex-direction: column;
@@ -408,14 +334,6 @@ h2 {
   border-color: rgba(165, 94, 234, 0.2);
 }
 
-.team-photo {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 18px;
-  margin-bottom: 0.8rem;
-}
-
 @keyframes drift {
   0%,
   100% {
@@ -432,8 +350,7 @@ h2 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .avatar-placeholder,
-  .team-photo {
+  .avatar-placeholder {
     height: 150px;
   }
 }
@@ -469,8 +386,7 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .avatar-placeholder,
-  .team-photo {
+  .avatar-placeholder {
     height: 240px;
   }
 
