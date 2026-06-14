@@ -12,6 +12,18 @@
     <div class="hero-content">
       <span class="eyebrow">Welcome to EduBet</span>
 
+      <div class="daily-game-status">
+        @if (dailyGameLoading()) {
+          <span>Loading today’s bonus game...</span>
+        } @else {
+          @if (dailyGameError()) {
+            <span class="error-text">{{ dailyGameError() }}</span>
+          } @else {
+            <span>Today’s bonus game is <strong>{{ dailyGameName() }}</strong> — +{{ dailyGameBonusPercent() }}% winnings!</span>
+          }
+        }
+      </div>
+
       <section class="reward-grid">
     <article class="reward-card card-glass daily-bonus">
       <div class="reward-icon icon-gold">
