@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
+import { LeaderboardService } from '../services/leaderboard-service';
 import { firstValueFrom } from 'rxjs';
 
 interface Bet {
@@ -45,6 +46,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
   @ViewChild('trackElement') trackElement!: ElementRef<HTMLElement>;
 
   protected userService = inject(UserService);
+  private leaderboardService = inject(LeaderboardService);
 
   balance: number = this.userService.coins();
   currentBet: number = 50;
@@ -606,6 +608,8 @@ export class RouletteComponent implements OnInit, OnDestroy {
     const updatedUser = await firstValueFrom(this.userService.updateCoins(finalBalance));
     this.balance = updatedUser.coins;
 
+    this.saveGameHistory(totalBet, totalWin);
+
     if (totalWin > 0) {
       this.lastWin = totalWin;
       this.lastLoss = 0;
@@ -648,6 +652,29 @@ export class RouletteComponent implements OnInit, OnDestroy {
     }, 8000);
   }
 
+  private saveGameHistory(totalBet: number, totalWin: number): void {
+    const user = this.userService.currentUser?.() ?? null;
+
+    if (!user) {
+      return;
+    }
+
+    const won = totalWin > 0;
+
+    void firstValueFrom(
+      this.leaderboardService.saveGameHistory({
+        userId: user.id,
+        gameName: 'Roulette',
+        result: won ? 'win' : 'loss',
+        betAmount: totalBet,
+        coinsWon: won ? totalWin : 0,
+        coinsLost: won ? 0 : totalBet
+      })
+    ).catch(error => {
+      console.error('Could not save Roulette game history', error);
+    });
+  }
+
   goBack(): void {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
@@ -655,4 +682,4 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
     this.router.navigate(['/home']);
   }
-}
+} 

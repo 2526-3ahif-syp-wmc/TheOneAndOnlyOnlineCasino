@@ -1,73 +1,134 @@
-<div class="leaderboard-shell">
+<section class="leaderboard-shell">
   <div class="ambient ambient-left"></div>
   <div class="ambient ambient-right"></div>
 
-  <section class="leaderboard-header card-glass">
-    <div class="header-content">
-      <span class="eyebrow">Casino Leaderboard</span>
-      <h1>Top Players</h1>
-      <p>Check out the highest wins and biggest losses in the casino.</p>
-    </div>
-  </section>
+  <header class="leaderboard-hero card-glass">
+    <span class="eyebrow">Casino Ranking</span>
+    <h1>Leaderboard</h1>
+    <p>
+      Players are ranked by total wins. Click a player to see detailed game stats,
+      coins won from games, losses and match history.
+    </p>
+  </header>
 
-  <section class="leaderboard-grid">
-    <div class="leaderboard-section card-glass">
-      <div class="section-header">
-        <div class="header-title">
-          <h2>Top Wins</h2>
-          <div class="period-selector-inline">
-            <select [(ngModel)]="selectedWinsPeriod" (ngModelChange)="onWinsPeriodChange($event)">
-              <option *ngFor="let period of periods" [value]="period.value">{{ period.label }}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="leaderboard-list">
-        <div class="leaderboard-item" *ngFor="let user of topWins(); let i = index">
-          <div class="rank">#{{ i + 1 }}</div>
-          <div class="player-info">
-            <span class="username">{{ user.username }}</span>
-            <span class="coins">{{ user.coins | number }} EC</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <p class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
 
-    <div class="leaderboard-section card-glass">
-      <div class="section-header">
-        <div class="header-title">
-          <h2>Top Losses</h2>
-          <div class="period-selector-inline">
-            <select [(ngModel)]="selectedLossesPeriod" (ngModelChange)="onLossesPeriodChange($event)">
-              <option *ngFor="let period of periods" [value]="period.value">{{ period.label }}</option>
-            </select>
-          </div>
+  <div class="leaderboard-layout">
+    <section class="leaderboard-list card-glass">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Top Players</span>
+          <h2>Most Wins</h2>
         </div>
       </div>
-      <div class="leaderboard-list">
-        <div class="leaderboard-item" *ngFor="let user of topLosses(); let i = index">
-          <div class="rank">#{{ i + 1 }}</div>
-          <div class="player-info">
-            <span class="username">{{ user.username }}</span>
-            <span class="coins">{{ user.coins | number }} EC</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="top-players-section card-glass">
-    <div class="section-header top-players-header">
-      <h2>Highest EC Players</h2>
-    </div>
-    <div class="leaderboard-list">
-      <div class="leaderboard-item" *ngFor="let user of topPlayers(); let i = index">
-        <div class="rank">#{{ i + 1 }}</div>
-        <div class="player-info">
-          <span class="username">{{ user.username }}</span>
-          <span class="coins">{{ user.coins | number }} EC</span>
+      <div class="leaderboard-scroll">
+        <div class="loading" *ngIf="loading">
+          Loading leaderboard...
         </div>
+
+        <div class="empty-state" *ngIf="!loading && leaderboard.length === 0">
+          No players found yet.
+        </div>
+
+        <button
+          class="player-row"
+          *ngFor="let player of leaderboard"
+          [class.active]="isSelected(player)"
+          (click)="selectPlayer(player)"
+        >
+          <span class="rank">#{{ player.rank }}</span>
+
+          <div class="player-main">
+            <strong>{{ player.username }}</strong>
+            <small>{{ player.games_played }} games played</small>
+          </div>
+
+          <div class="player-stats">
+            <strong>{{ player.wins }}</strong>
+            <small>wins</small>
+          </div>
+        </button>
       </div>
-    </div>
-  </section>
-</div>
+    </section>
+
+    <section class="player-details card-glass">
+      <div class="loading" *ngIf="detailsLoading">
+        Loading player details...
+      </div>
+
+      <ng-container *ngIf="!detailsLoading && selectedDetails">
+        <div class="details-header">
+          <div>
+            <span class="eyebrow">Player Details</span>
+            <h2>{{ selectedDetails.stats.username }}</h2>
+          </div>
+
+          <span class="rank-badge">
+            #{{ selectedDetails.stats.rank || '-' }}
+          </span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong>{{ selectedDetails.stats.wins }}</strong>
+            <span>Wins</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>{{ selectedDetails.stats.losses }}</strong>
+            <span>Losses</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>{{ selectedDetails.stats.coins_won }}</strong>
+            <span>Coins Won</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>{{ selectedDetails.stats.coins_lost }}</strong>
+            <span>Coins Lost</span>
+          </div>
+        </div>
+
+        <div class="history-section">
+          <h3>Game History</h3>
+
+          <div class="history-scroll">
+            <div class="empty-state" *ngIf="selectedDetails.history.length === 0">
+              This player has not played any games yet.
+            </div>
+
+            <div
+              class="history-row"
+              *ngFor="let game of selectedDetails.history"
+              [class.win]="game.result === 'win'"
+              [class.loss]="game.result === 'loss'"
+            >
+              <div>
+                <strong>{{ game.game_name }}</strong>
+                <small>{{ game.played_at | date:'short' }}</small>
+              </div>
+
+              <span class="result">
+                {{ game.result }}
+              </span>
+
+              <span class="coins">
+                <ng-container *ngIf="game.result === 'win'">
+                  +{{ game.coins_won }}
+                </ng-container>
+
+                <ng-container *ngIf="game.result === 'loss'">
+                  -{{ game.coins_lost }}
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </section>
+  </div>
+</section>

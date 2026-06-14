@@ -2,6 +2,8 @@ import Database from 'better-sqlite3';
 
 const db = new Database('users.db');
 
+db.pragma('foreign_keys = ON');
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,6 +16,19 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     xp INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE TABLE IF NOT EXISTS game_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    game_name TEXT NOT NULL,
+    result TEXT NOT NULL CHECK(result IN ('win', 'loss')),
+    bet_amount INTEGER NOT NULL DEFAULT 0,
+    coins_won INTEGER NOT NULL DEFAULT 0,
+    coins_lost INTEGER NOT NULL DEFAULT 0,
+    played_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
   );
 `);
 

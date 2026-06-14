@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AlertService } from '../services/alert-service';
 import { UserService } from '../services/user-service';
+import { LeaderboardService } from '../services/leaderboard-service';
 
 type SlotSymbol = {
   key: string;
@@ -134,6 +135,7 @@ const SLOT_LINE_DEFS: SlotLine[] = [
 export class SlotMachineComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly alertService = inject(AlertService);
+  private readonly leaderboardService = inject(LeaderboardService);
 
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
 
@@ -288,6 +290,8 @@ export class SlotMachineComponent implements OnInit {
 
         const updatedUser = await firstValueFrom(this.userService.updateCoins(nextBalance));
         this.balance = updatedUser.coins;
+
+        this.saveGameHistory(wager, evaluation.payout);
       } catch (error: any) {
         console.error('updateCoins failed', error);
 
@@ -303,13 +307,11 @@ export class SlotMachineComponent implements OnInit {
 
         this.alertService.error(serverMsg);
 
-        // Fallback: update local user state so UI reflects deduction/win immediately.
         try {
           this.userService.updateCoins(nextBalance);
           this.balance = nextBalance;
           this.alertService.info('Balance updated locally (backend unreachable)');
 
-          // Also record the spin so UI shows last result and recent spins
           this.lastSpin = {
             payout: evaluation.payout,
             winningLines: evaluation.winningLines,
@@ -371,6 +373,29 @@ export class SlotMachineComponent implements OnInit {
 
   protected isWinningCell(columnIndex: number, rowIndex: number): boolean {
     return this.lastSpin?.winningCellKeys.has(`${columnIndex}:${rowIndex}`) ?? false;
+  }
+
+  private saveGameHistory(wager: number, payout: number): void {
+    const user = this.userService.currentUser?.() ?? null;
+
+    if (!user) {
+      return;
+    }
+
+    const won = payout > 0;
+
+    void firstValueFrom(
+      this.leaderboardService.saveGameHistory({
+        userId: user.id,
+        gameName: 'Slot Machine',
+        result: won ? 'win' : 'loss',
+        betAmount: wager,
+        coinsWon: won ? payout : 0,
+        coinsLost: won ? 0 : wager
+      })
+    ).catch(error => {
+      console.error('Could not save Slot Machine game history', error);
+    });
   }
 
   private createGrid(): SlotSymbol[][] {
@@ -571,4 +596,4 @@ export class SlotMachineComponent implements OnInit {
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
   }
-}
+}   

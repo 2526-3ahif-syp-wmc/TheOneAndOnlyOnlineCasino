@@ -2,9 +2,7 @@ import { Router } from 'express';
 import {
   createUser,
   findUserByLogin,
-  getLeaderboard,
   getProfileUserById,
-  getTopPlayers,
   updateCoins,
   updatePremium,
   updateProfile,
@@ -124,20 +122,4 @@ authRouter.patch('/users/:id/premium', (req, res) => {
   }
 
   return res.json(updatedUser);
-});
-
-// LEADERBOARD
-authRouter.get('/leaderboard', (req, res) => {
-  const { type } = req.query;
-
-  const users = getLeaderboard(type);
-
-  return res.json(users);
-});
-
-// TOP PLAYERS
-authRouter.get('/top-players', (_, res) => {
-  const users = getTopPlayers();
-
-  return res.json(users);
 });

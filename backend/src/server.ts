@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { authRouter } from './routes/user-routes';
+import { leaderboardRouter } from './routes/leaderboard-routes';
 import { db } from './databases/db';
 
 const app = express();
@@ -9,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRouter);
+app.use('/leaderboard', leaderboardRouter);
 
 app.get('/', (_, res) => {
   return res.json('Backend is running!');
@@ -22,7 +24,7 @@ app.get('/users', (_, res) => {
     `)
     .all();
 
-    return res.json(users);
+  return res.json(users);
 });
 
 app.listen(3000, () => {

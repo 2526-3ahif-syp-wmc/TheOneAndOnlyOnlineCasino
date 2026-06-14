@@ -6,7 +6,7 @@
     <div class="profile-header">
       <span class="eyebrow">Your Account</span>
       <h1>Profile</h1>
-      <p>Manage your account, view your stats, and track your gaming progress.</p>
+      <p>Manage your account, view your stats, and track your real gaming progress.</p>
     </div>
   </section>
 
@@ -45,27 +45,38 @@
         <h2>Your Gaming Activity</h2>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <strong>{{ totalGamesPlayed() }}</strong>
-          <span>Games Played</span>
-        </div>
+      @if (statsLoading()) {
+        <p class="loading-text">Loading stats...</p>
+      } @else if (statsError()) {
+        <p class="error-text">{{ statsError() }}</p>
+      } @else {
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong>{{ totalGamesPlayed() }}</strong>
+            <span>Games Played</span>
+          </div>
 
-        <div class="stat-card">
-          <strong>{{ totalWins() }}</strong>
-          <span>Total Wins</span>
-        </div>
+          <div class="stat-card">
+            <strong>{{ totalWins() }}</strong>
+            <span>Total Wins</span>
+          </div>
 
-        <div class="stat-card">
-          <strong>{{ winRate() }}%</strong>
-          <span>Win Rate</span>
-        </div>
+          <div class="stat-card">
+            <strong>{{ totalLosses() }}</strong>
+            <span>Total Losses</span>
+          </div>
 
-        <div class="stat-card">
-          <strong>{{ totalCoinsWon() }}</strong>
-          <span>Coins Won</span>
+          <div class="stat-card">
+            <strong>{{ totalCoinsWon() }}</strong>
+            <span>Coins Won</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>{{ totalCoinsLost() }}</strong>
+            <span>Coins Lost</span>
+          </div>
         </div>
-      </div>
+      }
     </section>
   </div>
 
@@ -76,38 +87,28 @@
     </div>
 
     <div class="activity-list">
-      <article class="activity-item">
-        <div class="activity-game">
-          <span class="game-icon">♠</span>
-          <div>
-            <h3>Blackjack</h3>
-            <p>Won 150 coins</p>
-          </div>
-        </div>
-        <span class="activity-time">2 hours ago</span>
-      </article>
+      @if (statsLoading()) {
+        <p class="loading-text">Loading activity...</p>
+      } @else if (recentActivity().length === 0) {
+        <p class="empty-text">No game sessions yet. Start playing to fill your activity feed.</p>
+      } @else {
+        @for (game of recentActivity(); track game.id) {
+          <article class="activity-item" [class.win]="activityClass(game) === 'win'" [class.loss]="activityClass(game) === 'loss'">
+            <div class="activity-game">
+              <span class="game-icon">{{ gameIcon(game.game_name) }}</span>
 
-      <article class="activity-item">
-        <div class="activity-game">
-          <span class="game-icon">●</span>
-          <div>
-            <h3>Roulette</h3>
-            <p>Lost 50 coins</p>
-          </div>
-        </div>
-        <span class="activity-time">5 hours ago</span>
-      </article>
+              <div>
+                <h3>{{ game.game_name }}</h3>
+                <p>{{ activityText(game) }}</p>
+              </div>
+            </div>
 
-      <article class="activity-item">
-        <div class="activity-game">
-          <span class="game-icon">★</span>
-          <div>
-            <h3>Slots</h3>
-            <p>Won 300 coins</p>
-          </div>
-        </div>
-        <span class="activity-time">1 day ago</span>
-      </article>
+            <span class="activity-time">
+              {{ game.played_at | date:'short' }}
+            </span>
+          </article>
+        }
+      }
     </div>
   </section>
 </div>

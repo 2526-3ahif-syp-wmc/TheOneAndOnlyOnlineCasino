@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
+import { LeaderboardService } from '../services/leaderboard-service';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost' | 'cashed-out';
@@ -55,6 +56,7 @@ export class MinesComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private userService = inject(UserService);
   private alertService = inject(AlertService);
+  private leaderboardService = inject(LeaderboardService);
 
   balance = this.userService.coins();
   xp = this.userService.xp();
@@ -258,6 +260,7 @@ export class MinesComponent implements OnInit, OnDestroy {
         );
 
         this.balance = updatedUser.coins;
+        this.saveGameHistory('win', winnings, 0);
       } catch (err) {
         console.log(err);
         this.balance = previousBalance;
@@ -300,6 +303,7 @@ export class MinesComponent implements OnInit, OnDestroy {
         );
 
         this.balance = updatedUser.coins;
+        this.saveGameHistory('loss', 0, this.bet);
       } catch (err) {
         console.log(err);
       }
@@ -323,6 +327,7 @@ export class MinesComponent implements OnInit, OnDestroy {
         );
 
         this.balance = updatedUser.coins;
+        this.saveGameHistory('win', this.currentWin, 0);
       } catch (err) {
         console.log(err);
         this.alertService.error('Could not save win');
@@ -350,7 +355,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.roundStarted = false;
     this.status = 'idle';
 
-    if (resetBet) {
+        if (resetBet) {
       this.bet = Math.min(this.bet, this.balance || 1);
     }
   }
@@ -382,6 +387,27 @@ export class MinesComponent implements OnInit, OnDestroy {
         cell.revealed = true;
       }
     }
+  }
+
+  private saveGameHistory(result: 'win' | 'loss', coinsWon: number, coinsLost: number): void {
+    const user = this.userService.currentUser?.() ?? null;
+
+    if (!user) {
+      return;
+    }
+
+    void firstValueFrom(
+      this.leaderboardService.saveGameHistory({
+        userId: user.id,
+        gameName: 'Mines',
+        result,
+        betAmount: this.bet,
+        coinsWon,
+        coinsLost
+      })
+    ).catch(error => {
+      console.error('Could not save Mines game history', error);
+    });
   }
 
   exitGame() {

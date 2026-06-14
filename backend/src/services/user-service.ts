@@ -16,7 +16,7 @@ export function usernameExists(username: string): boolean {
     .prepare(`
       SELECT id
       FROM users
-      WHERE username = ?
+      WHERE username = ?  
     `)
     .get(username);
 
@@ -132,32 +132,4 @@ export function updateProfile(
   }
 
   return getPublicUserById(userId);
-}
-
-export function getLeaderboard(type: unknown): User[] {
-  let orderBy = 'coins DESC';
-
-  if (type === 'losses') {
-    orderBy = 'coins ASC';
-  }
-
-  return db
-    .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
-      FROM users
-      ORDER BY ${orderBy}
-      LIMIT 10
-    `)
-    .all() as User[];
-}
-
-export function getTopPlayers(): User[] {
-  return db
-    .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
-      FROM users
-      ORDER BY coins DESC
-      LIMIT 10
-    `)
-    .all() as User[];
 }

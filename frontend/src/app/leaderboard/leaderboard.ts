@@ -1,110 +1,87 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { UserService } from '../services/user-service';
-
-interface LeaderboardEntry {
-  id: number;
-  username: string;
-  coins: number;
-}
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  LeaderboardDetails,
+  LeaderboardEntry,
+  LeaderboardService
+} from '../services/leaderboard-service';
 
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './leaderboard.html',
-  styleUrls: ['./leaderboard.scss']
+  styleUrl: './leaderboard.scss'
 })
-export class Leaderboard implements OnInit, OnDestroy {
-  private userService = inject(UserService);
-  private refreshInterval: ReturnType<typeof setInterval> | null = null;
-  private readonly REFRESH_RATE = 5000; // 5 seconds
-  private readonly TOP_LIMIT = 10;
+export class Leaderboard implements OnInit {
+  leaderboard: LeaderboardEntry[] = [];
+  selectedDetails?: LeaderboardDetails;
 
-  selectedWinsPeriod = 'today';
-  selectedLossesPeriod = 'today';
-  topWinsRaw = signal<LeaderboardEntry[]>([]);
-  topLossesRaw = signal<LeaderboardEntry[]>([]);
-  topPlayersRaw = signal<LeaderboardEntry[]>([]);
+  loading = false;
+  detailsLoading = false;
+  errorMessage = '';
 
-  topWins = computed(() => this.limitTop(this.sortByCoinsDesc(this.topWinsRaw())));
-  topLosses = computed(() => this.limitTop(this.sortByCoinsAsc(this.topLossesRaw())));
-  topPlayers = computed(() => this.limitTop(this.sortByCoinsDesc(this.topPlayersRaw())));
+  constructor(
+    private leaderboardService: LeaderboardService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  periods = [
-    { value: 'today', label: 'Today' },
-    { value: 'last-week', label: 'Last Week' },
-    { value: 'last-month', label: 'Last Month' },
-    { value: 'all', label: 'All Time' }
-  ];
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadLeaderboard();
-    this.startLiveUpdates();
   }
 
-  ngOnDestroy() {
-    this.stopLiveUpdates();
-  }
+  loadLeaderboard(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.cdr.detectChanges();
 
-  startLiveUpdates() {
-    this.refreshInterval = setInterval(() => {
-      this.loadLeaderboard();
-    }, this.REFRESH_RATE);
-  }
+    this.leaderboardService.getLeaderboard().subscribe({
+      next: (players: LeaderboardEntry[]) => {
+        console.log('Leaderboard loaded:', players);
 
-  stopLiveUpdates() {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
-      this.refreshInterval = null;
-    }
-  }
+        this.leaderboard = players;
+        this.loading = false;
+        this.cdr.detectChanges();
 
-  loadLeaderboard() {
-    this.loadLeaderboardType('wins', this.selectedWinsPeriod, (users) => this.topWinsRaw.set(users));
-    this.loadLeaderboardType('losses', this.selectedLossesPeriod, (users) => this.topLossesRaw.set(users));
-    this.userService.getTopPlayers().subscribe({
-      next: (users) => this.topPlayersRaw.set(users),
-      error: (err) => console.error('Error loading top players', err)
+        if (players.length > 0) {
+          this.selectPlayer(players[0]);
+        }
+      },
+      error: (error) => {
+        console.error('Leaderboard error:', error);
+
+        this.errorMessage = 'Leaderboard could not be loaded.';
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  onWinsPeriodChange(period: string) {
-    this.selectedWinsPeriod = period;
-    this.loadLeaderboardType('wins', period, (users) => this.topWinsRaw.set(users));
-  }
+  selectPlayer(player: LeaderboardEntry): void {
+    this.detailsLoading = true;
+    this.errorMessage = '';
+    this.cdr.detectChanges();
 
-  onLossesPeriodChange(period: string) {
-    this.selectedLossesPeriod = period;
-    this.loadLeaderboardType('losses', period, (users) => this.topLossesRaw.set(users));
-  }
+    this.leaderboardService.getPlayerDetails(player.id).subscribe({
+      next: (details: LeaderboardDetails) => {
+        console.log('Player details loaded:', details);
 
-  private loadLeaderboardType(type: 'wins' | 'losses', period: string, setter: (users: LeaderboardEntry[]) => void) {
-    this.userService.getLeaderboard(type, period).subscribe({
-      next: (users) => setter(users),
-      error: (err) => console.error(`Error loading ${type} leaderboard`, err)
+        details.stats.rank = player.rank;
+        this.selectedDetails = details;
+        this.detailsLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Player details error:', error);
+
+        this.errorMessage = 'Player details could not be loaded.';
+        this.detailsLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  limitTop(entries: LeaderboardEntry[]): LeaderboardEntry[] {
-    return entries.slice(0, this.TOP_LIMIT);
-  }
-
-  // Sorting methods
-  sortByCoinsAsc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
-    return [...entries].sort((a, b) => a.coins - b.coins);
-  }
-
-  sortByCoinsDesc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
-    return [...entries].sort((a, b) => b.coins - a.coins);
-  }
-
-  sortByUsernameAsc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
-    return [...entries].sort((a, b) => a.username.localeCompare(b.username));
-  }
-
-  sortByUsernameDesc(entries: LeaderboardEntry[]): LeaderboardEntry[] {
-    return [...entries].sort((a, b) => b.username.localeCompare(a.username));
+  isSelected(player: LeaderboardEntry): boolean {
+    return this.selectedDetails?.stats.id === player.id;
   }
 }

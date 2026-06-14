@@ -1,7 +1,7 @@
 export type User = {
   id: number;
   username: string;
-  passoword: string;
+  password: string;
   premium: number;
   coins: number;
   wins: number;
