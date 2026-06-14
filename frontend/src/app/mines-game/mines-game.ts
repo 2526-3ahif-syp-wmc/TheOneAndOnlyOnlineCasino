@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
+import { GameOfDayService } from '../services/game-of-day.service';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost' | 'cashed-out';

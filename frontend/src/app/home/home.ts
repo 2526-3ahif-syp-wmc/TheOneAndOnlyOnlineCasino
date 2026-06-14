@@ -51,6 +51,10 @@ export class Home {
 
   private gameOfDayService = inject(GameOfDayService);
 
+  constructor() {
+    void this.loadDailyGame();
+  }
+
   protected readonly games: GameTile[] = [
     {
       title: 'Mines',
