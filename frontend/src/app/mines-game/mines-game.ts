@@ -328,7 +328,11 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.currentWin = Math.max(1, Math.floor(this.bet * this.multiplier));
 
     if (this.safeReveals >= this.safeTilesTotal) {
-      const newBalance = this.balance + this.currentWin;
+      const bonus = this.dailyGameName() === 'Mines'
+        ? Math.floor(this.currentWin * this.dailyGameBonusPercent() / 100)
+        : 0;
+      const totalPayout = this.currentWin + bonus;
+      const newBalance = this.balance + totalPayout;
 
       try {
         const updatedUser = await firstValueFrom(
