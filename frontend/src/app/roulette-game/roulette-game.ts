@@ -14,7 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
-import { GameOfDayService } from '../services/game-of-day.service';
 import { firstValueFrom } from 'rxjs';
 
 interface Bet {
@@ -49,10 +48,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   protected userService = inject(UserService);
   private leaderboardService = inject(LeaderboardService);
-  private gameOfDayService = inject(GameOfDayService);
 
-  protected dailyGameName = signal('');
-  protected dailyGameBonusPercent = signal(0);
 
   balance: number = this.userService.coins();
   currentBet: number = 50;
@@ -96,8 +92,6 @@ export class RouletteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initTrackNumbers();
     this.hideGlobalChrome();
-
-    void this.loadDailyGame();
   }
 
   ngOnDestroy(): void {
@@ -611,11 +605,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       this.resultsHistory.pop();
     }
 
-    const finalBalance = this.balance + totalWin;
-
-    const bonus = this.dailyGameName() === 'Roulette'
-      ? Math.floor(totalWin * this.dailyGameBonusPercent() / 100)
-      : 0;
+    const bonus = Math.floor(totalWin * 0.10);
     const totalPayout = totalWin + bonus;
     const updatedFinalBalance = this.balance + totalPayout;
 
@@ -666,16 +656,6 @@ export class RouletteComponent implements OnInit, OnDestroy {
     }, 8000);
   }
 
-  private loadDailyGame(): void {
-    void firstValueFrom(this.gameOfDayService.getGameOfDay())
-      .then((dailyGame) => {
-        this.dailyGameName.set(dailyGame.gameName);
-        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
-      })
-      .catch((error) => {
-        console.error('Failed to load daily game of day', error);
-      });
-  }
 
   private saveGameHistory(totalBet: number, totalWin: number): void {
     const user = this.userService.currentUser?.() ?? null;

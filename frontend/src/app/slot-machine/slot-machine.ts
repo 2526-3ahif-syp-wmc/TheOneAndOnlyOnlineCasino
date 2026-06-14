@@ -7,7 +7,6 @@ import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
 import { UserService } from '../services/user-service';
 import { LeaderboardService } from '../services/leaderboard-service';
-import { GameOfDayService } from '../services/game-of-day.service';
 
 type SlotSymbol = {
   key: string;
@@ -137,10 +136,6 @@ export class SlotMachineComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly alertService = inject(AlertService);
   private readonly leaderboardService = inject(LeaderboardService);
-  private readonly gameOfDayService = inject(GameOfDayService);
-
-  protected dailyGameName = signal('');
-  protected dailyGameBonusPercent = signal(0);
 
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
 
@@ -177,8 +172,6 @@ export class SlotMachineComponent implements OnInit {
     this.balance = this.userService.coins();
     this.bet = Math.min(this.bet, Math.max(1, this.balance));
     this.hideGlobalChrome();
-
-    void this.loadDailyGame();
   }
 
   ngOnDestroy(): void {
@@ -283,10 +276,8 @@ export class SlotMachineComponent implements OnInit {
       this.reels = finalGrid;
 
       const evaluation = this.evaluateGrid(finalGrid, wager);
-      const bonus = this.dailyGameName() === 'Slot Machine'
-        ? Math.floor(evaluation.payout * this.dailyGameBonusPercent() / 100)
-        : 0;
-      const totalPayout = evaluation.payout + bonus;
+      const bonus = 0;
+      const totalPayout = evaluation.payout;
       const nextBalance = Math.max(0, Math.floor(this.balance - wager + totalPayout));
 
       try {
@@ -433,16 +424,6 @@ export class SlotMachineComponent implements OnInit {
     return SLOT_SYMBOLS[0];
   }
 
-  private loadDailyGame(): void {
-    void firstValueFrom(this.gameOfDayService.getGameOfDay())
-      .then((dailyGame) => {
-        this.dailyGameName.set(dailyGame.gameName);
-        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
-      })
-      .catch((error) => {
-        console.error('Failed to load daily game of day', error);
-      });
-  }
 
   private getWeight(symbol: SlotSymbol): number {
     switch (symbol.key) {

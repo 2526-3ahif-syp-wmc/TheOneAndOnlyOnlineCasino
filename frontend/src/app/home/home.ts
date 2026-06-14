@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../services/user-service';
-import { GameOfDayService } from '../services/game-of-day.service';
 import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
 
@@ -46,16 +45,7 @@ export class Home {
     localStorage.getItem(this.bonusStorageKey()) ?? ''
   );
 
-  protected dailyGameName = signal('');
-  protected dailyGameBonusPercent = signal(0);
-  protected dailyGameLoading = signal(true);
-  protected dailyGameError = signal('');
-
-  private gameOfDayService = inject(GameOfDayService);
-
-  constructor() {
-    void this.loadDailyGame();
-  }
+  constructor() {}
 
   protected readonly games: GameTile[] = [
     {
@@ -110,19 +100,4 @@ export class Home {
     }
   }
 
-  private loadDailyGame(): void {
-    void firstValueFrom(this.gameOfDayService.getGameOfDay())
-      .then((dailyGame) => {
-        this.dailyGameName.set(dailyGame.gameName);
-        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
-        this.dailyGameError.set('');
-      })
-      .catch((error) => {
-        console.error('Failed to load daily game of day', error);
-        this.dailyGameError.set('Could not load today\'s game bonus.');
-      })
-      .finally(() => {
-        this.dailyGameLoading.set(false);
-      });
-  }
 }

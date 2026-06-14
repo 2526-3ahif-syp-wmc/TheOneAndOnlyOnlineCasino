@@ -58,10 +58,6 @@ export class MinesComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   private leaderboardService = inject(LeaderboardService);
-  private gameOfDayService = inject(GameOfDayService);
-
-  protected dailyGameName = signal('');
-  protected dailyGameBonusPercent = signal(0);
 
   balance = this.userService.coins();
   xp = this.userService.xp();
@@ -85,7 +81,6 @@ export class MinesComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.buildBoard();
-    void this.loadDailyGame();
   }
 
   ngOnInit(): void {
@@ -247,10 +242,8 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     this.isCashingOut = true;
     const winnings = this.currentWin;
-      const bonus = this.dailyGameName() === 'Mines'
-        ? Math.floor(winnings * this.dailyGameBonusPercent() / 100)
-        : 0;
-      const totalPayout = winnings + bonus;
+      const bonus = 0;
+      const totalPayout = winnings;
       const previousBalance = this.balance;
       const newBalance = previousBalance + totalPayout;
     this.balance = newBalance;
@@ -328,10 +321,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.currentWin = Math.max(1, Math.floor(this.bet * this.multiplier));
 
     if (this.safeReveals >= this.safeTilesTotal) {
-      const bonus = this.dailyGameName() === 'Mines'
-        ? Math.floor(this.currentWin * this.dailyGameBonusPercent() / 100)
-        : 0;
-      const totalPayout = this.currentWin + bonus;
+      const totalPayout = this.currentWin;
       const newBalance = this.balance + totalPayout;
 
       try {
@@ -394,16 +384,6 @@ export class MinesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadDailyGame(): void {
-    void firstValueFrom(this.gameOfDayService.getGameOfDay())
-      .then((dailyGame) => {
-        this.dailyGameName.set(dailyGame.gameName);
-        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
-      })
-      .catch((error) => {
-        console.error('Failed to load daily game of day', error);
-      });
-  }
 
   private revealAllBombs() {
     for (const cell of this.cells) {
