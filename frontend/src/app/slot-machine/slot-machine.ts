@@ -283,11 +283,11 @@ export class SlotMachineComponent implements OnInit {
       this.reels = finalGrid;
 
       const evaluation = this.evaluateGrid(finalGrid, wager);
-    const bonus = this.dailyGameName() === 'Slot Machine'
-      ? Math.floor(evaluation.payout * this.dailyGameBonusPercent() / 100)
-      : 0;
-    const totalPayout = evaluation.payout + bonus;
-    const rawNextBalance = this.balance - wager + totalPayout;
+      const bonus = this.dailyGameName() === 'Slot Machine'
+        ? Math.floor(evaluation.payout * this.dailyGameBonusPercent() / 100)
+        : 0;
+      const totalPayout = evaluation.payout + bonus;
+      const nextBalance = Math.max(0, Math.floor(this.balance - wager + totalPayout));
 
       try {
         console.debug('Saving coins', {
