@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -276,9 +276,8 @@ export class SlotMachineComponent implements OnInit {
       this.reels = finalGrid;
 
       const evaluation = this.evaluateGrid(finalGrid, wager);
-      const bonus = 0;
-      const totalPayout = evaluation.payout;
-      const nextBalance = Math.max(0, Math.floor(this.balance - wager + totalPayout));
+      const rawNextBalance = this.balance - wager + evaluation.payout;
+      const nextBalance = Math.max(0, Math.floor(rawNextBalance));
 
       try {
         console.debug('Saving coins', {
@@ -292,7 +291,7 @@ export class SlotMachineComponent implements OnInit {
         const updatedUser = await firstValueFrom(this.userService.updateCoins(nextBalance));
         this.balance = updatedUser.coins;
 
-        this.saveGameHistory(wager, totalPayout);
+        this.saveGameHistory(wager, evaluation.payout);
       } catch (error: any) {
         console.error('updateCoins failed', error);
 
@@ -363,7 +362,7 @@ export class SlotMachineComponent implements OnInit {
 
       if (evaluation.payout > 0) {
         this.spawnConfetti();
-        this.alertService.success(`You won ${totalPayout} EC${bonus > 0 ? ` (+${bonus} bonus)` : ''}`);
+        this.alertService.success(`You won ${evaluation.payout} EC`);
       } else {
         this.alertService.info('No line matched this spin');
       }
@@ -423,7 +422,6 @@ export class SlotMachineComponent implements OnInit {
 
     return SLOT_SYMBOLS[0];
   }
-
 
   private getWeight(symbol: SlotSymbol): number {
     switch (symbol.key) {

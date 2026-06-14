@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
@@ -241,10 +241,9 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     this.isCashingOut = true;
     const winnings = this.currentWin;
-      const bonus = 0;
-      const totalPayout = winnings;
-      const previousBalance = this.balance;
-      const newBalance = previousBalance + totalPayout;
+    const previousBalance = this.balance;
+    const newBalance = previousBalance + winnings;
+
     this.balance = newBalance;
 
     this.buildBoard();
@@ -320,8 +319,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.currentWin = Math.max(1, Math.floor(this.bet * this.multiplier));
 
     if (this.safeReveals >= this.safeTilesTotal) {
-      const totalPayout = this.currentWin;
-      const newBalance = this.balance + totalPayout;
+      const newBalance = this.balance + this.currentWin;
 
       try {
         const updatedUser = await firstValueFrom(
@@ -329,7 +327,7 @@ export class MinesComponent implements OnInit, OnDestroy {
         );
 
         this.balance = updatedUser.coins;
-        this.saveGameHistory('win', totalPayout, 0);
+        this.saveGameHistory('win', this.currentWin, 0);
       } catch (err) {
         console.log(err);
         this.alertService.error('Could not save win');
@@ -382,7 +380,6 @@ export class MinesComponent implements OnInit, OnDestroy {
       this.cells[idx].mine = true;
     }
   }
-
 
   private revealAllBombs() {
     for (const cell of this.cells) {
