@@ -107,4 +107,15 @@ export class Home {
       this.alertService.error('Claiming daily bonus failed');
     }
   }
+
+  private loadDailyGame(): void {
+    void firstValueFrom(this.gameOfDayService.getGameOfDay())
+      .then((dailyGame) => {
+        this.dailyGameName.set(dailyGame.gameName);
+        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
+      })
+      .catch((error) => {
+        console.error('Failed to load daily game of day', error);
+      });
+  }
 }
