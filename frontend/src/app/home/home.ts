@@ -48,6 +48,8 @@ export class Home {
 
   protected dailyGameName = signal('');
   protected dailyGameBonusPercent = signal(0);
+  protected dailyGameLoading = signal(true);
+  protected dailyGameError = signal('');
 
   private gameOfDayService = inject(GameOfDayService);
 
@@ -113,9 +115,14 @@ export class Home {
       .then((dailyGame) => {
         this.dailyGameName.set(dailyGame.gameName);
         this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
+        this.dailyGameError.set('');
       })
       .catch((error) => {
         console.error('Failed to load daily game of day', error);
+        this.dailyGameError.set('Could not load today\'s game bonus.');
+      })
+      .finally(() => {
+        this.dailyGameLoading.set(false);
       });
   }
 }
