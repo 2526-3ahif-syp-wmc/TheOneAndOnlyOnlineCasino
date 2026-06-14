@@ -6,6 +6,7 @@ import {
   ElementRef,
   ViewChild,
   inject,
+  signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
+import { GameOfDayService } from '../services/game-of-day.service';
 import { firstValueFrom } from 'rxjs';
 
 interface Bet {
@@ -47,6 +49,10 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   protected userService = inject(UserService);
   private leaderboardService = inject(LeaderboardService);
+  private gameOfDayService = inject(GameOfDayService);
+
+  protected dailyGameName = signal('');
+  protected dailyGameBonusPercent = signal(0);
 
   balance: number = this.userService.coins();
   currentBet: number = 50;
@@ -90,6 +96,8 @@ export class RouletteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initTrackNumbers();
     this.hideGlobalChrome();
+
+    void this.loadDailyGame();
   }
 
   ngOnDestroy(): void {
@@ -605,16 +613,22 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
     const finalBalance = this.balance + totalWin;
 
-    const updatedUser = await firstValueFrom(this.userService.updateCoins(finalBalance));
+    const bonus = this.dailyGameName() === 'Roulette'
+      ? Math.floor(totalWin * this.dailyGameBonusPercent() / 100)
+      : 0;
+    const totalPayout = totalWin + bonus;
+    const updatedFinalBalance = this.balance + totalPayout;
+
+    const updatedUser = await firstValueFrom(this.userService.updateCoins(updatedFinalBalance));
     this.balance = updatedUser.coins;
 
-    this.saveGameHistory(totalBet, totalWin);
+    this.saveGameHistory(totalBet, totalPayout);
 
     if (totalWin > 0) {
-      this.lastWin = totalWin;
+      this.lastWin = totalPayout;
       this.lastLoss = 0;
       this.showWinAnimation = true;
-      this.alertService.success(`You won ${totalWin} EC!`);
+      this.alertService.success(`You won ${totalPayout} EC${bonus > 0 ? ` (+${bonus} bonus)` : ''}`);
 
       setTimeout(() => {
         this.showWinAnimation = false;
@@ -650,6 +664,17 @@ export class RouletteComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     }, 8000);
+  }
+
+  private loadDailyGame(): void {
+    void firstValueFrom(this.gameOfDayService.getGameOfDay())
+      .then((dailyGame) => {
+        this.dailyGameName.set(dailyGame.gameName);
+        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
+      })
+      .catch((error) => {
+        console.error('Failed to load daily game of day', error);
+      });
   }
 
   private saveGameHistory(totalBet: number, totalWin: number): void {

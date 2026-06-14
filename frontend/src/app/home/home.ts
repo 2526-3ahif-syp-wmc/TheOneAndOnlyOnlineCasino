@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../services/user-service';
+import { GameOfDayService } from '../services/game-of-day.service';
 import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
 
@@ -44,6 +45,11 @@ export class Home {
   protected lastClaimedDay = signal(
     localStorage.getItem(this.bonusStorageKey()) ?? ''
   );
+
+  protected dailyGameName = signal('');
+  protected dailyGameBonusPercent = signal(0);
+
+  private gameOfDayService = inject(GameOfDayService);
 
   protected readonly games: GameTile[] = [
     {

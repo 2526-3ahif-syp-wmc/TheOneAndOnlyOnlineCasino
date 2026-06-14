@@ -57,6 +57,10 @@ export class MinesComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   private leaderboardService = inject(LeaderboardService);
+  private gameOfDayService = inject(GameOfDayService);
+
+  protected dailyGameName = signal('');
+  protected dailyGameBonusPercent = signal(0);
 
   balance = this.userService.coins();
   xp = this.userService.xp();
@@ -80,6 +84,7 @@ export class MinesComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.buildBoard();
+    void this.loadDailyGame();
   }
 
   ngOnInit(): void {
@@ -241,9 +246,12 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     this.isCashingOut = true;
     const winnings = this.currentWin;
-    const previousBalance = this.balance;
-    const newBalance = previousBalance + winnings;
-
+      const bonus = this.dailyGameName() === 'Mines'
+        ? Math.floor(winnings * this.dailyGameBonusPercent() / 100)
+        : 0;
+      const totalPayout = winnings + bonus;
+      const previousBalance = this.balance;
+      const newBalance = previousBalance + totalPayout;
     this.balance = newBalance;
 
     this.buildBoard();
@@ -327,7 +335,7 @@ export class MinesComponent implements OnInit, OnDestroy {
         );
 
         this.balance = updatedUser.coins;
-        this.saveGameHistory('win', this.currentWin, 0);
+        this.saveGameHistory('win', totalPayout, 0);
       } catch (err) {
         console.log(err);
         this.alertService.error('Could not save win');
@@ -379,6 +387,17 @@ export class MinesComponent implements OnInit, OnDestroy {
     for (const idx of shuffled.slice(0, this.bombs)) {
       this.cells[idx].mine = true;
     }
+  }
+
+  private loadDailyGame(): void {
+    void firstValueFrom(this.gameOfDayService.getGameOfDay())
+      .then((dailyGame) => {
+        this.dailyGameName.set(dailyGame.gameName);
+        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
+      })
+      .catch((error) => {
+        console.error('Failed to load daily game of day', error);
+      });
   }
 
   private revealAllBombs() {

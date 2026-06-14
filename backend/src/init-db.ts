@@ -30,6 +30,13 @@ db.exec(`
 
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS daily_game_of_day (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    selected_at TEXT NOT NULL UNIQUE,
+    game_name TEXT NOT NULL,
+    bonus_percent INTEGER NOT NULL DEFAULT 10
+  );
 `);
 
 console.log('Database tables created/updated successfully.');

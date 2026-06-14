@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
 import { UserService } from '../services/user-service';
 import { LeaderboardService } from '../services/leaderboard-service';
+import { GameOfDayService } from '../services/game-of-day.service';
 
 type SlotSymbol = {
   key: string;
@@ -136,6 +137,10 @@ export class SlotMachineComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly alertService = inject(AlertService);
   private readonly leaderboardService = inject(LeaderboardService);
+  private readonly gameOfDayService = inject(GameOfDayService);
+
+  protected dailyGameName = signal('');
+  protected dailyGameBonusPercent = signal(0);
 
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
 
@@ -172,6 +177,8 @@ export class SlotMachineComponent implements OnInit {
     this.balance = this.userService.coins();
     this.bet = Math.min(this.bet, Math.max(1, this.balance));
     this.hideGlobalChrome();
+
+    void this.loadDailyGame();
   }
 
   ngOnDestroy(): void {
@@ -276,8 +283,11 @@ export class SlotMachineComponent implements OnInit {
       this.reels = finalGrid;
 
       const evaluation = this.evaluateGrid(finalGrid, wager);
-      const rawNextBalance = this.balance - wager + evaluation.payout;
-      const nextBalance = Math.max(0, Math.floor(rawNextBalance));
+    const bonus = this.dailyGameName() === 'Slot Machine'
+      ? Math.floor(evaluation.payout * this.dailyGameBonusPercent() / 100)
+      : 0;
+    const totalPayout = evaluation.payout + bonus;
+    const rawNextBalance = this.balance - wager + totalPayout;
 
       try {
         console.debug('Saving coins', {
@@ -291,7 +301,7 @@ export class SlotMachineComponent implements OnInit {
         const updatedUser = await firstValueFrom(this.userService.updateCoins(nextBalance));
         this.balance = updatedUser.coins;
 
-        this.saveGameHistory(wager, evaluation.payout);
+        this.saveGameHistory(wager, totalPayout);
       } catch (error: any) {
         console.error('updateCoins failed', error);
 
@@ -362,7 +372,7 @@ export class SlotMachineComponent implements OnInit {
 
       if (evaluation.payout > 0) {
         this.spawnConfetti();
-        this.alertService.success(`You won ${evaluation.payout} EC`);
+        this.alertService.success(`You won ${totalPayout} EC${bonus > 0 ? ` (+${bonus} bonus)` : ''}`);
       } else {
         this.alertService.info('No line matched this spin');
       }
@@ -421,6 +431,17 @@ export class SlotMachineComponent implements OnInit {
     }
 
     return SLOT_SYMBOLS[0];
+  }
+
+  private loadDailyGame(): void {
+    void firstValueFrom(this.gameOfDayService.getGameOfDay())
+      .then((dailyGame) => {
+        this.dailyGameName.set(dailyGame.gameName);
+        this.dailyGameBonusPercent.set(dailyGame.bonusPercent);
+      })
+      .catch((error) => {
+        console.error('Failed to load daily game of day', error);
+      });
   }
 
   private getWeight(symbol: SlotSymbol): number {
