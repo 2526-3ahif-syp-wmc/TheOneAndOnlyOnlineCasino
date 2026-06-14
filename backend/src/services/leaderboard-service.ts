@@ -66,7 +66,7 @@ export function getLeaderboard(): LeaderboardEntry[] {
       FROM users u
       LEFT JOIN game_history g ON g.user_id = u.id
       GROUP BY u.id, u.username
-      ORDER BY wins DESC, coins_won DESC, net_coins DESC
+      ORDER BY wins DESC, coins_won DESC
     `)
     .all() as LeaderboardEntry[];
 }
