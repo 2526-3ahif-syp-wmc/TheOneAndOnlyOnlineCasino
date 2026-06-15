@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule, FormsModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Friend {
   id: number;
