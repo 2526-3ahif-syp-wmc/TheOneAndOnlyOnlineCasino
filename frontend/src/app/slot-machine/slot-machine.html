@@ -16,134 +16,246 @@
 			}
 		</div>
 	}
-	<div class="ambient ambient-left"></div>
-	<div class="ambient ambient-right"></div>
 
-	<header class="hero card-glass">
-		<div class="hero-copy">
-			<span class="eyebrow">EduBet Casino</span>
-			<h1>Slot Machine</h1>
-			<p>
-				Spin the reels, chase matching lines and build your balance with a fast arcade-style slot round.
-			</p>
+
+<div class="ambient ambient-left"></div>
+<div class="ambient ambient-right"></div>
+
+<header class="hero card-glass">
+	<div class="hero-copy">
+		<span class="eyebrow">EduBet Casino</span>
+		<h1>Slots</h1>
+	</div>
+
+	<div class="hero-actions">
+		<div class="balance-pill">
+			<span>Balance</span>
+			<strong>{{ balance }} EC</strong>
 		</div>
 
-		<div class="hero-actions">
-			<div class="balance-pill">
-				<span>Balance</span>
-				<strong>{{ balance }} EC</strong>
+		<a routerLink="/home" class="back-button">Back</a>
+	</div>
+</header>
+
+<section class="slot-layout">
+	<article class="machine card-glass">
+		<div class="machine-top">
+			<div>
+				<span class="machine-label">5 Reels • 10 Lines</span>
+				<h2>{{ isSpinning ? 'Spinning...' : currentStatusLabel }}</h2>
 			</div>
 
-			<a routerLink="/home" class="back-button">Back to Home</a>
+			<div class="status-chip" [class.status-chip-win]="(lastSpin?.payout ?? 0) > 0">
+				<span>Last Win</span>
+				<strong>{{ lastSpin?.payout ?? 0 }} EC</strong>
+			</div>
 		</div>
-	</header>
 
-	<section class="slot-layout">
-		<article class="machine card-glass">
-			<div class="machine-top">
-				<div>
-					<span class="machine-label">Current round</span>
-					<h2>{{ isSpinning ? 'Reels spinning' : 'Ready to spin' }}</h2>
-				</div>
+		<div class="reel-stage">
+			<div class="slot-frame">
+				<div class="slot-lights"></div>
 
-				<div class="status-chip" [class.status-chip-win]="(lastSpin?.payout ?? 0) > 0">
-					<span>Win rate</span>
-					<strong>{{ winRatePercent }}%</strong>
-				</div>
-			</div>
-
-			<div class="reel-stage">
 				<div class="reel-window">
 					@for (column of reels; track $index; let columnIndex = $index) {
-						<div class="reel" [class.reel-spinning]="isSpinning" [style.animation-delay.ms]="columnIndex * 90">
-							@for (symbol of column; track $index; let rowIndex = $index) {
+						<div
+							class="reel"
+							[class.reel-spinning]="isReelSpinning(columnIndex)"
+						>
+							<div class="reel-viewport">
 								<div
-									class="symbol-cell"
-									[class.symbol-cell-winning]="isWinningCell(columnIndex, rowIndex)"
-									[style.background]="symbol.background"
-									[style.box-shadow]="'0 0 0 1px rgba(255,255,255,0.08), 0 16px 30px ' + symbol.glow"
+									class="reel-strip"
+									[class.reel-strip-spinning]="isReelSpinning(columnIndex)"
+									[style.animation-duration.ms]="spinDurationFor(columnIndex)"
+									[style.--reel-delay.ms]="columnIndex * 80"
 								>
-									<span class="symbol-icon">{{ symbol.icon }}</span>
-									<span class="symbol-label">{{ symbol.label }}</span>
+									@for (symbol of getDisplayColumn(columnIndex); track $index; let rowIndex = $index) {
+										<div
+											class="symbol-cell"
+											[class.symbol-cell-winning]="!isSpinning && isWinningCell(columnIndex, rowIndex)"
+										>
+											<span class="symbol-fallback">{{ symbol.icon }}</span>
+
+											<img
+												class="symbol-image"
+												[src]="symbol.imageUrl"
+												[alt]="symbol.label"
+												(error)="handleSymbolImageError($event)"
+											/>
+
+											<span class="symbol-label">{{ symbol.label }}</span>
+										</div>
+									}
 								</div>
-							}
+							</div>
 						</div>
 					}
 				</div>
-
-				<div class="payline-hint">
-					<span>8 paylines</span>
-					<strong>Rows, columns and diagonals all pay</strong>
-				</div>
 			</div>
 
-			<div class="result-grid">
-				<div class="result-card">
-					<span>Bet</span>
-					<strong>{{ bet }} EC</strong>
-				</div>
-
-				<div class="result-card">
-					<span>Payout</span>
-					<strong>{{ lastSpin?.payout ?? 0 }} EC</strong>
-				</div>
-
-				<div class="result-card">
-					<span>Status</span>
-					<strong>{{ currentStatusLabel }}</strong>
-				</div>
-
-				<div class="result-card">
-					<span>Lines</span>
-					<strong>{{ lastSpin ? lastSpin.winningLines.length : 0 }}</strong>
-				</div>
+			<div class="payline-hint">
+				<span>Book = Wild</span>
+				<strong>Scatter pays anywhere</strong>
 			</div>
-		</article>
+		</div>
 
-		<aside class="side-panel">
-			<section class="control-card card-glass-soft">
-				<div class="field">
-					<label for="slotBet">Bet amount</label>
-					<input id="slotBet" type="number" [(ngModel)]="bet" min="1" [max]="balance" [disabled]="isSpinning" />
+		<div class="result-grid">
+			<div class="result-card">
+				<span>Bet</span>
+				<strong>{{ bet }} EC</strong>
+			</div>
+
+			<div class="result-card">
+				<span>Payout</span>
+				<strong>{{ lastSpin?.payout ?? 0 }} EC</strong>
+			</div>
+
+			<div class="result-card">
+				<span>Lines</span>
+				<strong>{{ lastSpin ? lastSpin.winningLines.length : 0 }}</strong>
+			</div>
+
+			<div class="result-card">
+				<span>Win Rate</span>
+				<strong>{{ winRatePercent }}%</strong>
+			</div>
+		</div>
+	</article>
+
+	<aside class="side-panel">
+		<section class="control-card card-glass-soft">
+			<div class="field">
+				<label for="slotBet">Bet amount</label>
+				<input
+					id="slotBet"
+					type="number"
+					[(ngModel)]="bet"
+					min="1"
+					[max]="balance"
+					[disabled]="isSpinning || isGambling || canGamble"
+				/>
+			</div>
+
+			<div class="quick-bets">
+				@for (amount of quickBets; track amount) {
+					<button
+						type="button"
+						class="quick-bet"
+						(click)="setQuickBet(amount)"
+						[disabled]="isSpinning || isGambling || canGamble"
+					>
+						{{ amount }}
+					</button>
+				}
+			</div>
+
+			<button type="button" class="spin-button" (click)="spinSlots()" [disabled]="!canSpin">
+				{{ isSpinning ? 'Spinning...' : 'Spin Now' }}
+			</button>
+
+			<button type="button" class="paytable-button" (click)="openPaytable()">
+				Paytable
+			</button>
+		</section>
+
+		<section class="gamble-card card-glass-soft" [class.gamble-card-active]="canUseDouble">
+			<div class="detail-heading">
+				<span>2x Gamble</span>
+				<strong>{{ gambleAmount > 0 ? gambleAmount + ' EC' : 'No Win' }}</strong>
+			</div>
+
+			@if (lastGambleCard) {
+				<div
+					class="draw-card"
+					[class.red-card]="lastGambleCard.color === 'red'"
+					[class.black-card]="lastGambleCard.color === 'black'"
+				>
+					<span>{{ lastGambleCard.rank }}</span>
+					<strong>{{ lastGambleCard.suit }}</strong>
 				</div>
+			} @else {
+				<p class="detail-empty">Guess red or black to double.</p>
+			}
 
-				<div class="quick-bets">
-					@for (amount of quickBets; track amount) {
-						<button type="button" class="quick-bet" (click)="setQuickBet(amount)" [disabled]="isSpinning">
-							{{ amount }}
-						</button>
+			<div class="gamble-actions">
+				<button type="button" class="red-button" (click)="gambleDouble('red')" [disabled]="!canUseDouble">
+					Red
+				</button>
+
+				<button type="button" class="black-button" (click)="gambleDouble('black')" [disabled]="!canUseDouble">
+					Black
+				</button>
+			</div>
+
+			<button type="button" class="collect-button" (click)="collectGamble()" [disabled]="!canUseDouble">
+				Collect
+			</button>
+		</section>
+
+		<section class="detail-card card-glass-soft">
+			<div class="detail-heading">
+				<span>Last Result</span>
+				<strong>{{ topPayoutHint }}</strong>
+			</div>
+
+			@if (lastSpin && lastSpin.winningLines.length > 0) {
+				<div class="detail-lines">
+					@for (line of lastSpin.winningLines; track line.label) {
+						<article class="line-chip">
+							<div>
+								<span>{{ line.label }}</span>
+								<strong>{{ line.matchCount }}x {{ line.symbol.label }}</strong>
+							</div>
+
+							<small>+{{ line.payout }} EC</small>
+						</article>
 					}
 				</div>
+			} @else {
+				<p class="detail-empty"></p>
+			}
+		</section>
+	</aside>
+</section>
 
-				<button type="button" class="spin-button" (click)="spinSlots()" [disabled]="!canSpin">
-					<span>{{ isSpinning ? 'Spinning...' : 'Spin Now' }}</span>
-				</button>
-			</section>
-
-			<section class="detail-card card-glass-soft">
-				<div class="detail-heading">
-					<span>Last result</span>
-					<strong>{{ topPayoutHint }}</strong>
+@if (paytableOpen) {
+	<div class="paytable-overlay" (click)="closePaytable()">
+		<section class="paytable-modal card-glass" (click)="$event.stopPropagation()">
+			<div class="paytable-modal-header">
+				<div>
+					<span class="eyebrow">Temple Slots</span>
+					<h2>Paytable</h2>
 				</div>
 
-				@if (lastSpin) {
-					<div class="detail-lines">
-						@for (line of lastSpin.winningLines; track line.label) {
-							<article class="line-chip">
-								<div>
-									<span>{{ line.label }}</span>
-									<strong>{{ line.symbol.label }}</strong>
-								</div>
-								<small>+{{ line.payout }} EC</small>
-							</article>
-						}
-					</div>
-				} @else {
-					<p class="detail-empty">
-						No spin yet. Pick a stake and hit the reels.
-					</p>
+				<button type="button" class="modal-close" (click)="closePaytable()">×</button>
+			</div>
+
+			<div class="paytable-modal-list">
+				@for (symbol of paytable; track symbol.key) {
+					<article class="paytable-modal-item">
+						<div class="paytable-modal-symbol">
+							<span>{{ symbol.icon }}</span>
+
+							<img
+								[src]="symbol.imageUrl"
+								[alt]="symbol.label"
+								(error)="handleSymbolImageError($event)"
+							/>
+						</div>
+
+						<div>
+							<h3>{{ symbol.label }}</h3>
+							<p>
+								3x {{ symbol.payouts[3] }}x ·
+								4x {{ symbol.payouts[4] }}x ·
+								5x {{ symbol.payouts[5] }}x
+							</p>
+						</div>
+					</article>
 				}
-			</section>
-		</aside>
-	</section>
+			</div>
+		</section>
+	</div>
+}
+
+
 </div>

@@ -32,11 +32,11 @@
           <span class="tile-art" *ngIf="cell.revealed">
             <img
               *ngIf="cell.mine; else diamond"
-              src="/mines_bomb.png"
+              src="/mines/mines_bomb.png"
               alt="Bomb"
             />
             <ng-template #diamond>
-              <img src="/mines_diamond.png" alt="Diamond" />
+              <img src="/mines/mines_diamond.png" alt="Diamond" />
             </ng-template>
           </span>
         </button>
