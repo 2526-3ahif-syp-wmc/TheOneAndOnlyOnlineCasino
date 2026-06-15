@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
+import { MysteryBoxService } from '../services/mystery-box-service';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost' | 'cashed-out';
@@ -57,6 +58,7 @@ export class MinesComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   private leaderboardService = inject(LeaderboardService);
+  private mysteryBoxService = inject(MysteryBoxService);
 
   balance = this.userService.coins();
   xp = this.userService.xp();
@@ -405,7 +407,11 @@ export class MinesComponent implements OnInit, OnDestroy {
         coinsWon,
         coinsLost
       })
-    ).catch(error => {
+    ).then(() => {
+      if (result === 'win') {
+        this.mysteryBoxService.applyBuffToWin(user.id, 'Mines', this.bet);
+      }
+    }).catch(error => {
       console.error('Could not save Mines game history', error);
     });
   }

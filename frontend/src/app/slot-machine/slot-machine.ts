@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
 import { UserService } from '../services/user-service';
 import { LeaderboardService } from '../services/leaderboard-service';
+import { MysteryBoxService } from '../services/mystery-box-service';
 
 type SlotSymbol = {
   key: string;
@@ -136,6 +137,7 @@ export class SlotMachineComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly alertService = inject(AlertService);
   private readonly leaderboardService = inject(LeaderboardService);
+  private readonly mysteryBoxService = inject(MysteryBoxService);
 
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
 
@@ -393,7 +395,11 @@ export class SlotMachineComponent implements OnInit {
         coinsWon: won ? payout : 0,
         coinsLost: won ? 0 : wager
       })
-    ).catch(error => {
+    ).then(() => {
+      if (won) {
+        this.mysteryBoxService.applyBuffToWin(user.id, 'Slot Machine', wager);
+      }
+    }).catch(error => {
       console.error('Could not save Slot Machine game history', error);
     });
   }

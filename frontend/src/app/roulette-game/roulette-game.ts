@@ -49,6 +49,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   protected userService = inject(UserService);
   private leaderboardService = inject(LeaderboardService);
+  private mysteryBoxService = inject(MysteryBoxService);
 
 
   balance: number = this.userService.coins();
@@ -676,7 +677,11 @@ export class RouletteComponent implements OnInit, OnDestroy {
         coinsWon: won ? totalWin : 0,
         coinsLost: won ? 0 : totalBet
       })
-    ).catch(error => {
+    ).then(() => {
+      if (won) {
+        this.mysteryBoxService.applyBuffToWin(user.id, 'Roulette', totalBet);
+      }
+    }).catch(error => {
       console.error('Could not save Roulette game history', error);
     });
   }

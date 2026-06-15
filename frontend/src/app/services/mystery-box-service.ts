@@ -3,7 +3,7 @@ import { LeaderboardService } from './leaderboard-service';
 
 export interface MysteryBoxReward {
   type: 'zero' | 'coins' | 'buff';
-  amount: number; // for coins, this is the amount; for buff, not used
+  amount: number; 
 }
 
 @Injectable({
@@ -11,15 +11,10 @@ export interface MysteryBoxReward {
 })
 export class MysteryBoxService {
   private leaderboardService = inject(LeaderboardService);
-  private readonly BUFF_DURATION_MS = 60 * 60 * 1000; // 1 hour (adjust as needed)
+  private readonly BUFF_DURATION_MS = 60 * 60 * 1000; //1 stunde
   private readonly BUFF_STORAGE_KEY = 'mystery-box-buff-expiry';
 
-  /**
-   * Get random reward based on probabilities:
-   * 50% chance: 0 coins
-   * 40% chance: 1-500 coins
-   * 10% chance: buff (2x wins)
-   */
+ 
   generateReward(): MysteryBoxReward {
     const random = Math.random();
 
@@ -33,17 +28,13 @@ export class MysteryBoxService {
     }
   }
 
-  /**
-   * Activate the 2x wins buff for the configured duration
-   */
+ 
   activateBuff(): void {
     const expiryTime = Date.now() + this.BUFF_DURATION_MS;
     localStorage.setItem(this.BUFF_STORAGE_KEY, expiryTime.toString());
   }
 
-  /**
-   * Check if the buff is currently active
-   */
+
   isBuffActive(): boolean {
     const expiryTime = localStorage.getItem(this.BUFF_STORAGE_KEY);
     if (!expiryTime) {
@@ -60,9 +51,7 @@ export class MysteryBoxService {
     return isActive;
   }
 
-  /**
-   * Get the remaining time of the buff in milliseconds
-   */
+ 
   getBuffRemainingTime(): number {
     const expiryTime = localStorage.getItem(this.BUFF_STORAGE_KEY);
     if (!expiryTime) {
@@ -75,16 +64,13 @@ export class MysteryBoxService {
     return remaining > 0 ? remaining : 0;
   }
 
-  /**
-   * Apply the buff to a game win by logging an additional win with 0 coins
-   * This way the leaderboard counts it as 2 wins but doesn't double the money
-   */
+ 
   applyBuffToWin(userId: number, gameName: string, betAmount: number): void {
     if (!this.isBuffActive()) {
       return;
     }
 
-    // Save an additional win with 0 coins to represent the buff multiplier
+    
     void this.leaderboardService
       .saveGameHistory({
         userId,
@@ -101,9 +87,7 @@ export class MysteryBoxService {
       });
   }
 
-  /**
-   * Clear the buff (used when testing or for admin purposes)
-   */
+  
   clearBuff(): void {
     localStorage.removeItem(this.BUFF_STORAGE_KEY);
   }

@@ -168,3 +168,5 @@ export class Home {
       this.alertService.error('Claiming mystery box failed');
     }
   }
+
+}
