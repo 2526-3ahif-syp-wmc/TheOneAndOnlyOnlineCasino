@@ -1,0 +1,169 @@
+<section class="friends-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <header class="friends-hero card-glass">
+    <span class="eyebrow">Social Hub</span>
+    <h1>Friends</h1>
+    <p>Add friends from your saved users and keep your list organized.</p>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  }
+
+  <div class="friends-layout">
+
+  <!-- FRIENDS -->
+  <section class="friends-list card-glass">
+    <div class="section-heading compact-heading">
+      <div>
+        <span class="eyebrow">Your Friends</span>
+        <h2>{{ friends().length }} Friends</h2>
+      </div>
+    </div>
+
+    <div class="friends-scroll">
+      @if (friendsLoading()) {
+        <div class="loading">Loading friends...</div>
+      } @else if (friends().length === 0) {
+        <div class="empty-state">
+          <p>No friends yet.</p>
+        </div>
+      } @else {
+        @for (friend of friends(); track friend.id) {
+          <button
+            class="friend-card"
+            [class.active]="isSelected(friend)"
+            (click)="selectFriend(friend)"
+          >
+            <div class="friend-avatar">
+              <span>{{ friend.username.substring(0, 1).toUpperCase() }}</span>
+            </div>
+
+            <div class="friend-main">
+              <strong>{{ friend.username }}</strong>
+              <small>
+                {{ friend.level }} lvl ·
+                {{ friend.totalWins }} wins ·
+                {{ friend.balance }} EC
+              </small>
+            </div>
+
+            <div class="friend-level">
+              <span class="level-badge">Friend</span>
+            </div>
+          </button>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- SEARCH + SUGGESTIONS -->
+  <!-- RIGHT SIDE: SEARCH OR FRIEND PROFILE -->
+<section class="suggestions-section card-glass">
+
+  @if (selectedFriend()) {
+    <button type="button" class="back-btn" (click)="closeFriendProfile()">
+      ← Back to Search
+    </button>
+
+    <div class="section-heading">
+      <span class="eyebrow">Friend Profile</span>
+      <h2>{{ selectedFriend()!.username }}</h2>
+    </div>
+
+    <div class="detail-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <strong>{{ selectedFriend()!.level }}</strong>
+          <span>Level</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>{{ selectedFriend()!.totalWins }}</strong>
+          <span>Wins</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>{{ selectedFriend()!.balance }}</strong>
+          <span>Balance</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>{{ selectedFriend()!.lastActive }}</strong>
+          <span>Last Active</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="action action-secondary action-remove"
+        (click)="removeSelectedFriend()"
+      >
+        Remove Friend
+      </button>
+    </div>
+  } @else {
+    <div class="search-panel">
+      <div class="field-group search-field">
+        <span class="field-label">Search users</span>
+        <input
+          type="text"
+          placeholder="Type to filter saved users"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (keyup.enter)="addBestMatch()"
+        />
+      </div>
+    </div>
+
+    <div class="section-heading compact-heading">
+      <div>
+        <span class="eyebrow">Suggestions</span>
+      </div>
+    </div>
+
+    <div class="suggestions-list">
+      @if (usersLoading()) {
+        <div class="loading">Loading Users...</div>
+      } @else if (filteredUsers().length === 0) {
+        <div class="empty-state">
+          <p>No users match this search.</p>
+        </div>
+      } @else {
+        @for (user of filteredUsers(); track user.id) {
+          <div class="suggestion-card" [class.added]="isAlreadyAdded(user.username)">
+            <div class="suggestion-avatar">
+              <span>{{ user.username.substring(0, 1).toUpperCase() }}</span>
+            </div>
+
+            <div class="suggestion-main">
+              <strong>{{ user.username }}</strong>
+              <small>
+                {{ user.wins }} wins ·
+                {{ user.coins }} EC ·
+                XP {{ user.xp }}
+              </small>
+            </div>
+
+            <div class="suggestion-actions">
+              @if (isAlreadyAdded(user.username)) {
+                <span class="suggestion-badge">Added</span>
+              } @else {
+                <button
+                  type="button"
+                  class="add-btn"
+                  (click)="addSuggestedUser(user)"
+                >
+                  Add
+                </button>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+
+</section>

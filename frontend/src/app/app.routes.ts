@@ -6,6 +6,7 @@ import { UserProfile } from './user-profile/user-profile';
 import { UserEditPage } from './user-edit-page/user-edit-page';
 import { Leaderboard } from './leaderboard/leaderboard';
 import { Shop } from './shop/shop';
+import { FriendsPage } from './friends-page/friends-page';
 import { authGuard, guestGuard } from '../auth-guard';
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'user-profile', component: UserProfile, canActivate: [authGuard] },
   { path: 'user-edit-page', component: UserEditPage, canActivate: [authGuard] },
   { path: 'leaderboard', component: Leaderboard, canActivate: [authGuard] },
+  { path: 'friends', component: FriendsPage, canActivate: [authGuard] },
   { path: 'shop', component: Shop, canActivate: [authGuard] },
   {
     path: 'games/slotmachine',

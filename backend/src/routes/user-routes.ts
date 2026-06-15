@@ -3,6 +3,8 @@ import {
   createUser,
   findUserByLogin,
   getProfileUserById,
+  getPublicUsers,
+  searchPublicUsers,
   updateCoins,
   updatePremium,
   updateProfile,
@@ -12,6 +14,17 @@ import {
 } from "../services/user-service";
 
 export const authRouter = Router();
+
+authRouter.get('/users/public', (req, res) => {
+  const excludeUserId = Number(req.query.excludeUserId);
+  const query = String(req.query.query ?? '').trim();
+
+  if (query.length > 0) {
+    return res.json(searchPublicUsers(query, Number.isInteger(excludeUserId) ? excludeUserId : undefined));
+  }
+
+  return res.json(getPublicUsers(Number.isInteger(excludeUserId) ? excludeUserId : undefined));
+});
 
 // REGISTER
 authRouter.post("/users", (req, res) => {

@@ -30,6 +30,21 @@ db.exec(`
 
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS friends (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    friend_name TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'offline' CHECK(status IN ('online', 'offline', 'gaming')),
+    level INTEGER NOT NULL DEFAULT 1,
+    total_wins INTEGER NOT NULL DEFAULT 0,
+    balance INTEGER NOT NULL DEFAULT 0,
+    last_active TEXT NOT NULL DEFAULT 'just now',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
 
 console.log("Database tables created/updated successfully.");
