@@ -45,6 +45,35 @@
         </button>
       }
     </article>
+
+    <article class="reward-card card-glass mystery-box">
+      <div class="reward-icon icon-mystery">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 4h18v3H3z"></path>
+          <path d="M3 4v13c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4"></path>
+          <path d="M9 10v6M15 10v6M12 10v6"></path>
+          <rect x="5" y="7" width="2" height="3"></rect>
+          <rect x="17" y="7" width="2" height="3"></rect>
+        </svg>
+      </div>
+
+      <span class="card-kicker">Mystery reward</span>
+      <h3>Mystery Box!</h3>
+
+      @if (canClaimMysteryBox()) {
+        <p>Unlock a mystery reward every 6 hours! Win coins, nothing, or a buff!</p>
+
+        <button class="bonus-btn" type="button" (click)="claimMysteryBox()">
+          Open mystery box
+        </button>
+      } @else {
+        <p>You already opened your mystery box today. Come back in {{ timeUntilNextMysteryBox() }} hours.</p>
+
+        <button class="bonus-btn" type="button" disabled>
+          Opened today
+        </button>
+      }
+    </article>
   </section>
     </div>
 

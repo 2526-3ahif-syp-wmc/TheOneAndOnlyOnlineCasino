@@ -502,6 +502,24 @@ h1 span {
   margin-bottom: 0.45rem;
 }
 
+.reward-card.mystery-box {
+  border-color: rgba(168, 85, 247, 0.22);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  padding: 1.05rem;
+  max-width: 340px;
+}
+
+.reward-card.mystery-box .reward-icon {
+  color: #a855f7;
+  border-color: rgba(168, 85, 247, 0.25);
+  background: rgba(168, 85, 247, 0.12);
+}
+
+.reward-card.mystery-box .card-kicker {
+  color: rgba(168, 85, 247, 0.85);
+  margin-bottom: 0.45rem;
+}
+
 .reward-icon {
   position: relative;
   z-index: 1;

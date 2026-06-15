@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
+import { MysteryBoxService } from '../services/mystery-box-service';
 import { firstValueFrom } from 'rxjs';
 
 interface Bet {
