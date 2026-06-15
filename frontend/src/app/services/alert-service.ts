@@ -8,7 +8,7 @@ type AppAlert = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
   private alertSignal = signal<AppAlert | null>(null);

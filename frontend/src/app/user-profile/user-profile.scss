@@ -43,7 +43,8 @@
 }
 
 @keyframes drift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
   }
   50% {
@@ -149,9 +150,7 @@ h3 {
   display: grid;
   place-items: center;
   border-radius: 20px;
-  background:
-    radial-gradient(circle, rgba(168, 85, 247, 0.45), rgba(124, 58, 237, 0.15)),
-    #111118;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.45), rgba(124, 58, 237, 0.15)), #111118;
   border: 1px solid rgba(168, 85, 247, 0.35);
   box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
 }
@@ -218,7 +217,10 @@ h3 {
   font-weight: 800;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
   font-size: 0.95rem;
 }
 
@@ -306,7 +308,9 @@ h3 {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(168, 85, 247, 0.1);
-  transition: background 200ms ease, border-color 200ms ease;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease;
 }
 
 .activity-item:hover {

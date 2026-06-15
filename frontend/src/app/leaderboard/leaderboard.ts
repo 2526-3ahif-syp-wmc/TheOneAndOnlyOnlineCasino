@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   LeaderboardDetails,
   LeaderboardEntry,
-  LeaderboardService
+  LeaderboardService,
 } from '../services/leaderboard-service';
 
 @Component({
@@ -11,7 +11,7 @@ import {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './leaderboard.html',
-  styleUrl: './leaderboard.scss'
+  styleUrl: './leaderboard.scss',
 })
 export class Leaderboard implements OnInit {
   leaderboard: LeaderboardEntry[] = [];
@@ -23,7 +23,7 @@ export class Leaderboard implements OnInit {
 
   constructor(
     private leaderboardService: LeaderboardService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class Leaderboard implements OnInit {
         this.errorMessage = 'Leaderboard could not be loaded.';
         this.loading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -77,11 +77,23 @@ export class Leaderboard implements OnInit {
         this.errorMessage = 'Player details could not be loaded.';
         this.detailsLoading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
   isSelected(player: LeaderboardEntry): boolean {
     return this.selectedDetails?.stats.id === player.id;
+  }
+
+  formatPlayedAt(playedAt: string): string {
+    const utcDate = new Date(playedAt.replace(' ', 'T') + 'Z');
+
+    return utcDate.toLocaleString('de-AT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

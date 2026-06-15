@@ -1,8 +1,8 @@
-import Database from 'better-sqlite3';
+import Database from "better-sqlite3";
 
-const db = new Database('users.db');
+const db = new Database("users.db");
 
-db.pragma('foreign_keys = ON');
+db.pragma("foreign_keys = ON");
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
@@ -47,6 +47,6 @@ db.exec(`
   );
 `);
 
-console.log('Database tables created/updated successfully.');
+console.log("Database tables created/updated successfully.");
 
 db.close();

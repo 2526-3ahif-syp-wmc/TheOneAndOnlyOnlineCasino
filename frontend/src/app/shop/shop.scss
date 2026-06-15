@@ -239,7 +239,9 @@ h3 {
   font-weight: 900;
   background: linear-gradient(135deg, var(--gold, #d4af37), #7c3aed);
   box-shadow: 0 10px 30px rgba(168, 85, 247, 0.28);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .subscription-card button:hover,
@@ -364,7 +366,9 @@ h3 {
   font-weight: 900;
   background: linear-gradient(135deg, var(--gold, #d4af37), #7c3aed);
   box-shadow: 0 10px 30px rgba(168, 85, 247, 0.28);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .custom-coin-buy button:hover {
@@ -389,7 +393,10 @@ h3 {
   flex-direction: column;
   gap: 0.8rem;
   min-height: 250px;
-  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .coin-card:hover {

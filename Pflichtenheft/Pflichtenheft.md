@@ -118,9 +118,8 @@ Zur Abschätzung der aufkommenden Datenmengen und damit verbunden der notwendige
 
 - Auflistung der Softwarekomponenten in einem Verteilungsdiagramm (typisch: Client - Server - Datenbank).
 - Beispiel:
-...
+  ...
 
 ### 6.2 Datenmodell
 
 <img src="pics/ERD_Casino.png">
-

@@ -18,7 +18,7 @@ export class NavBar {
   protected premium = this.service.premium;
 
   protected isPremium = computed(() => Number(this.premium()) === 1);
-  
+
   logOut() {
     this.service.logOut();
     this.router.navigate(['/auth']);

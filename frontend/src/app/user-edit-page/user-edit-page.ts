@@ -33,7 +33,7 @@ export class UserEditPage implements OnInit {
       username: [this.userService.username(), [Validators.required, Validators.minLength(3)]],
       currentPassword: ['', Validators.required],
       newPassword: [''],
-      confirmPassword: ['']
+      confirmPassword: [''],
     });
   }
 
@@ -63,32 +63,35 @@ export class UserEditPage implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
 
-    this.userService.updateProfile({
-      username,
-      currentPassword,
-      newPassword: newPassword?.trim() || undefined
-    }).pipe(
-      finalize(() => {
-        this.isSubmitting = false;
+    this.userService
+      .updateProfile({
+        username,
+        currentPassword,
+        newPassword: newPassword?.trim() || undefined,
       })
-    ).subscribe({
-      next: () => {
-        this.successMessage = 'Profile updated successfully!';
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.successMessage = 'Profile updated successfully!';
 
-        setTimeout(() => {
-          this.router.navigate(['/user-profile']);
-        }, 1500);
-      },
-      error: (error) => {
-        const message = error?.error?.message ?? 'Failed to update profile. Please try again.';
+          setTimeout(() => {
+            this.router.navigate(['/user-profile']);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error?.error?.message ?? 'Failed to update profile. Please try again.';
 
-        if (error?.status === 401 || message === 'Current password is incorrect') {
-          this.alertService.error('The old password you entered is incorrect.');
-        }
+          if (error?.status === 401 || message === 'Current password is incorrect') {
+            this.alertService.error('The old password you entered is incorrect.');
+          }
 
-        this.errorMessage = message;
-      }
-    });
+          this.errorMessage = message;
+        },
+      });
   }
 
   onUnsubscribe() {
@@ -110,7 +113,7 @@ export class UserEditPage implements OnInit {
       error: (err) => {
         this.errorMessage = err?.error?.message ?? 'Failed to unsubscribe. Please try again.';
         this.isSubmitting = false;
-      }
+      },
     });
   }
 }
