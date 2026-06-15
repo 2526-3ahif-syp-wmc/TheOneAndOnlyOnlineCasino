@@ -23,5 +23,6 @@ export const routes: Routes = [
   { path: 'games/slotmachine', loadComponent: () => import('./slot-machine/slot-machine').then(m => m.SlotMachineComponent), canActivate: [authGuard] },
   {path : 'games/roulette', loadComponent: () => import('./roulette-game/roulette-game').then(m => m.RouletteComponent), canActivate: [authGuard]},
   {path : 'games/mines', loadComponent: () => import('./mines-game/mines-game').then(m => m.MinesComponent), canActivate: [authGuard]},
+  {path : 'games/plinko', loadComponent: () => import('./plinko/plinko').then(m => m.PlinkoComponent), canActivate: [authGuard]},
   { path: '**', redirectTo: 'home' }
 ];

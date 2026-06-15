@@ -1,0 +1,217 @@
+<div class="plinko-shell">
+	@if (confettiParticles.length > 0) {
+		<div class="confetti-layer" aria-hidden="true">
+			@for (particle of confettiParticles; track particle.id) {
+				<span
+					class="confetti-piece"
+					[style.left.%]="particle.left"
+					[style.--delay.ms]="particle.delay"
+					[style.--duration.ms]="particle.duration"
+					[style.--x]="particle.offsetX + 'px'"
+					[style.--y]="particle.offsetY + 'px'"
+					[style.--rotate]="particle.rotate + 'deg'"
+					[style.--size]="particle.size + 'px'"
+					[style.background]="particle.color"
+				></span>
+			}
+		</div>
+	}
+
+
+<div class="ambient ambient-left"></div>
+<div class="ambient ambient-right"></div>
+
+<header class="hero card-glass">
+	<div class="hero-copy">
+		<span class="eyebrow">EduBet Casino</span>
+		<h1>Plinko</h1>
+	</div>
+
+	<div class="hero-actions">
+		<div class="balance-pill">
+			<span>Balance</span>
+			<strong>{{ balance }} EC</strong>
+		</div>
+
+		<a routerLink="/home" class="back-button">Back</a>
+	</div>
+</header>
+
+<section class="plinko-layout">
+	<article class="board-card card-glass">
+		<div class="board-top">
+			<div>
+				<span class="machine-label">10 Rows • {{ currentRiskLabel }} Risk</span>
+				<h2>{{ isDropping ? 'Ball dropping...' : currentStatusLabel }}</h2>
+			</div>
+
+			<div class="status-chip" [class.status-chip-win]="(lastDrop?.profit ?? 0) > 0">
+				<span>Last result</span>
+				<strong>{{ lastDrop ? lastDrop.payout + ' EC' : '0 EC' }}</strong>
+			</div>
+		</div>
+
+		<div class="plinko-board">
+			<div class="drop-zone">
+				<span>Drop</span>
+			</div>
+
+			@if (ballVisible) {
+				<div
+	                #plinkoBall
+	                class="plinko-ball"
+                ></div>
+			}
+
+			@for (pin of pins; track pin.id) {
+				<span
+					class="pin"
+					[class.pin-hit]="activePinId === pin.id"
+					[style.left.%]="pin.left"
+					[style.top.%]="pin.top"
+				></span>
+			}
+
+			<div class="slot-row">
+				@for (slot of slots; track slot.index) {
+					<div
+						class="multiplier-slot"
+						[class.hit]="lastDrop?.slotIndex === slot.index"
+						[style.--slot-glow]="slot.glow"
+					>
+						{{ slot.multiplier }}x
+					</div>
+				}
+			</div>
+		</div>
+
+		<div class="result-grid">
+			<div class="result-card">
+				<span>Bet</span>
+				<strong>{{ bet }} EC</strong>
+			</div>
+
+			<div class="result-card">
+				<span>Payout</span>
+				<strong>{{ lastDrop?.payout ?? 0 }} EC</strong>
+			</div>
+
+			<div class="result-card">
+				<span>Multiplier</span>
+				<strong>{{ lastDrop ? lastDrop.multiplier + 'x' : '-' }}</strong>
+			</div>
+
+			<div class="result-card">
+				<span>Profit</span>
+				<strong [class.negative]="(lastDrop?.profit ?? 0) < 0">
+					{{ lastDrop ? lastDrop.profit : 0 }} EC
+				</strong>
+			</div>
+		</div>
+	</article>
+
+	<aside class="side-panel">
+		<section class="control-card card-glass-soft">
+			<div class="field">
+				<label for="plinkoBet">Bet amount</label>
+				<input
+					id="plinkoBet"
+					type="number"
+					[(ngModel)]="bet"
+					min="1"
+					[max]="balance"
+					[disabled]="isDropping"
+				/>
+			</div>
+
+			<div class="quick-bets">
+				@for (amount of quickBets; track amount) {
+					<button
+						type="button"
+						class="quick-bet"
+						(click)="setQuickBet(amount)"
+						[disabled]="isDropping"
+					>
+						{{ amount }}
+					</button>
+				}
+			</div>
+
+			<div class="risk-tabs">
+				<button
+					type="button"
+					[class.active]="risk === 'low'"
+					(click)="setRisk('low')"
+					[disabled]="isDropping"
+				>
+					Low
+				</button>
+
+				<button
+					type="button"
+					[class.active]="risk === 'medium'"
+					(click)="setRisk('medium')"
+					[disabled]="isDropping"
+				>
+					Medium
+				</button>
+
+				<button
+					type="button"
+					[class.active]="risk === 'high'"
+					(click)="setRisk('high')"
+					[disabled]="isDropping"
+				>
+					High
+				</button>
+			</div>
+
+			<button type="button" class="drop-button" (click)="dropBall()" [disabled]="!canDrop">
+				{{ isDropping ? 'Dropping...' : 'Drop Ball' }}
+			</button>
+		</section>
+
+		<section class="detail-card card-glass-soft">
+			<div class="detail-heading">
+				<span>Last Drop</span>
+				<strong>{{ lastDrop ? lastDrop.multiplier + 'x' : 'No drop yet' }}</strong>
+			</div>
+
+			@if (lastDrop) {
+				<div class="last-result" [class.win]="lastDrop.profit > 0" [class.loss]="lastDrop.profit < 0">
+					<span>{{ lastDrop.profit > 0 ? 'Profit' : 'Result' }}</span>
+					<strong>{{ lastDrop.profit }} EC</strong>
+				</div>
+			} @else {
+				<p class="detail-empty">Choose bet, pick risk and drop.</p>
+			}
+		</section>
+
+		<section class="history-card card-glass-soft">
+			<div class="detail-heading">
+				<span>Recent Drops</span>
+				<strong>{{ recentDrops.length }}/6</strong>
+			</div>
+
+			@if (recentDrops.length === 0) {
+				<p class="detail-empty">Your drops appear here.</p>
+			} @else {
+				<div class="history-list">
+					@for (drop of recentDrops; track drop.id) {
+						<article class="history-item" [class.win]="drop.profit > 0" [class.loss]="drop.profit < 0">
+							<div>
+								<strong>{{ drop.multiplier }}x</strong>
+								<span>{{ drop.risk }} risk</span>
+							</div>
+
+							<small>{{ drop.profit }} EC</small>
+						</article>
+					}
+				</div>
+			}
+		</section>
+	</aside>
+</section>
+
+
+</div>
