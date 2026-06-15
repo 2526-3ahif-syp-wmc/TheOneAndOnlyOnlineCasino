@@ -40,5 +40,10 @@ export const routes: Routes = [
     loadComponent: () => import('./plinko/plinko').then((m) => m.PlinkoComponent),
     canActivate: [authGuard],
   },
+  {
+    path: 'games/blackjack',
+    loadComponent: () => import('./blackjack/blackjack').then((m) => m.BlackjackComponent),
+    canActivate: [authGuard],
+  },
   { path: '**', redirectTo: 'home' },
 ];

@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { authRouter } from "./routes/user-routes";
 import { leaderboardRouter } from "./routes/leaderboard-routes";
-import { gameOfDayRouter } from "./routes/game-of-day-routes";
+import { blackjackRouter } from "./routes/blackjack-routes";
 import { db } from "./databases/db";
 
 const app = express();
@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/leaderboard", leaderboardRouter);
-app.use("/game-of-day", gameOfDayRouter);
+app.use("/blackjack", blackjackRouter);
 
 app.get("/", (_, res) => {
   return res.json("Backend is running!");
