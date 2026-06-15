@@ -324,7 +324,10 @@ h2 {
     radial-gradient(circle at top, rgba(168, 85, 247, 0.13), transparent 45%),
     rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .team-card:hover {
@@ -453,52 +456,32 @@ h2 {
   border-radius: 30px;
 
   background:
-    radial-gradient(
-      circle at top left,
-      rgba(168, 85, 247, 0.22),
-      transparent 40%
-    ),
+    radial-gradient(circle at top left, rgba(168, 85, 247, 0.22), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(0, 214, 255, 0.12), transparent 38%),
+    linear-gradient(160deg, rgba(18, 18, 25, 0.95), rgba(10, 10, 16, 0.88));
 
-    radial-gradient(
-      circle at bottom right,
-      rgba(0, 214, 255, 0.12),
-      transparent 38%
-    ),
-
-    linear-gradient(
-      160deg,
-      rgba(18, 18, 25, 0.95),
-      rgba(10, 10, 16, 0.88)
-    );
-
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   backdrop-filter: blur(18px);
 
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 
   isolation: isolate;
 }
 
 .form-card::before {
-  content: "";
+  content: '';
 
   position: absolute;
   inset: 0;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,0.06),
-      transparent 35%
-    );
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 35%);
 
   pointer-events: none;
 }
 
 .form-card::after {
-  content: "";
+  content: '';
 
   position: absolute;
 
@@ -510,12 +493,7 @@ h2 {
 
   border-radius: 50%;
 
-  background:
-    radial-gradient(
-      circle,
-      rgba(168,85,247,0.22),
-      transparent 70%
-    );
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.22), transparent 70%);
 
   filter: blur(10px);
 
@@ -529,9 +507,9 @@ h2 {
 
   border-radius: 999px;
 
-  background: rgba(168,85,247,0.12);
+  background: rgba(168, 85, 247, 0.12);
 
-  border: 1px solid rgba(168,85,247,0.2);
+  border: 1px solid rgba(168, 85, 247, 0.2);
 
   color: #f8d76b;
 
@@ -561,7 +539,7 @@ h2 {
 
   line-height: 1.8;
 
-  color: rgba(255,255,255,0.72);
+  color: rgba(255, 255, 255, 0.72);
 
   font-size: 1rem;
 }
@@ -586,15 +564,9 @@ h2 {
   font-weight: 800;
   letter-spacing: 0.02em;
 
-  background:
-    linear-gradient(
-      135deg,
-      #d4af37,
-      #7c3aed
-    );
+  background: linear-gradient(135deg, #d4af37, #7c3aed);
 
-  box-shadow:
-    0 14px 38px rgba(124,58,237,0.4);
+  box-shadow: 0 14px 38px rgba(124, 58, 237, 0.4);
 
   transition:
     transform 180ms ease,
@@ -603,32 +575,23 @@ h2 {
 }
 
 .contact-mail-btn::before {
-  content: "";
+  content: '';
 
   position: absolute;
   inset: 0;
 
-  background:
-    linear-gradient(
-      120deg,
-      transparent,
-      rgba(255,255,255,0.22),
-      transparent
-    );
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.22), transparent);
 
   transform: translateX(-120%);
   transition: transform 0.7s ease;
 }
 
 .contact-mail-btn:hover {
-  transform:
-    translateY(-4px)
-    scale(1.02);
+  transform: translateY(-4px) scale(1.02);
 
   filter: brightness(1.05);
 
-  box-shadow:
-    0 20px 48px rgba(124,58,237,0.5);
+  box-shadow: 0 20px 48px rgba(124, 58, 237, 0.5);
 }
 
 .contact-mail-btn:hover::before {

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { NavBar } from "./nav-bar/nav-bar";
+import { NavBar } from './nav-bar/nav-bar';
 import { filter } from 'rxjs';
 import { AlertService } from './services/alert-service';
 
@@ -8,7 +8,7 @@ import { AlertService } from './services/alert-service';
   selector: 'app-root',
   imports: [RouterOutlet, NavBar],
   templateUrl: './app.html',
-  styleUrls: ['./app.scss']
+  styleUrls: ['./app.scss'],
 })
 export class App {
   protected alertService = inject(AlertService);
@@ -18,7 +18,7 @@ export class App {
     this.updateNavbar(this.router.url);
 
     this.router.events
-      .pipe(filter((event: any) => event instanceof NavigationEnd))
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(() => {
         this.updateNavbar(this.router.url);
       });

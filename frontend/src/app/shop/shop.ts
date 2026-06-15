@@ -16,7 +16,7 @@ type CoinPack = {
   selector: 'app-shop',
   imports: [],
   templateUrl: './shop.html',
-  styleUrls: ['./shop.scss']
+  styleUrls: ['./shop.scss'],
 })
 export class Shop {
   private service = inject(UserService);
@@ -28,7 +28,7 @@ export class Shop {
       price: 3.99,
       badge: 'Starter',
       title: '500 Coins',
-      description: 'Perfect for a small session.'
+      description: 'Perfect for a small session.',
     },
     {
       coins: 1000,
@@ -36,31 +36,29 @@ export class Shop {
       badge: 'Popular',
       title: '1000 Coins',
       description: 'Best pick for regular players.',
-      popular: true
+      popular: true,
     },
     {
       coins: 5000,
       price: 44.99,
       badge: 'Value',
       title: '5000 Coins',
-      description: 'A strong pack for longer play.'
+      description: 'A strong pack for longer play.',
     },
     {
       coins: 10000,
       price: 89.99,
       badge: 'High Roller',
       title: '10000 Coins',
-      description: 'Maximum balance for serious players.'
-    }
+      description: 'Maximum balance for serious players.',
+    },
   ];
 
   protected async buyCoins(pack: CoinPack) {
     const currentCoins = this.service.currentUser()?.coins ?? 0;
 
     try {
-      await firstValueFrom(
-        this.service.updateCoins(currentCoins + pack.coins)
-      );
+      await firstValueFrom(this.service.updateCoins(currentCoins + pack.coins));
 
       this.alertService.info(`You bought ${pack.coins} Coins for ${pack.price.toFixed(2)}€`);
     } catch (err) {
@@ -81,9 +79,7 @@ export class Shop {
     const currentCoins = this.service.currentUser()?.coins ?? 0;
 
     try {
-      await firstValueFrom(
-        this.service.updateCoins(currentCoins + coins)
-      );
+      await firstValueFrom(this.service.updateCoins(currentCoins + coins));
 
       this.alertService.info(`You bought ${coins} Coins for ${price.toFixed(2)}€`);
     } catch (err) {
@@ -93,11 +89,11 @@ export class Shop {
   }
 
   protected async buySubscription() {
-    if(this.service.premium() === 1) {
+    if (this.service.premium() === 1) {
       this.alertService.info('You already own Edubet+ Subscription!');
       return;
     }
-    
+
     try {
       await firstValueFrom(this.service.buyPremium());
 

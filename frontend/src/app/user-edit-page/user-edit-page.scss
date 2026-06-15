@@ -43,7 +43,8 @@
 }
 
 @keyframes drift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
   }
   50% {
@@ -155,7 +156,10 @@ form {
   background: rgba(255, 255, 255, 0.04);
   color: #fff;
   font-size: 0.95rem;
-  transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.4);
@@ -199,7 +203,10 @@ form {
   font-weight: 800;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
   font-size: 0.95rem;
   flex: 1;
 

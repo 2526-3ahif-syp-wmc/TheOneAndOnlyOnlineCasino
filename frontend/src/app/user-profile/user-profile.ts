@@ -5,7 +5,7 @@ import { UserService } from '../services/user-service';
 import {
   GameHistory,
   LeaderboardDetails,
-  LeaderboardService
+  LeaderboardService,
 } from '../services/leaderboard-service';
 
 @Component({
@@ -77,7 +77,7 @@ export class UserProfile implements OnInit {
         console.error('Could not load profile stats', error);
         this.statsError.set('Could not load profile stats.');
         this.statsLoading.set(false);
-      }
+      },
     });
   }
 
@@ -114,5 +114,17 @@ export class UserProfile implements OnInit {
   logout(): void {
     this.userService.logOut();
     this.router.navigate(['/auth']);
+  }
+
+  formatPlayedAt(playedAt: string): string {
+    const utcDate = new Date(playedAt.replace(' ', 'T') + 'Z');
+
+    return utcDate.toLocaleString('de-AT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

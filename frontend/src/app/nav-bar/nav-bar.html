@@ -1,37 +1,33 @@
 <header class="site-nav-shell">
-    <nav class="site-nav" aria-label="Main navigation">
-        <a class="brand" routerLink="/home" aria-label="EduBet home">
-            <img src = "logo.png" class="brand-mark">
-            <span class="brand-copy">
-                <strong>EduBet</strong>
-            </span>
-        </a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="brand" routerLink="/home" aria-label="EduBet home">
+      <img src="logo.png" class="brand-mark" />
+      <span class="brand-copy">
+        <strong>EduBet</strong>
+      </span>
+    </a>
 
-        <div class="nav-links">
-            <a routerLink="/home" routerLinkActive="is-active">Home</a>
-            <a routerLink="/shop" routerLinkActive="is-active">Shop</a>
-            <a routerLink="/leaderboard" routerLinkActive="is-active">Leaderboard</a>
-            <a routerLink="/contact-page" routerLinkActive="is-active">Contact</a>
-        </div>
+    <div class="nav-links">
+      <a routerLink="/home" routerLinkActive="is-active">Home</a>
+      <a routerLink="/shop" routerLinkActive="is-active">Shop</a>
+      <a routerLink="/leaderboard" routerLinkActive="is-active">Leaderboard</a>
+      <a routerLink="/contact-page" routerLinkActive="is-active">Contact</a>
+    </div>
 
-        <div class="nav-actions">
-            @if (isPremium()) {
-                <button disabled class="premium-active">
-                EduBet+ Active
-                </button>
-            } @else {
-                <button routerLink="/shop">
-                Get EduBet+
-                </button>
-            }
-            <a routerLink="/user-profile" class="nav-status">
-                <span class="user-avatar" aria-hidden="true">U</span>
-                <span class="user-meta">
-                    <strong>{{ username() }}</strong>
-                    <small>Balance: {{ coins() }} EC</small>
-                </span>
-            </a>
-            <button class="nav-logout" type="button" aria-label="Logout" (click)="logOut()">➜]</button>
-        </div>
-    </nav>
+    <div class="nav-actions">
+      @if (isPremium()) {
+        <button disabled class="premium-active">EduBet+ Active</button>
+      } @else {
+        <button routerLink="/shop">Get EduBet+</button>
+      }
+      <a routerLink="/user-profile" class="nav-status">
+        <span class="user-avatar" aria-hidden="true">U</span>
+        <span class="user-meta">
+          <strong>{{ username() }}</strong>
+          <small>Balance: {{ coins() }} EC</small>
+        </span>
+      </a>
+      <button class="nav-logout" type="button" aria-label="Logout" (click)="logOut()">➜]</button>
+    </div>
+  </nav>
 </header>

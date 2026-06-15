@@ -3,9 +3,7 @@
     <div class="hero-copy">
       <span class="eyebrow">EduBet Casino</span>
       <h1>Mines</h1>
-      <p>
-        Choose your bet, open safe tiles and cash out before the bomb strikes.
-      </p>
+      <p>Choose your bet, open safe tiles and cash out before the bomb strikes.</p>
     </div>
     <div class="hero-actions">
       <button class="howto-top" type="button" (click)="openHowTo()">How to Play</button>
@@ -30,11 +28,7 @@
           <span class="tile-shine"></span>
 
           <span class="tile-art" *ngIf="cell.revealed">
-            <img
-              *ngIf="cell.mine; else diamond"
-              src="/mines/mines_bomb.png"
-              alt="Bomb"
-            />
+            <img *ngIf="cell.mine; else diamond" src="/mines/mines_bomb.png" alt="Bomb" />
             <ng-template #diamond>
               <img src="/mines/mines_diamond.png" alt="Diamond" />
             </ng-template>
@@ -57,7 +51,11 @@
 
         <label class="field difficulty-field">
           <span>Difficulty</span>
-          <select class="difficulty-select" [(ngModel)]="difficulty" (ngModelChange)="setDifficulty($event)">
+          <select
+            class="difficulty-select"
+            [(ngModel)]="difficulty"
+            (ngModelChange)="setDifficulty($event)"
+          >
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
@@ -90,10 +88,20 @@
       </div>
 
       <div class="actions">
-        <button class="primary-button" type="button" (click)="startGame()" [disabled]="isStartingGame || status === 'playing'">
+        <button
+          class="primary-button"
+          type="button"
+          (click)="startGame()"
+          [disabled]="isStartingGame || status === 'playing'"
+        >
           {{ startButtonLabel }}
         </button>
-        <button class="secondary-button" type="button" (click)="cashOut()" [disabled]="!canCashOut || isCashingOut">
+        <button
+          class="secondary-button"
+          type="button"
+          (click)="cashOut()"
+          [disabled]="!canCashOut || isCashingOut"
+        >
           Cashout
         </button>
       </div>
@@ -102,11 +110,13 @@
 
   <div class="howto-backdrop" *ngIf="showHowTo" (click)="closeHowTo()">
     <div class="howto-modal card-glass" (click)="$event.stopPropagation()">
-      <button class="close-button" type="button" (click)="closeHowTo()" aria-label="Close modal">X</button>
+      <button class="close-button" type="button" (click)="closeHowTo()" aria-label="Close modal">
+        X
+      </button>
       <h2>How to Play</h2>
       <p>
-        Choose your bet, start the game, and open tiles. Diamonds increase your winnings.
-        If you hit a bomb, you lose your bet. Cashout ends the game and secures your winnings.
+        Choose your bet, start the game, and open tiles. Diamonds increase your winnings. If you hit
+        a bomb, you lose your bet. Cashout ends the game and secures your winnings.
       </p>
     </div>
   </div>

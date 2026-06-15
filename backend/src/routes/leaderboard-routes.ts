@@ -1,16 +1,16 @@
-import { Router } from 'express';
-import { GameResult } from '../models/leaderboard-model';
+import { Router } from "express";
+import { GameResult } from "../models/leaderboard-model";
 import {
   createGameHistory,
   getLeaderboard,
-  getLeaderboardUserDetails
-} from '../services/leaderboard-service';
+  getLeaderboardUserDetails,
+} from "../services/leaderboard-service";
 
 export const leaderboardRouter = Router();
 
-leaderboardRouter.post('/game-history', (req, res) => {
+leaderboardRouter.post("/game-history", (req, res) => {
   const userId = Number(req.body.userId);
-  const gameName = String(req.body.gameName ?? '');
+  const gameName = String(req.body.gameName ?? "");
   const result = req.body.result as GameResult;
   const betAmount = Number(req.body.betAmount) || 0;
   const coinsWon = Number(req.body.coinsWon) || 0;
@@ -18,19 +18,19 @@ leaderboardRouter.post('/game-history', (req, res) => {
 
   if (!Number.isInteger(userId)) {
     return res.status(400).json({
-      message: 'Valid userId is required'
+      message: "Valid userId is required",
     });
   }
 
   if (!gameName) {
     return res.status(400).json({
-      message: 'gameName is required'
+      message: "gameName is required",
     });
   }
 
-  if (result !== 'win' && result !== 'loss') {
+  if (result !== "win" && result !== "loss") {
     return res.status(400).json({
-      message: 'Result must be win or loss'
+      message: "Result must be win or loss",
     });
   }
 
@@ -40,33 +40,33 @@ leaderboardRouter.post('/game-history', (req, res) => {
     result,
     betAmount,
     coinsWon,
-    coinsLost
+    coinsLost,
   });
 
   if (!historyEntry) {
     return res.status(404).json({
-      message: 'User not found'
+      message: "User not found",
     });
   }
 
   return res.status(201).json(historyEntry);
 });
 
-leaderboardRouter.get('/', (_, res) => {
+leaderboardRouter.get("/", (_, res) => {
   const leaderboard = getLeaderboard().map((player, index) => ({
     rank: index + 1,
-    ...player
+    ...player,
   }));
 
   return res.json(leaderboard);
 });
 
-leaderboardRouter.get('/:id', (req, res) => {
+leaderboardRouter.get("/:id", (req, res) => {
   const userId = Number(req.params.id);
 
   if (!Number.isInteger(userId)) {
     return res.status(400).json({
-      message: 'Invalid user id'
+      message: "Invalid user id",
     });
   }
 
@@ -74,7 +74,7 @@ leaderboardRouter.get('/:id', (req, res) => {
 
   if (!details) {
     return res.status(404).json({
-      message: 'User not found'
+      message: "User not found",
     });
   }
 

@@ -1,24 +1,20 @@
 @if (mysteryRevealOpen()) {
-
   <div class="mystery-reveal-overlay">
     <div class="mystery-background-flash"></div>
 
+    <div
+      class="mystery-casino-box"
+      [class.mystery-explosion]="mysteryRevealExplode()"
+      [style.transform]="'scale(' + mysteryRevealScale() + ')'"
+    >
+      <div class="mystery-reward-cycle">
+        {{ mysteryRevealReward() }}
+      </div>
 
-<div
-  class="mystery-casino-box"
-  [class.mystery-explosion]="mysteryRevealExplode()"
-  [style.transform]="'scale(' + mysteryRevealScale() + ')'"
->
-  <div class="mystery-reward-cycle">
-    {{ mysteryRevealReward() }}
-  </div>
-
-  <span class="mystery-label">
-    {{ mysteryRevealExplode() ? 'YOUR FATE IS DECIDED' : 'ROLLING...' }}
-  </span>
-</div>
-
-
+      <span class="mystery-label">
+        {{ mysteryRevealExplode() ? 'YOUR FATE IS DECIDED' : 'ROLLING...' }}
+      </span>
+    </div>
   </div>
 }
 
@@ -31,135 +27,120 @@
     <strong>2,847,500 EC</strong>
     <small>Next winner could be you</small>
 
-
-<button type="button" class="jackpot-play-btn" (click)="scrollToGames()">
-  Play Now
-</button>
-
-
+    <button type="button" class="jackpot-play-btn" (click)="scrollToGames()">Play Now</button>
   </div>
 
   <section class="hero card-glass upgraded-hero">
     <div class="hero-content">
       <span class="eyebrow">Welcome to EduBet</span>
 
-  <div class="hero-main-actions">
-    <button type="button" class="action action-primary play-now-main" (click)="scrollToGames()">
-      Play Now
-    </button>
+      <div class="hero-main-actions">
+        <button type="button" class="action action-primary play-now-main" (click)="scrollToGames()">
+          Play Now
+        </button>
 
-    <a routerLink="/leaderboard" class="action action-secondary">
-      Leaderboard
-    </a>
-  </div>
-
-  <div class="daily-game-status upgraded-lucky-strip">
-    <span>Today’s lucky game: <strong>Roulette</strong></span>
-    <small>+10% winnings today</small>
-  </div>
-
-  <section class="reward-grid upgraded-reward-grid">
-    <article class="reward-card card-glass daily-bonus">
-      <div class="reward-icon icon-gold">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M20 12v9H4v-9"></path>
-          <path d="M2 7h20v5H2z"></path>
-          <path d="M12 22V7"></path>
-          <path d="M12 7H8.5A2.5 2.5 0 1 1 12 4.5V7z"></path>
-          <path d="M12 7h3.5A2.5 2.5 0 1 0 12 4.5V7z"></path>
-        </svg>
+        <a routerLink="/leaderboard" class="action action-secondary"> Leaderboard </a>
       </div>
 
-      <span class="card-kicker">Free reward</span>
-      <h3>Daily Bonus</h3>
-
-      @if (canClaimDailyBonus()) {
-        <p>Claim {{ dailyBonusAmount }} free EduCoins today.</p>
-
-        <button class="bonus-btn" type="button" (click)="claimDailyBonus()">
-          Claim bonus
-        </button>
-      } @else {
-        <p>You already claimed your daily bonus today.</p>
-
-        <button class="bonus-btn" type="button" disabled>
-          Claimed today
-        </button>
-      }
-    </article>
-
-    <article class="reward-card card-glass mystery-box">
-      <div class="reward-icon icon-mystery">
-        <span class="mystery-question-mark">?</span>
+      <div class="daily-game-status upgraded-lucky-strip">
+        <span>Today’s lucky game: <strong>Roulette</strong></span>
+        <small>+10% winnings today</small>
       </div>
 
-      <span class="card-kicker">Mystery reward</span>
-      <h3>Mystery Box</h3>
+      <section class="reward-grid upgraded-reward-grid">
+        <article class="reward-card card-glass daily-bonus">
+          <div class="reward-icon icon-gold">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 12v9H4v-9"></path>
+              <path d="M2 7h20v5H2z"></path>
+              <path d="M12 22V7"></path>
+              <path d="M12 7H8.5A2.5 2.5 0 1 1 12 4.5V7z"></path>
+              <path d="M12 7h3.5A2.5 2.5 0 1 0 12 4.5V7z"></path>
+            </svg>
+          </div>
 
-      @if (canClaimMysteryBox()) {
-        <p>Open a mystery box every 6 hours.</p>
+          <span class="card-kicker">Free reward</span>
+          <h3>Daily Bonus</h3>
 
-        <button
-          class="bonus-btn"
-          type="button"
-          (click)="claimMysteryBox()"
-          [disabled]="mysteryRevealOpen()"
-        >
-          Open mystery box
-        </button>
-      } @else {
-        <p>Next box in {{ timeUntilNextMysteryBox() }} hours.</p>
+          @if (canClaimDailyBonus()) {
+            <p>Claim {{ dailyBonusAmount }} free EduCoins today.</p>
 
-        <button class="bonus-btn" type="button" disabled>
-          Opened
-        </button>
-      }
-    </article>
-  </section>
-</div>
+            <button class="bonus-btn" type="button" (click)="claimDailyBonus()">Claim bonus</button>
+          } @else {
+            <p>You already claimed your daily bonus today.</p>
 
-<aside class="player-card upgraded-player-card">
-  <div class="player-top">
-    <div class="avatar">
-      <span>{{ profileInitial() }}</span>
+            <button class="bonus-btn" type="button" disabled>Claimed today</button>
+          }
+        </article>
+
+        <article class="reward-card card-glass mystery-box">
+          <div class="reward-icon icon-mystery">
+            <span class="mystery-question-mark">?</span>
+          </div>
+
+          <span class="card-kicker">Mystery reward</span>
+          <h3>Mystery Box</h3>
+
+          @if (canClaimMysteryBox()) {
+            <p>Open a mystery box every 6 hours.</p>
+
+            <button
+              class="bonus-btn"
+              type="button"
+              (click)="claimMysteryBox()"
+              [disabled]="mysteryRevealOpen()"
+            >
+              Open mystery box
+            </button>
+          } @else {
+            <p>Next box in {{ timeUntilNextMysteryBox() }} hours.</p>
+
+            <button class="bonus-btn" type="button" disabled>Opened</button>
+          }
+        </article>
+      </section>
     </div>
 
-    <div>
-      <span class="player-label">Current player</span>
-      <h2>{{ username() }}</h2>
-    </div>
-  </div>
+    <aside class="player-card upgraded-player-card">
+      <div class="player-top">
+        <div class="avatar">
+          <span>{{ profileInitial() }}</span>
+        </div>
 
-  <div class="account-stack">
-    <div class="coin-box">
-      <span>Your balance</span>
-      <strong>{{ coins() }} EC</strong>
-    </div>
-
-    <div class="level-box">
-      <div class="level-top">
-        <span>Player Level</span>
-        <strong>Level {{ level() }}</strong>
+        <div>
+          <span class="player-label">Current player</span>
+          <h2>{{ username() }}</h2>
+        </div>
       </div>
 
-      <div class="xp-bar">
-        <div [style.width.%]="xpPercent()"></div>
+      <div class="account-stack">
+        <div class="coin-box">
+          <span>Your balance</span>
+          <strong>{{ coins() }} EC</strong>
+        </div>
+
+        <div class="level-box">
+          <div class="level-top">
+            <span>Player Level</span>
+            <strong>Level {{ level() }}</strong>
+          </div>
+
+          <div class="xp-bar">
+            <div [style.width.%]="xpPercent()"></div>
+          </div>
+
+          <div class="xp-info">
+            <span>{{ xpProgress() }} / {{ xpNeeded() }} XP</span>
+            <span>{{ xpPercent() }}%</span>
+          </div>
+        </div>
       </div>
 
-      <div class="xp-info">
-        <span>{{ xpProgress() }} / {{ xpNeeded() }} XP</span>
-        <span>{{ xpPercent() }}%</span>
+      <div class="player-actions">
+        <a routerLink="/user-profile">Profile</a>
+        <a (click)="scrollToGames()">Start playing</a>
       </div>
-    </div>
-  </div>
-
-  <div class="player-actions">
-    <a routerLink="/user-profile">Profile</a>
-    <a (click)="scrollToGames()">Start playing</a>
-  </div>
-</aside>
-
-
+    </aside>
   </section>
 
   <section id="game-lobby" class="game-lobby-section upgraded-game-lobby">
@@ -171,38 +152,29 @@
       </div>
     </div>
 
+    <div class="game-grid upgraded-game-grid">
+      @for (game of games; track game.title) {
+        <a class="game-card card-glass upgraded-game-card" [routerLink]="game.route">
+          <div class="game-card-cover" [style.background-image]="'url(' + game.coverImage + ')'">
+            <span class="game-card-badge">{{ game.badge }}</span>
+          </div>
 
-<div class="game-grid upgraded-game-grid">
-  @for (game of games; track game.title) {
-    <a class="game-card card-glass upgraded-game-card" [routerLink]="game.route">
-      <div
-        class="game-card-cover"
-        [style.background-image]="'url(' + game.coverImage + ')'"
-      >
-        <span class="game-card-badge">{{ game.badge }}</span>
-        <span class="game-card-play">Play now</span>
-      </div>
+          <div class="game-card-body">
+            <div class="game-card-icon">{{ game.icon }}</div>
 
-      <div class="game-card-body">
-        <div class="game-card-icon">{{ game.icon }}</div>
+            <div>
+              <h3>{{ game.title }}</h3>
+              <p>{{ game.subtitle }}</p>
+            </div>
 
-        <div>
-          <h3>{{ game.title }}</h3>
-          <p>{{ game.subtitle }}</p>
-        </div>
+            @if (game.title === 'Roulette') {
+              <span class="game-card-daily-bonus"> Lucky game today +10% </span>
+            }
 
-        @if (game.title === 'Roulette') {
-          <span class="game-card-daily-bonus">
-            Lucky game today +10%
-          </span>
-        }
-
-        <span class="game-card-meta">{{ game.players }} players today</span>
-      </div>
-    </a>
-  }
-</div>
-
-
+            <span class="game-card-meta">{{ game.players }} players today</span>
+          </div>
+        </a>
+      }
+    </div>
   </section>
 </div>

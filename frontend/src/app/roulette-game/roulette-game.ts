@@ -51,7 +51,6 @@ export class RouletteComponent implements OnInit, OnDestroy {
   private leaderboardService = inject(LeaderboardService);
   private mysteryBoxService = inject(MysteryBoxService);
 
-
   balance: number = this.userService.coins();
   currentBet: number = 50;
   isSpinning: boolean = false;
@@ -88,7 +87,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {}
 
   ngOnInit(): void {
@@ -106,8 +105,8 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   private initTrackNumbers(): void {
     const rouletteOrder = [
-      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23,
-      10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
+      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20,
+      14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
     ];
 
     this.trackNumbers = [...rouletteOrder, ...rouletteOrder, ...rouletteOrder];
@@ -118,10 +117,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const elements = [
-      document.querySelector('app-nav-bar'),
-      document.querySelector('footer'),
-    ];
+    const elements = [document.querySelector('app-nav-bar'), document.querySelector('footer')];
 
     for (const element of elements) {
       if (!(element instanceof HTMLElement)) {
@@ -164,9 +160,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return '#2e7d32';
     }
 
-    const redNumbers = [
-      1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36,
-    ];
+    const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 
     return redNumbers.includes(number) ? '#dc2626' : '#1f2937';
   }
@@ -216,9 +210,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBet = this.activeBets.find(
-      (b) => b.type === 'number' && b.value === number
-    );
+    const existingBet = this.activeBets.find((b) => b.type === 'number' && b.value === number);
 
     if (existingBet) {
       existingBet.amount += this.currentBet;
@@ -239,9 +231,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBet = this.activeBets.find(
-      (b) => b.type === 'color' && b.value === color
-    );
+    const existingBet = this.activeBets.find((b) => b.type === 'color' && b.value === color);
 
     if (existingBet) {
       existingBet.amount += this.currentBet;
@@ -262,9 +252,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBet = this.activeBets.find(
-      (b) => b.type === 'evenodd' && b.value === type
-    );
+    const existingBet = this.activeBets.find((b) => b.type === 'evenodd' && b.value === type);
 
     if (existingBet) {
       existingBet.amount += this.currentBet;
@@ -285,9 +273,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBet = this.activeBets.find(
-      (b) => b.type === 'highlow' && b.value === type
-    );
+    const existingBet = this.activeBets.find((b) => b.type === 'highlow' && b.value === type);
 
     if (existingBet) {
       existingBet.amount += this.currentBet;
@@ -308,9 +294,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBet = this.activeBets.find(
-      (b) => b.type === 'dozen' && b.value === dozen
-    );
+    const existingBet = this.activeBets.find((b) => b.type === 'dozen' && b.value === dozen);
 
     if (existingBet) {
       existingBet.amount += this.currentBet;
@@ -492,8 +476,8 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
   private getFallbackWinner(): { number: number; index: number } {
     const rouletteOrder = [
-      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23,
-      10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
+      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20,
+      14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
     ];
 
     const number = rouletteOrder[Math.floor(Math.random() * rouletteOrder.length)];
@@ -510,11 +494,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
     const winningColor = this.getNumberColor(winningNumber);
     const winningColorName =
-      winningColor === '#dc2626'
-        ? 'Red'
-        : winningColor === '#1f2937'
-          ? 'Black'
-          : 'Green';
+      winningColor === '#dc2626' ? 'Red' : winningColor === '#1f2937' ? 'Black' : 'Green';
 
     const spinResults: SpinResult[] = [];
     let totalWin = 0;
@@ -607,7 +587,7 @@ export class RouletteComponent implements OnInit, OnDestroy {
       this.resultsHistory.pop();
     }
 
-    const bonus = Math.floor(totalWin * 0.10);
+    const bonus = Math.floor(totalWin * 0.1);
     const totalPayout = totalWin + bonus;
     const updatedFinalBalance = this.balance + totalPayout;
 
@@ -620,7 +600,9 @@ export class RouletteComponent implements OnInit, OnDestroy {
       this.lastWin = totalPayout;
       this.lastLoss = 0;
       this.showWinAnimation = true;
-      this.alertService.success(`You won ${totalPayout} EC${bonus > 0 ? ` (+${bonus} bonus)` : ''}`);
+      this.alertService.success(
+        `You won ${totalPayout} EC${bonus > 0 ? ` (+${bonus} bonus)` : ''}`,
+      );
 
       setTimeout(() => {
         this.showWinAnimation = false;
@@ -658,7 +640,6 @@ export class RouletteComponent implements OnInit, OnDestroy {
     }, 8000);
   }
 
-
   private saveGameHistory(totalBet: number, totalWin: number): void {
     const user = this.userService.currentUser?.() ?? null;
 
@@ -675,15 +656,17 @@ export class RouletteComponent implements OnInit, OnDestroy {
         result: won ? 'win' : 'loss',
         betAmount: totalBet,
         coinsWon: won ? totalWin : 0,
-        coinsLost: won ? 0 : totalBet
+        coinsLost: won ? 0 : totalBet,
+      }),
+    )
+      .then(() => {
+        if (won) {
+          this.mysteryBoxService.applyBuffToWin(user.id, 'Roulette', totalBet);
+        }
       })
-    ).then(() => {
-      if (won) {
-        this.mysteryBoxService.applyBuffToWin(user.id, 'Roulette', totalBet);
-      }
-    }).catch(error => {
-      console.error('Could not save Roulette game history', error);
-    });
+      .catch((error) => {
+        console.error('Could not save Roulette game history', error);
+      });
   }
 
   goBack(): void {
@@ -693,4 +676,4 @@ export class RouletteComponent implements OnInit, OnDestroy {
 
     this.router.navigate(['/home']);
   }
-} 
+}

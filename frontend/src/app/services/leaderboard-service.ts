@@ -41,7 +41,7 @@ export interface CreateGameHistoryDto {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LeaderboardService {
   private apiUrl = 'http://localhost:3000/leaderboard';

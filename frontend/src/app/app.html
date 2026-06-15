@@ -7,19 +7,15 @@
   >
     <span>{{ alert.message }}</span>
 
-    <button type="button" (click)="alertService.clear()">
-      ×
-    </button>
+    <button type="button" (click)="alertService.clear()">×</button>
   </div>
 }
-
 
 @if (showNavbar) {
   <app-nav-bar></app-nav-bar>
 }
 
-
 <router-outlet />
 <footer>
-    <div>  © 2026 EduBet. All rights reserved.</div>
+  <div>© 2026 EduBet. All rights reserved.</div>
 </footer>

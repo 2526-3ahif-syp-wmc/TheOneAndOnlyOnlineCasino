@@ -12,9 +12,7 @@
         <strong>{{ balance }} EC</strong>
       </div>
 
-      <button class="exit-button" type="button" (click)="goBack()">
-        Back to Home
-      </button>
+      <button class="exit-button" type="button" (click)="goBack()">Back to Home</button>
     </div>
   </header>
 
@@ -263,9 +261,7 @@
               <span class="bet-amount">{{ bet.amount }} EC</span>
             </div>
 
-            <button type="button" (click)="removeBet(bet)" class="remove-bet">
-              ×
-            </button>
+            <button type="button" (click)="removeBet(bet)" class="remove-bet">×</button>
           </div>
         </div>
 
@@ -283,9 +279,7 @@
         <div class="protocol-header">
           <span>Spin Results</span>
 
-          <button class="close-protocol" type="button" (click)="closeProtocol()">
-            ×
-          </button>
+          <button class="close-protocol" type="button" (click)="closeProtocol()">×</button>
         </div>
 
         <div class="protocol-list">
@@ -301,13 +295,9 @@
             </div>
 
             <div class="protocol-result">
-              <span *ngIf="result.won" class="win-badge">
-                +{{ result.winAmount }} EC
-              </span>
+              <span *ngIf="result.won" class="win-badge"> +{{ result.winAmount }} EC </span>
 
-              <span *ngIf="!result.won" class="loss-badge">
-                -{{ result.betAmount }} EC
-              </span>
+              <span *ngIf="!result.won" class="loss-badge"> -{{ result.betAmount }} EC </span>
             </div>
           </div>
         </div>

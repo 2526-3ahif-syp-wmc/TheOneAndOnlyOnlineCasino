@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   createUser,
   findUserByLogin,
@@ -8,18 +8,18 @@ import {
   updateProfile,
   updateXp,
   usernameExists,
-  usernameExistsForOtherUser
-} from '../services/user-service';
+  usernameExistsForOtherUser,
+} from "../services/user-service";
 
 export const authRouter = Router();
 
 // REGISTER
-authRouter.post('/users', (req, res) => {
+authRouter.post("/users", (req, res) => {
   const { username, password, coins } = req.body;
 
   if (usernameExists(username)) {
     return res.status(409).json({
-      message: 'Username already exists'
+      message: "Username already exists",
     });
   }
 
@@ -29,14 +29,14 @@ authRouter.post('/users', (req, res) => {
 });
 
 // LOG IN
-authRouter.post('/login', (req, res) => {
+authRouter.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   const user = findUserByLogin(username, password);
 
   if (!user) {
     return res.status(401).json({
-      message: 'Invalid username or password'
+      message: "Invalid username or password",
     });
   }
 
@@ -44,7 +44,7 @@ authRouter.post('/login', (req, res) => {
 });
 
 // UPDATE COINS
-authRouter.patch('/users/:id/coins', (req, res) => {
+authRouter.patch("/users/:id/coins", (req, res) => {
   const userId = Number(req.params.id);
   const { coins } = req.body;
 
@@ -52,7 +52,7 @@ authRouter.patch('/users/:id/coins', (req, res) => {
 
   if (!updatedUser) {
     return res.status(404).json({
-      message: 'User not found'
+      message: "User not found",
     });
   }
 
@@ -60,7 +60,7 @@ authRouter.patch('/users/:id/coins', (req, res) => {
 });
 
 // UPDATE XP
-authRouter.patch('/users/:id/xp', (req, res) => {
+authRouter.patch("/users/:id/xp", (req, res) => {
   const userId = Number(req.params.id);
   const { xp } = req.body;
 
@@ -68,7 +68,7 @@ authRouter.patch('/users/:id/xp', (req, res) => {
 
   if (!updatedUser) {
     return res.status(404).json({
-      message: 'User not found'
+      message: "User not found",
     });
   }
 
@@ -76,7 +76,7 @@ authRouter.patch('/users/:id/xp', (req, res) => {
 });
 
 // UPDATE PROFILE
-authRouter.patch('/users/:id', (req, res) => {
+authRouter.patch("/users/:id", (req, res) => {
   const userId = Number(req.params.id);
   const { username, currentPassword, newPassword } = req.body;
 
@@ -84,19 +84,22 @@ authRouter.patch('/users/:id', (req, res) => {
 
   if (!user) {
     return res.status(404).json({
-      message: 'User not found'
+      message: "User not found",
     });
   }
 
   if (user.password !== currentPassword) {
     return res.status(401).json({
-      message: 'Current password is incorrect'
+      message: "Current password is incorrect",
     });
   }
 
-  if (username !== user.username && usernameExistsForOtherUser(username, userId)) {
+  if (
+    username !== user.username &&
+    usernameExistsForOtherUser(username, userId)
+  ) {
     return res.status(409).json({
-      message: 'Username already exists'
+      message: "Username already exists",
     });
   }
 
@@ -109,7 +112,7 @@ authRouter.patch('/users/:id', (req, res) => {
 });
 
 // PREMIUM
-authRouter.patch('/users/:id/premium', (req, res) => {
+authRouter.patch("/users/:id/premium", (req, res) => {
   const userId = Number(req.params.id);
   const { premium } = req.body;
 
@@ -117,7 +120,7 @@ authRouter.patch('/users/:id/premium', (req, res) => {
 
   if (!updatedUser) {
     return res.status(404).json({
-      message: 'User not found'
+      message: "User not found",
     });
   }
 
