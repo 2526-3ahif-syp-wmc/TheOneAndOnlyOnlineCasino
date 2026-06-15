@@ -1,3 +1,23 @@
+
+@if (mysteryRevealOpen()) {
+<div class="mystery-reveal-overlay">
+  <div class="mystery-background-flash"></div>
+
+  <div
+    class="mystery-casino-box"
+    [class.mystery-explosion]="mysteryRevealExplode()"
+    [style.transform]="'scale(' + mysteryRevealScale() + ')'"
+  >
+      <div class="mystery-reward-cycle">
+        {{ mysteryRevealReward() }}
+      </div>
+      <span class="mystery-label">
+        {{ mysteryRevealExplode() ? 'YOUR FATE IS DECIDED' : 'ROLLING...' }}
+      </span>
+  </div>
+</div>
+}
+
 <div class="home-shell">
   <div class="ambient ambient-left"></div>
   <div class="ambient ambient-right"></div>
@@ -57,7 +77,7 @@
       @if (canClaimMysteryBox()) {
         <p>Unlock a mystery reward every 6 hours! Win coins, nothing, or a buff!</p>
 
-        <button class="bonus-btn" type="button" (click)="claimMysteryBox()">
+        <button class="bonus-btn" type="button" (click)="claimMysteryBox()" [disabled]="mysteryRevealOpen()">
           Open mystery box
         </button>
       } @else {
@@ -137,7 +157,7 @@
             <h3>{{ game.title }}</h3>
             @if (game.title === 'Roulette') {
               <span class="game-card-daily-bonus">
-                +10% winnings today!
+                
               </span>
             }
             <p>{{ game.subtitle }}</p>

@@ -58,6 +58,48 @@ export class Home {
 
   constructor() {}
 
+  protected mysteryRevealOpen = signal(false);
+  protected mysteryRevealExplode = signal(false);
+  protected mysteryRevealReward = signal('❓');
+  protected mysteryRevealScale = signal(1);
+
+  private mysteryVisualRewards = ['❌','🪙','⭐'];
+
+  private wait(milliseconds: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
+
+  private async playMysteryReveal(finalReward: string): Promise<void> {
+    this.mysteryRevealOpen.set(true);
+    this.mysteryRevealExplode.set(false);
+    const start = performance.now();
+    const duration = 3800;
+
+    while (performance.now() - start < duration) {
+      const progress = (performance.now() - start) / duration;
+      const delay = 45 + progress * 260;
+
+      this.mysteryRevealScale.set(1 + progress * 1.6);
+      this.mysteryRevealReward.set(
+        this.mysteryVisualRewards[
+          Math.floor(Math.random() * this.mysteryVisualRewards.length)
+        ]
+      );
+
+      await this.wait(delay);
+    }
+
+    this.mysteryRevealReward.set(finalReward);
+    this.mysteryRevealExplode.set(true);
+
+    await this.wait(1000);
+
+    this.mysteryRevealOpen.set(false);
+    this.mysteryRevealExplode.set(false);
+    this.mysteryRevealScale.set(1);
+  }
+
+
   protected readonly games: GameTile[] = [
     {
       title: 'Mines',
@@ -147,6 +189,15 @@ export class Home {
 
     try {
       const reward = this.mysteryBoxService.generateReward();
+
+      const finalReward =
+        reward.type === 'zero'
+          ? '❌'
+          : reward.type === 'coins'
+            ? '🪙'
+            : '⭐';
+
+      await this.playMysteryReveal(finalReward);
       const now = Date.now();
 
       if (reward.type === 'zero') {
