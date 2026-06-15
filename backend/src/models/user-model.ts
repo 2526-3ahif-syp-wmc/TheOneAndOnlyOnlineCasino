@@ -12,3 +12,5 @@ export type User = {
 export type ProfileUserRow = User & {
   password: string;
 };
+
+export type PublicUser = Omit<User, 'password'>;
