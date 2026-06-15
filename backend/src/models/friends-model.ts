@@ -16,7 +16,6 @@ export type FriendRow = {
 export type Friend = {
   id: number;
   username: string;
-  status: FriendStatus;
   level: number;
   totalWins: number;
   balance: number;

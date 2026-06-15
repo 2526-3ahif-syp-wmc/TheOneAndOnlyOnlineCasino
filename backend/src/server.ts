@@ -4,7 +4,8 @@ import cors from "cors";
 import { authRouter } from "./routes/user-routes";
 import { leaderboardRouter } from "./routes/leaderboard-routes";
 import { blackjackRouter } from "./routes/blackjack-routes";
-import { db } from "./databases/db";
+import { friendsRouter } from "./routes/friends-routes";
+import { getPublicUsers } from "./services/user-service";
 
 const app = express();
 
@@ -14,20 +15,14 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/leaderboard", leaderboardRouter);
 app.use("/blackjack", blackjackRouter);
+app.use("/friends", friendsRouter);
 
 app.get("/", (_, res) => {
   return res.json("Backend is running!");
 });
 
 app.get("/users", (_, res) => {
-  const users = db
-    .prepare(
-      `
-      SELECT *
-      FROM users
-    `,
-    )
-    .all();
+  const users = getPublicUsers();
 
   return res.json(users);
 });
