@@ -99,30 +99,26 @@ button {
 
 // Layout
 .friends-layout {
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1rem;
 
   @media (min-width: 1024px) {
-    grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.15fr);
-    gap: 1rem;
-    height: calc(100vh - 260px);
-    min-height: 520px;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
   }
 }
 
 // Friends List
 .friends-list {
-  height: 100%;
+  height: auto;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   border-radius: 28px;
   padding: clamp(1rem, 2vw, 1.5rem);
+  gap: 0.9rem;
 }
 
 .section-heading {
@@ -140,62 +136,227 @@ button {
   }
 }
 
-// Add Friend Input
-.add-friend-input {
+// Add Friend Panel
+.add-friend-panel {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr auto;
+  gap: 0.85rem;
+  margin-bottom: 1.15rem;
+  align-items: end;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-group {
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(248, 215, 107, 0.9);
+}
+
+.search-panel {
   margin-bottom: 1rem;
-  flex: 0 0 auto;
+}
 
-  input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    font-size: 0.95rem;
+.search-field input {
+  width: 100%;
+}
 
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
+.search-help {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
 
-    &:focus {
-      outline: none;
-      border-color: rgba(168, 85, 247, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-    }
+.field-group input,
+.select-wrap select {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.2;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.46);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(248, 215, 107, 0.65);
+    background: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 0 3px rgba(248, 215, 107, 0.12);
+  }
+}
+
+.select-wrap {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.25rem;
+    cursor: pointer;
   }
 }
 
 .add-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0 1.4rem;
+  border-radius: 0.9rem;
   background: linear-gradient(135deg, #f8d76b, #d4a940);
   color: #0b0b0f;
-  font-weight: 800;
-  font-size: 1.2rem;
+  font-weight: 900;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
   cursor: pointer;
   border: none;
-  transition: all 0.3s ease;
+  box-shadow: 0 16px 30px rgba(248, 215, 107, 0.15);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(248, 215, 107, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 18px 38px rgba(248, 215, 107, 0.22);
+    filter: brightness(1.03);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
-// Friends Scroll
-.friends-scroll {
-  flex: 1;
-  min-height: 0;
+.suggestions-section {
+  margin-bottom: 1rem;
+}
+
+.compact-heading {
+  margin-bottom: 0.85rem;
+
+  h3 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 420px;
   overflow-y: auto;
-  padding-right: 0.35rem;
+  padding-right: 0.25rem;
+}
+
+.suggestion-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.suggestion-card.added {
+  border-color: rgba(34, 197, 94, 0.25);
+  background: rgba(34, 197, 94, 0.07);
+}
+
+.suggestion-avatar {
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(248, 215, 107, 0.22), rgba(168, 85, 247, 0.26));
+  border: 1px solid rgba(248, 215, 107, 0.25);
+}
+
+.suggestion-main {
+  min-width: 0;
+
+  strong {
+    display: block;
+    color: #fff;
+    font-size: 1rem;
+    word-break: break-word;
+  }
+
+  small {
+    display: block;
+    margin-top: 0.25rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+  }
+}
+
+.suggestion-actions {
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.friends-divider {
+  height: 1px;
+  margin: 1rem 0;
+  background: linear-gradient(90deg, transparent, rgba(248, 215, 107, 0.4), transparent);
+}
+
+// Friends Scroll
+.friends-scroll,
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 420px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 // Friend Row
-.friend-row {
+.friend-card {
   width: 100%;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -217,6 +378,63 @@ button {
     border-color: rgba(168, 85, 247, 0.45);
     background: rgba(168, 85, 247, 0.12);
   }
+}
+
+.friends-list,
+.suggestions-list,
+.friends-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(248, 215, 107, 0.5) rgba(255, 255, 255, 0.06);
+}
+
+.friends-list::-webkit-scrollbar,
+.suggestions-list::-webkit-scrollbar,
+.friends-scroll::-webkit-scrollbar {
+  width: 0.45rem;
+}
+
+.friends-list::-webkit-scrollbar-thumb,
+.suggestions-list::-webkit-scrollbar-thumb,
+.friends-scroll::-webkit-scrollbar-thumb {
+  background: rgba(248, 215, 107, 0.55);
+  border-radius: 999px;
+}
+
+.friends-list::-webkit-scrollbar-track,
+.suggestions-list::-webkit-scrollbar-track,
+.friends-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.friends-list,
+.suggestions-section,
+.friend-detail {
+  border-radius: 28px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  overflow: hidden;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto;
+  padding: 0.55rem 0.9rem;
+
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f8d76b, #d4a940);
+  color: #09090f;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  margin-bottom: 1rem;
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 // Friend Avatar
@@ -292,6 +510,17 @@ button {
     &.status-offline {
       color: #6b7280;
     }
+  }
+}
+
+.detail-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.85rem;
+  align-items: end;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -448,6 +677,21 @@ button {
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
   }
+}
+
+.action-remove {
+  min-height: 3.25rem;
+}
+
+.error-message {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+  color: #fff;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
 // Empty State

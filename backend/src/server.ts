@@ -3,8 +3,9 @@ import express from 'express';
 import cors from 'cors';
 import { authRouter } from './routes/user-routes';
 import { leaderboardRouter } from './routes/leaderboard-routes';
+import { friendsRouter } from './routes/friends-routes';
 import { gameOfDayRouter } from './routes/game-of-day-routes';
-import { db } from './databases/db';
+import { getPublicUsers } from './services/user-service';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/leaderboard', leaderboardRouter);
+app.use('/friends', friendsRouter);
 app.use('/game-of-day', gameOfDayRouter);
 
 app.get('/', (_, res) => {
@@ -20,12 +22,7 @@ app.get('/', (_, res) => {
 });
 
 app.get('/users', (_, res) => {
-  const users = db
-    .prepare(`
-      SELECT *
-      FROM users
-    `)
-    .all();
+  const users = getPublicUsers();
 
   return res.json(users);
 });

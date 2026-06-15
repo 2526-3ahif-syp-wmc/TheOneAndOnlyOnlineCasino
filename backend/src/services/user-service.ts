@@ -1,5 +1,18 @@
 import { db } from '../databases/db';
-import { ProfileUserRow, User } from '../models/user-model';
+import { ProfileUserRow, PublicUser, User } from '../models/user-model';
+
+function getPublicUserRows(whereClause = '', params: Array<string | number> = []): PublicUser[] {
+  const rows = db
+    .prepare(`
+      SELECT id, username, coins, premium, wins, losses, xp
+      FROM users
+      ${whereClause}
+      ORDER BY username COLLATE NOCASE ASC
+    `)
+    .all(...params) as PublicUser[];
+
+  return rows;
+}
 
 export function getPublicUserById(id: number): User | undefined {
   return db
@@ -9,6 +22,37 @@ export function getPublicUserById(id: number): User | undefined {
       WHERE id = ?
     `)
     .get(id) as User | undefined;
+}
+
+export function getPublicUsers(excludeUserId?: number): PublicUser[] {
+  if (Number.isInteger(excludeUserId)) {
+    return getPublicUserRows('WHERE id != ?', [excludeUserId as number]);
+  }
+
+  return getPublicUserRows();
+}
+
+export function searchPublicUsers(query: string, excludeUserId?: number): PublicUser[] {
+  const search = `%${query.trim().toLowerCase()}%`;
+
+  if (Number.isInteger(excludeUserId)) {
+    return getPublicUserRows(
+      'WHERE id != ? AND lower(username) LIKE ?',
+      [excludeUserId as number, search]
+    );
+  }
+
+  return getPublicUserRows('WHERE lower(username) LIKE ?', [search]);
+}
+
+export function findPublicUserByUsername(username: string): PublicUser | undefined {
+  return db
+    .prepare(`
+      SELECT id, username, coins, premium, wins, losses, xp
+      FROM users
+      WHERE lower(username) = lower(?)
+    `)
+    .get(username) as PublicUser | undefined;
 }
 
 export function usernameExists(username: string): boolean {
