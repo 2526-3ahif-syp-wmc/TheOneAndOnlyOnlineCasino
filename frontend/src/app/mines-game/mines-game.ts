@@ -124,16 +124,20 @@ export class MinesComponent implements OnInit, OnDestroy {
   }
 
   get startButtonLabel(): string {
-    if (this.status === 'lost') {
-      return 'Try Again';
-    }
-
-    if (this.status === 'won') {
-      return 'Reset';
-    }
-
-    return this.roundStarted ? 'New Game' : 'Start New Game';
+  if (this.status === 'lost') {
+    return 'Try Again';
   }
+
+  if (this.status === 'won') {
+    return 'Try Again';
+  }
+
+  if (this.status === 'playing') {
+    return 'Start New Game';
+  }
+
+  return 'Start New Game';
+}
 
   get statusLabel(): string {
     switch (this.status) {
@@ -178,7 +182,6 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     if (this.status === 'lost' || this.status === 'won') {
       this.resetRound(false);
-      return;
     }
 
     if (this.status === 'playing') {
