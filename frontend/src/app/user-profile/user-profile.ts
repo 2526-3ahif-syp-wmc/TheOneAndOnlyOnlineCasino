@@ -1,7 +1,8 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../services/user-service';
+
 import {
   GameHistory,
   LeaderboardDetails,
@@ -28,6 +29,56 @@ export class UserProfile implements OnInit {
   protected leaderboardDetails = signal<LeaderboardDetails | null>(null);
   protected statsLoading = signal(false);
   protected statsError = signal('');
+
+private readonly AVATAR_KEY = computed(
+  () => `profile_avatar_${this.userService.currentUser()?.id ?? 'guest'}`
+);
+
+@ViewChild('avatarInput') private avatarInput!: ElementRef<HTMLInputElement>;
+
+protected profileImage = signal<string | null>(null);
+protected avatarPreview = signal<string | null>(null);
+
+// Call this in ngOnInit, after the existing loadProfileStats() call
+private loadStoredAvatar(): void {
+  const stored = localStorage.getItem(this.AVATAR_KEY());
+  if (stored) this.profileImage.set(stored);
+}
+
+triggerAvatarUpload(): void {
+  this.avatarInput.nativeElement.click();
+}
+
+onAvatarSelected(event: Event): void {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+
+  // Guard: images only, max 5 MB
+  if (!file.type.startsWith('image/')) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Please choose an image under 5 MB.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => this.avatarPreview.set(reader.result as string);
+  reader.readAsDataURL(file);
+
+  // Reset input so the same file can be re-selected later
+  this.avatarInput.nativeElement.value = '';
+}
+
+confirmAvatar(): void {
+  const preview = this.avatarPreview();
+  if (!preview) return;
+  this.profileImage.set(preview);
+  localStorage.setItem(this.AVATAR_KEY(), preview);
+  this.avatarPreview.set(null);
+}
+
+cancelAvatarPreview(): void {
+  this.avatarPreview.set(null);
+}
 
   totalGamesPlayed = computed(() => {
     return this.leaderboardDetails()?.stats.games_played ?? 0;

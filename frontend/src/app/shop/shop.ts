@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { UserService } from '../services/user-service';
 import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
@@ -21,6 +21,25 @@ type CoinPack = {
 export class Shop {
   private service = inject(UserService);
   private alertService = inject(AlertService);
+
+  protected isPremium = computed(() => this.service.premium() === 1);
+  protected discountAvailable = !this.checkUsedDiscountToday();
+
+  private checkUsedDiscountToday(): boolean {
+    return localStorage.getItem('premiumDiscountDate') === new Date().toDateString();
+  }
+
+  private markDiscountUsed(): void {
+    localStorage.setItem('premiumDiscountDate', new Date().toDateString());
+    this.discountAvailable = false;
+  }
+
+  protected getDisplayPrice(price: number): string {
+    if (this.isPremium() && this.discountAvailable) {
+      return (price * 0.8).toFixed(2);
+    }
+    return price.toFixed(2);
+  }
 
   protected coinPacks: CoinPack[] = [
     {
@@ -56,11 +75,16 @@ export class Shop {
 
   protected async buyCoins(pack: CoinPack) {
     const currentCoins = this.service.currentUser()?.coins ?? 0;
+    const isDiscounted = this.isPremium() && this.discountAvailable;
+    const finalPrice = isDiscounted ? +(pack.price * 0.8).toFixed(2) : pack.price;
 
     try {
       await firstValueFrom(this.service.updateCoins(currentCoins + pack.coins));
-
-      this.alertService.info(`You bought ${pack.coins} Coins for ${pack.price.toFixed(2)}€`);
+      if (isDiscounted) this.markDiscountUsed();
+      const msg = isDiscounted
+        ? `You bought ${pack.coins} Coins for ${finalPrice.toFixed(2)}€ (20% EduBet+ discount applied!)`
+        : `You bought ${pack.coins} Coins for ${pack.price.toFixed(2)}€`;
+      this.alertService.info(msg);
     } catch (err) {
       console.log(err);
       this.alertService.error('Buying coins failed');
@@ -75,13 +99,18 @@ export class Shop {
       return;
     }
 
-    const price = coins / 100;
+    const basePrice = coins / 100;
+    const isDiscounted = this.isPremium() && this.discountAvailable;
+    const finalPrice = isDiscounted ? +(basePrice * 0.8).toFixed(2) : basePrice;
     const currentCoins = this.service.currentUser()?.coins ?? 0;
 
     try {
       await firstValueFrom(this.service.updateCoins(currentCoins + coins));
-
-      this.alertService.info(`You bought ${coins} Coins for ${price.toFixed(2)}€`);
+      if (isDiscounted) this.markDiscountUsed();
+      const msg = isDiscounted
+        ? `You bought ${coins} Coins for ${finalPrice.toFixed(2)}€ (20% EduBet+ discount applied!)`
+        : `You bought ${coins} Coins for ${basePrice.toFixed(2)}€`;
+      this.alertService.info(msg);
     } catch (err) {
       console.log(err);
       this.alertService.error('Buying custom coins failed');

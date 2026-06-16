@@ -92,6 +92,15 @@ export class Home {
       route: '/games/roulette',
     },
     {
+      title: 'Blackjack',
+      subtitle: 'Hit, stand and beat the dealer at 21.',
+      badge: 'Classic',
+      icon: '♠',
+      players: 104,
+      coverImage: '/blackjack.jpeg',
+      route: '/games/blackjack',
+    },
+    {
       title: 'Plinko',
       subtitle: 'Drop the ball and chase huge multipliers.',
       badge: 'New',

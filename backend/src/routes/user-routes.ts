@@ -3,8 +3,6 @@ import {
   createUser,
   findUserByLogin,
   getProfileUserById,
-  getPublicUsers,
-  searchPublicUsers,
   updateCoins,
   updatePremium,
   updateProfile,
@@ -12,6 +10,45 @@ import {
   usernameExists,
   usernameExistsForOtherUser,
 } from "../services/user-service";
+import { db } from "../databases/db";
+
+type PublicUserRow = {
+  id: number;
+  username: string;
+  coins: number;
+  premium: number;
+  wins: number;
+  losses: number;
+  xp: number;
+};
+
+function getPublicUsers(excludeUserId?: number): PublicUserRow[] {
+  const query = `
+    SELECT id, username, coins, premium, wins, losses, xp
+    FROM users
+    ${Number.isInteger(excludeUserId) ? "WHERE id != ?" : ""}
+    ORDER BY username COLLATE NOCASE ASC
+  `;
+
+  return Number.isInteger(excludeUserId)
+    ? (db.prepare(query).all(excludeUserId) as PublicUserRow[])
+    : (db.prepare(query).all() as PublicUserRow[]);
+}
+
+function searchPublicUsers(queryText: string, excludeUserId?: number): PublicUserRow[] {
+  const searchText = `%${queryText.trim()}%`;
+  const query = `
+    SELECT id, username, coins, premium, wins, losses, xp
+    FROM users
+    WHERE username LIKE ? COLLATE NOCASE
+    ${Number.isInteger(excludeUserId) ? "AND id != ?" : ""}
+    ORDER BY username COLLATE NOCASE ASC
+  `;
+
+  return Number.isInteger(excludeUserId)
+    ? (db.prepare(query).all(searchText, excludeUserId) as PublicUserRow[])
+    : (db.prepare(query).all(searchText) as PublicUserRow[]);
+}
 
 export const authRouter = Router();
 

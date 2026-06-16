@@ -13,6 +13,7 @@ export interface LeaderboardEntry {
   losses: number;
   coins_won: number;
   coins_lost: number;
+  premium?: number;
 }
 
 export interface GameHistory {

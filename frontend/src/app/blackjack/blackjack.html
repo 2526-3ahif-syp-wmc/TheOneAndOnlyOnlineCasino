@@ -1,0 +1,108 @@
+<div class="blackjack-shell">
+  <div class="table-stage">
+    <div class="table-rim"></div>
+    <div class="table-glow"></div>
+
+    <section class="header-panel glass-panel">
+      <div class="title-block">
+        <span class="eyebrow">Premium Blackjack</span>
+        <h1>Beat the dealer at 21</h1>
+        <p>{{ statusLabel() }}</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-chip">
+          <span>Balance</span>
+          <strong>{{ balance() }} EC</strong>
+        </div>
+        <div class="stat-chip">
+          <span>Bet</span>
+          <strong>{{ bet }} EC</strong>
+        </div>
+        <div class="stat-chip accent">
+          <span>Table</span>
+          <strong>Green Felt Classic</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls-panel glass-panel">
+      <label class="bet-control">
+        <span>Bet Amount</span>
+        <input type="number" [(ngModel)]="bet" min="1" />
+      </label>
+
+      <div class="quick-bets">
+        @for (amount of quickBets; track amount) {
+          <button type="button" class="quick-bet" (click)="bet = amount">{{ amount }}</button>
+        }
+      </div>
+
+      <div class="actions">
+        <button class="primary-action" (click)="start()" [disabled]="loading()">Deal</button>
+        <button class="secondary-action" (click)="hit()" [disabled]="loading() || !game()">Hit</button>
+        <button class="secondary-action" (click)="stand()" [disabled]="loading() || !game()">Stand</button>
+      </div>
+    </section>
+
+    <section class="table-surface glass-panel" [class.dealing]="dealing()">
+      <div class="dealer-zone hand-zone">
+        <div class="hand-heading">
+          <div>
+            <span class="hand-label">Dealer</span>
+            <h3>{{ handLabel('dealer') }}</h3>
+          </div>
+          <div class="hand-total">{{ game() ? getHandValue(game()?.dealerHand) : 0 }}</div>
+        </div>
+
+        <div class="hand dealer-hand" [class.dealing]="dealing()">
+          @if (game(); as g) {
+            @for (c of g.dealerHand; track $index) {
+              <div class="card" [class.red]="isRedSuit(c.suit)">
+                <span class="corner top-left">{{ c.rank }}</span>
+                <span class="center-icon">{{ getCardSuitSymbol(c.suit) }}</span>
+                <span class="corner bottom-right">{{ c.rank }}</span>
+              </div>
+            }
+          } @else {
+            <div class="card back-card">
+              <span class="back-pattern"></span>
+              <span class="back-label">BLACKJACK</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="center-divider">
+        <span>EDUBET BLACKJACK</span>
+      </div>
+
+      <div class="player-zone hand-zone">
+        <div class="hand-heading">
+          <div>
+            <span class="hand-label">Player</span>
+            <h3>{{ handLabel('player') }}</h3>
+          </div>
+          <div class="hand-total">{{ game() ? getHandValue(game()?.playerHand) : 0 }}</div>
+        </div>
+
+        <div class="hand player-hand" [class.dealing]="dealing()">
+          @if (game(); as g) {
+            @for (c of g.playerHand; track $index) {
+              <div class="card" [class.red]="isRedSuit(c.suit)">
+                <span class="corner top-left">{{ c.rank }}</span>
+                <span class="center-icon">{{ getCardSuitSymbol(c.suit) }}</span>
+                <span class="corner bottom-right">{{ c.rank }}</span>
+              </div>
+            }
+          } @else {
+            <div class="card back-card">
+              <span class="back-pattern"></span>
+              <span class="back-label">DEAL</span>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
