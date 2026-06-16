@@ -1,23 +1,25 @@
-import { db } from '../databases/db';
-import { ProfileUserRow, PublicUser, User } from '../models/user-model';
+import { db } from "../databases/db";
+import { ProfileUserRow, PublicUser, User } from "../models/user-model";
 
-function getPublicUserRows(whereClause = '', params: Array<string | number> = []): PublicUser[] {
-  const rows = db
-    .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
-      FROM users
-      ${whereClause}
-      ORDER BY username COLLATE NOCASE ASC
-    `)
-    .all(...params) as PublicUser[];
+type PublicUserRow = PublicUser;
 
-  return rows;
+function toPublicUser(row: PublicUserRow): PublicUser {
+  return {
+    id: row.id,
+    username: row.username,
+    coins: row.coins,
+    premium: row.premium,
+    wins: row.wins,
+    losses: row.losses,
+    xp: row.xp,
+    avatar_url: (row as any).avatar_url ?? null,
+  };
 }
 
 export function getPublicUserById(id: number): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
+      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE id = ?
     `)
@@ -25,30 +27,41 @@ export function getPublicUserById(id: number): User | undefined {
 }
 
 export function getPublicUsers(excludeUserId?: number): PublicUser[] {
-  if (Number.isInteger(excludeUserId)) {
-    return getPublicUserRows('WHERE id != ?', [excludeUserId as number]);
-  }
+  const query = `
+    SELECT id, username, coins, premium, wins, losses, xp, avatar_url
+    FROM users
+    ${Number.isInteger(excludeUserId) ? "WHERE id != ?" : ""}
+    ORDER BY username COLLATE NOCASE ASC
+  `;
 
-  return getPublicUserRows();
+  const rows = Number.isInteger(excludeUserId)
+    ? (db.prepare(query).all(excludeUserId) as PublicUserRow[])
+    : (db.prepare(query).all() as PublicUserRow[]);
+
+  return rows.map(toPublicUser);
 }
 
-export function searchPublicUsers(query: string, excludeUserId?: number): PublicUser[] {
-  const search = `%${query.trim().toLowerCase()}%`;
+export function searchPublicUsers(queryText: string, excludeUserId?: number): PublicUser[] {
+  const searchText = `%${queryText.trim()}%`;
+  const query = `
+    SELECT id, username, coins, premium, wins, losses, xp, avatar_url
+    FROM users
+    WHERE username LIKE ? COLLATE NOCASE
+    ${Number.isInteger(excludeUserId) ? "AND id != ?" : ""}
+    ORDER BY username COLLATE NOCASE ASC
+  `;
 
-  if (Number.isInteger(excludeUserId)) {
-    return getPublicUserRows(
-      'WHERE id != ? AND lower(username) LIKE ?',
-      [excludeUserId as number, search]
-    );
-  }
+  const rows = Number.isInteger(excludeUserId)
+    ? (db.prepare(query).all(searchText, excludeUserId) as PublicUserRow[])
+    : (db.prepare(query).all(searchText) as PublicUserRow[]);
 
-  return getPublicUserRows('WHERE lower(username) LIKE ?', [search]);
+  return rows.map(toPublicUser);
 }
 
 export function findPublicUserByUsername(username: string): PublicUser | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
+      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE lower(username) = lower(?)
     `)
@@ -93,7 +106,7 @@ export function createUser(username: string, password: string, coins: number = 1
 export function findUserByLogin(username: string, password: string): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
+      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE username = ? AND password = ?
     `)
@@ -103,7 +116,7 @@ export function findUserByLogin(username: string, password: string): User | unde
 export function getProfileUserById(id: number): ProfileUserRow | undefined {
   return db
     .prepare(`
-      SELECT id, username, password, coins, premium, wins, losses, xp
+      SELECT id, username, password, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE id = ?
     `)
@@ -170,6 +183,22 @@ export function updateProfile(
       WHERE id = ?
     `)
     .run(username, password, userId);
+
+  if (result.changes === 0) {
+    return undefined;
+  }
+
+  return getPublicUserById(userId);
+}
+
+export function updateAvatar(userId: number, avatarUrl: string): User | undefined {
+  const result = db
+    .prepare(`
+      UPDATE users
+      SET avatar_url = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .run(avatarUrl, userId);
 
   if (result.changes === 0) {
     return undefined;

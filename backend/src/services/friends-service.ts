@@ -152,27 +152,14 @@ export function acceptFriendRequest(requestId: number) {
     JOIN users sender ON fr.sender_id = sender.id
     JOIN users receiver ON fr.receiver_id = receiver.id
     WHERE fr.id = ? AND fr.status = 'pending'
-  `).get(requestId) as {
-    id: number;
-    senderId: number;
-    receiverId: number;
-    senderUsername: string;
-    senderXp: number;
-    senderWins: number;
-    senderCoins: number;
-    receiverUsername: string;
-    receiverXp: number;
-    receiverWins: number;
-    receiverCoins: number;
-  } | undefined;
+  `).get(requestId) as any;
 
   if (!request) {
     throw new Error('Request not found');
   }
 
   const existingForReceiver = db.prepare(`
-    SELECT id
-    FROM friends
+    SELECT id FROM friends
     WHERE user_id = ? AND lower(friend_name) = lower(?)
   `).get(request.receiverId, request.senderUsername);
 
@@ -191,8 +178,7 @@ export function acceptFriendRequest(requestId: number) {
   }
 
   const existingForSender = db.prepare(`
-    SELECT id
-    FROM friends
+    SELECT id FROM friends
     WHERE user_id = ? AND lower(friend_name) = lower(?)
   `).get(request.senderId, request.receiverUsername);
 
@@ -216,15 +202,46 @@ export function acceptFriendRequest(requestId: number) {
     WHERE id = ?
   `).run(requestId);
 
+  db.prepare(`
+    INSERT INTO notifications (user_id, message)
+    VALUES (?, ?)
+  `).run(
+    request.senderId,
+    `${request.receiverUsername} accepted your friend request`
+  );
+
   return { success: true };
 }
 
 export function declineFriendRequest(requestId: number) {
+  const request = db.prepare(`
+    SELECT
+      fr.sender_id as senderId,
+      sender.username as senderUsername,
+      receiver.username as receiverUsername
+    FROM friend_requests fr
+    JOIN users sender ON sender.id = fr.sender_id
+    JOIN users receiver ON receiver.id = fr.receiver_id
+    WHERE fr.id = ? AND fr.status = 'pending'
+  `).get(requestId) as any;
+
+  if (!request) {
+    throw new Error('Request not found');
+  }
+
   db.prepare(`
     UPDATE friend_requests
     SET status = 'declined'
     WHERE id = ?
   `).run(requestId);
+
+  db.prepare(`
+    INSERT INTO notifications (user_id, message)
+    VALUES (?, ?)
+  `).run(
+    request.senderId,
+    `${request.receiverUsername} declined your friend request`
+  );
 
   return { success: true };
 }
