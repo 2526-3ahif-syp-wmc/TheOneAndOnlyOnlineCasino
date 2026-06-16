@@ -15,6 +15,7 @@ import {
 } from "../services/user-service";
 import { db } from "../databases/db";
 
+
 type PublicUserRow = {
   id: number;
   username: string;
