@@ -1,0 +1,65 @@
+<div class="daily-tasks-shell">
+  <section class="daily-tasks-hero card-glass">
+    <div class="hero-copy">
+      <span class="eyebrow">Daily Tasks</span>
+      <h1>Complete today’s missions</h1>
+      <p>Finish daily activities to earn EduCoins and XP. Rewards are saved through the backend so your balance updates immediately.</p>
+
+      <div class="hero-stats">
+        <div>
+          <span>Current balance</span>
+          <strong>{{ coins() }} EC</strong>
+        </div>
+        <div>
+          <span>Current XP</span>
+          <strong>{{ xp() }} XP</strong>
+        </div>
+      </div>
+
+      <a routerLink="/home" class="action action-secondary">Back to home</a>
+    </div>
+
+    <div class="hero-card card-glass">
+      <span class="card-kicker">Daily progress</span>
+      <h2>{{ completedCount() }} / {{ tasks.length }} completed</h2>
+      @if (allCompleted()) {
+        <p>Nice work! Come back tomorrow for fresh rewards.</p>
+      } @else {
+        <p>Complete more tasks to increase your balance and rank.</p>
+      }
+    </div>
+  </section>
+
+  <section class="task-list">
+    @for (task of tasks; track task.id) {
+      <article class="task-card card-glass" [class.completed]="isCompleted(task.id)">
+        <div class="task-card-header">
+          <div>
+            <span class="task-title">{{ task.title }}</span>
+            <p>{{ task.description }}</p>
+          </div>
+
+          <div class="reward-chip">+{{ task.rewardCoins }} EC</div>
+        </div>
+
+        <div class="task-card-footer">
+          <span>{{ task.rewardXp }} XP</span>
+          <button
+            type="button"
+            class="task-action"
+            (click)="completeTask(task)"
+            [disabled]="isCompleted(task.id) || isLoading(task.id)"
+          >
+            @if (isCompleted(task.id)) {
+              Completed
+            } @else if (isLoading(task.id)) {
+              Claiming...
+            } @else {
+              Claim reward
+            }
+          </button>
+        </div>
+      </article>
+    }
+  </section>
+</div>

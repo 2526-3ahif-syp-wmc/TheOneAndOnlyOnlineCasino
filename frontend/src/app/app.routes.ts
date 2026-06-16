@@ -7,6 +7,7 @@ import { UserEditPage } from './user-edit-page/user-edit-page';
 import { Leaderboard } from './leaderboard/leaderboard';
 import { Shop } from './shop/shop';
 import { FriendsPage } from './friends-page/friends-page';
+import { DailyTasks } from './daily-tasks/daily-tasks';
 import { authGuard, guestGuard } from '../auth-guard';
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'leaderboard', component: Leaderboard, canActivate: [authGuard] },
   { path: 'friends', component: FriendsPage, canActivate: [authGuard] },
   { path: 'shop', component: Shop, canActivate: [authGuard] },
+  { path: 'daily-tasks', component: DailyTasks, canActivate: [authGuard] },
   {
     path: 'games/slotmachine',
     loadComponent: () => import('./slot-machine/slot-machine').then((m) => m.SlotMachineComponent),
