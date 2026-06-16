@@ -29,15 +29,35 @@ export function getFriendsByUserId(userId: number): Friend[] {
   const rows = db
     .prepare(
       `
-      SELECT id, user_id, friend_name, status, level, total_wins, balance, last_active, created_at, updated_at
-      FROM friends
-      WHERE user_id = ?
-      ORDER BY datetime(updated_at) DESC, id DESC
+      SELECT
+        f.id,
+        f.user_id,
+        f.friend_name,
+        f.status,
+        COALESCE(u.xp, f.level) as xp,
+        COALESCE(u.wins, f.total_wins) as total_wins,
+        COALESCE(u.coins, f.balance) as balance,
+        f.last_active,
+        f.created_at,
+        f.updated_at
+      FROM friends f
+      LEFT JOIN users u ON lower(u.username) = lower(f.friend_name)
+      WHERE f.user_id = ?
+      ORDER BY datetime(f.updated_at) DESC, f.id DESC
     `
     )
-    .all(userId) as FriendRow[];
+    .all(userId) as any[];
 
-  return rows.map(mapFriend);
+  return rows.map(row => {
+    return {
+      id: row.id,
+      username: row.friend_name,
+      level: getLevelFromXp(row.xp),
+      totalWins: row.total_wins,
+      balance: row.balance,
+      lastActive: row.last_active
+    };
+  });
 }
 
 export function sendFriendRequest(senderId: number, receiverUsername: string) {
