@@ -11,6 +11,14 @@ export interface Friend {
   lastActive: string;
 }
 
+export interface FriendRequest {
+  id: number;
+  senderId: number;
+  receiverId: number;
+  senderUsername: string;
+  status: string;
+}
+
 export interface CreateFriendRequest {
   userId: number;
   username: string;
@@ -31,22 +39,55 @@ export interface PublicUser {
 })
 export class FriendsService {
   private httpClient = inject(HttpClient);
+
   private apiUrl = 'http://localhost:3000/friends';
   private authApiUrl = 'http://localhost:3000/auth';
 
   getFriends(userId: number): Observable<Friend[]> {
-    return this.httpClient.get<Friend[]>(`${this.apiUrl}?userId=${userId}`);
+    return this.httpClient.get<Friend[]>(
+      `${this.apiUrl}?userId=${userId}`
+    );
   }
 
   getPublicUsers(excludeUserId: number): Observable<PublicUser[]> {
-    return this.httpClient.get<PublicUser[]>(`${this.authApiUrl}/users/public?excludeUserId=${excludeUserId}`);
+    return this.httpClient.get<PublicUser[]>(
+      `${this.authApiUrl}/users/public?excludeUserId=${excludeUserId}`
+    );
   }
 
-  addFriend(request: CreateFriendRequest): Observable<Friend> {
-    return this.httpClient.post<Friend>(this.apiUrl, request);
+  sendFriendRequest(userId: number, username: string): Observable<any> {
+    return this.httpClient.post(
+      `${this.apiUrl}/requests`,
+      {
+        userId: userId,
+        username: username
+      }
+    );
+  }
+
+  getFriendRequests(userId: number): Observable<FriendRequest[]> {
+    return this.httpClient.get<FriendRequest[]>(
+      `${this.apiUrl}/requests/${userId}`
+    );
+  }
+
+  acceptFriendRequest(requestId: number): Observable<any> {
+    return this.httpClient.post(
+      `${this.apiUrl}/requests/${requestId}/accept`,
+      {}
+    );
+  }
+
+  declineFriendRequest(requestId: number): Observable<any> {
+    return this.httpClient.post(
+      `${this.apiUrl}/requests/${requestId}/decline`,
+      {}
+    );
   }
 
   removeFriend(userId: number, friendId: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiUrl}/${friendId}?userId=${userId}`);
+    return this.httpClient.delete<void>(
+      `${this.apiUrl}/${friendId}?userId=${userId}`
+    );
   }
 }

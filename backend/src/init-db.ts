@@ -35,7 +35,6 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     friend_name TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'offline' CHECK(status IN ('online', 'offline', 'gaming')),
     level INTEGER NOT NULL DEFAULT 1,
     total_wins INTEGER NOT NULL DEFAULT 0,
     balance INTEGER NOT NULL DEFAULT 0,
@@ -48,5 +47,14 @@ db.exec(`
 `);
 
 console.log("Database tables created/updated successfully.");
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS friend_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    receiver_id INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending'
+  )
+`).run();
 
 db.close();
