@@ -9,6 +9,7 @@ export interface Friend {
   totalWins: number;
   balance: number;
   lastActive: string;
+  avatar_url?: string | null;
 }
 
 export interface FriendRequest {
@@ -32,6 +33,7 @@ export interface PublicUser {
   wins: number;
   losses: number;
   xp: number;
+  avatar_url?: string | null;
 }
 
 @Injectable({
@@ -58,10 +60,7 @@ export class FriendsService {
   sendFriendRequest(userId: number, username: string): Observable<any> {
     return this.httpClient.post(
       `${this.apiUrl}/requests`,
-      {
-        userId: userId,
-        username: username
-      }
+      { userId, username }
     );
   }
 

@@ -164,14 +164,11 @@ public uploadAvatar(base64: string) {
   const user = this.getLoggedInUser();
 
   return this.httpClient
-    .patch<{ avatar_url: string }>(`${this.apiUrl}/users/${user.id}/avatar`, {
+    .patch<User>(`${this.apiUrl}/users/${user.id}/avatar`, {
       avatar_base64: base64,
     })
     .pipe(
-      tap(({ avatar_url }) => {
-        const updated: User = { ...this.getLoggedInUser(), avatar_url };
-        this.saveUser(updated);
-      })
+      tap((updatedUser) => this.saveUser(updatedUser))
     );
 }
 

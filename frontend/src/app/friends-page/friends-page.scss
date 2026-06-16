@@ -19,6 +19,17 @@ button {
   background: none;
   cursor: pointer;
 }
+.friend-avatar,
+.suggestion-avatar {
+  overflow: hidden;
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+}
 
 // Background
 .friends-shell {
