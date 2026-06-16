@@ -3,47 +3,49 @@
     <div class="table-rim"></div>
     <div class="table-glow"></div>
 
-    <section class="header-panel glass-panel">
-      <div class="title-block">
-        <span class="eyebrow">Premium Blackjack</span>
-        <h1>Beat the dealer at 21</h1>
-        <p>{{ statusLabel() }}</p>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat-chip">
-          <span>Balance</span>
-          <strong>{{ balance() }} EC</strong>
+    <div class="top-grid">
+      <section class="header-panel glass-panel">
+        <div class="title-block">
+          <span class="eyebrow">Premium Blackjack</span>
+          <h1>Beat the dealer at 21</h1>
+          <p>{{ statusLabel() }}</p>
         </div>
-        <div class="stat-chip">
-          <span>Bet</span>
-          <strong>{{ bet }} EC</strong>
+
+        <div class="stat-row">
+          <div class="stat-chip">
+            <span>Balance</span>
+            <strong>{{ balance() }} EC</strong>
+          </div>
+          <div class="stat-chip">
+            <span>Bet</span>
+            <strong>{{ bet }} EC</strong>
+          </div>
+          <div class="stat-chip accent">
+            <span>Table</span>
+            <strong>Green Felt Classic</strong>
+          </div>
         </div>
-        <div class="stat-chip accent">
-          <span>Table</span>
-          <strong>Green Felt Classic</strong>
+      </section>
+
+      <section class="controls-panel glass-panel">
+        <label class="bet-control">
+          <span>Bet Amount</span>
+          <input type="number" [(ngModel)]="bet" min="1" [disabled]="loading() || dealing() || game()?.status === 'playing'" />
+        </label>
+
+        <div class="quick-bets">
+          @for (amount of quickBets; track amount) {
+            <button type="button" class="quick-bet" (click)="bet = amount" [disabled]="loading() || dealing() || game()?.status === 'playing'">{{ amount }}</button>
+          }
         </div>
-      </div>
-    </section>
 
-    <section class="controls-panel glass-panel">
-      <label class="bet-control">
-        <span>Bet Amount</span>
-        <input type="number" [(ngModel)]="bet" min="1" />
-      </label>
-
-      <div class="quick-bets">
-        @for (amount of quickBets; track amount) {
-          <button type="button" class="quick-bet" (click)="bet = amount">{{ amount }}</button>
-        }
-      </div>
-
-      <div class="actions">
-        <button class="primary-action" (click)="start()" [disabled]="loading()">Deal</button>
-        <button class="secondary-action" (click)="hit()" [disabled]="loading() || !game()">Hit</button>
-        <button class="secondary-action" (click)="stand()" [disabled]="loading() || !game()">Stand</button>
-      </div>
-    </section>
+        <div class="actions">
+          <button class="primary-action" (click)="start()" [disabled]="!canDeal()">Deal</button>
+          <button class="secondary-action" (click)="hit()" [disabled]="!canPlay()">Hit</button>
+          <button class="secondary-action" (click)="stand()" [disabled]="!canPlay()">Stand</button>
+        </div>
+      </section>
+    </div>
 
     <section class="table-surface glass-panel" [class.dealing]="dealing()">
       <div class="dealer-zone hand-zone">

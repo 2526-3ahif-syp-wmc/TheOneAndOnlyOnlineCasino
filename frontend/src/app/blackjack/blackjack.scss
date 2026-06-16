@@ -1,6 +1,11 @@
+:host {
+  display: block;
+  min-height: calc(100dvh - 11.5rem);
+}
+
 .blackjack-shell {
-  min-height: 100vh;
-  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: calc(100dvh - 11.5rem);
+  padding: clamp(0.35rem, 0.8vw, 0.7rem);
   background:
     radial-gradient(circle at 20% 15%, rgba(19, 151, 87, 0.14), transparent 24%),
     radial-gradient(circle at 80% 12%, rgba(248, 215, 107, 0.1), transparent 18%),
@@ -10,9 +15,19 @@
 
 .table-stage {
   position: relative;
-  max-width: 1240px;
+  width: min(1240px, 100%);
   margin: 0 auto;
-  padding: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(0.55rem, 1vw, 0.85rem);
+  min-height: 0;
+}
+
+.top-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
 }
 
 .table-rim,
@@ -54,15 +69,14 @@
 
 .header-panel {
   display: grid;
-  gap: 1rem;
-  padding: 1.2rem 1.4rem;
-  border-radius: 24px 24px 0 0;
-  border-bottom: none;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 22px;
 }
 
 .title-block h1 {
-  margin: 0.35rem 0 0.5rem;
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin: 0.2rem 0 0.35rem;
+  font-size: clamp(1.7rem, 3vw, 2.85rem);
   line-height: 0.95;
   letter-spacing: -0.05em;
   color: #fff7df;
@@ -73,8 +87,8 @@
   max-width: 58ch;
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
-  font-size: 0.98rem;
-  line-height: 1.5;
+  font-size: 0.92rem;
+  line-height: 1.4;
 }
 
 .eyebrow {
@@ -95,12 +109,12 @@
 .stat-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .stat-chip {
-  padding: 0.9rem 1rem;
-  border-radius: 18px;
+  padding: 0.75rem 0.85rem;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -117,7 +131,7 @@
 }
 
 .stat-chip strong {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   color: #fff;
 }
 
@@ -128,10 +142,9 @@
 
 .controls-panel {
   display: grid;
-  gap: 1rem;
-  padding: 1rem 1.4rem 1.2rem;
-  border-top: none;
-  border-bottom: none;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 22px;
 }
 
 .bet-control {
@@ -142,8 +155,8 @@
 .bet-control input {
   width: 100%;
   max-width: 240px;
-  min-height: 3rem;
-  padding: 0.7rem 0.9rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.8rem;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(5, 7, 6, 0.75);
@@ -166,8 +179,8 @@
 .quick-bet,
 .primary-action,
 .secondary-action {
-  min-height: 2.95rem;
-  padding: 0.8rem 1.15rem;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.9rem;
   border-radius: 999px;
   border: 0;
   font-weight: 800;
@@ -206,7 +219,7 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 0.55rem;
 }
 
 .actions button:disabled,
@@ -219,14 +232,14 @@
 .table-surface {
   position: relative;
   display: grid;
-  gap: 1.15rem;
-  padding: 1.25rem 1.35rem 1.4rem;
-  border-radius: 0 0 24px 24px;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem 0.95rem;
+  border-radius: 22px;
 }
 
 .hand-zone {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.45rem;
 }
 
 .hand-heading {
@@ -238,13 +251,13 @@
 
 .hand-heading h3 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1rem;
   color: #fff;
 }
 
 .hand-total {
-  min-width: 3.5rem;
-  padding: 0.4rem 0.7rem;
+  min-width: 3.1rem;
+  padding: 0.32rem 0.62rem;
   border-radius: 999px;
   background: rgba(248, 215, 107, 0.12);
   border: 1px solid rgba(248, 215, 107, 0.18);
@@ -256,17 +269,17 @@
 .hand {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.95rem;
-  min-height: 11rem;
+  gap: 0.55rem;
+  min-height: 7.6rem;
   align-items: center;
   justify-content: center;
 }
 
 .card {
   position: relative;
-  width: 96px;
-  height: 136px;
-  border-radius: 16px;
+  width: 76px;
+  height: 108px;
+  border-radius: 12px;
   background:
     radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.6), transparent 24%),
     linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
@@ -301,19 +314,19 @@
 .corner {
   position: absolute;
   display: block;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 900;
   line-height: 1;
 }
 
 .top-left {
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
 }
 
 .bottom-right {
-  right: 10px;
-  bottom: 10px;
+  right: 8px;
+  bottom: 8px;
   transform: rotate(180deg);
 }
 
@@ -322,7 +335,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: 2.45rem;
+  font-size: 2rem;
   font-weight: 700;
   text-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
@@ -346,10 +359,10 @@
 
 .back-label {
   position: absolute;
-  inset: auto 0 16px;
+  inset: auto 0 12px;
   text-align: center;
   color: #f8d76b;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 900;
   letter-spacing: 0.22em;
 }
@@ -375,11 +388,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   color: rgba(255, 255, 255, 0.38);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 800;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
@@ -396,9 +409,127 @@
   justify-content: center;
 }
 
+@media (max-width: 1366px), (max-height: 820px) {
+  .blackjack-shell {
+    padding: 0.3rem;
+  }
+
+  .table-stage {
+    padding: 0.4rem;
+  }
+
+  .top-grid {
+    gap: 0.55rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .header-panel,
+  .controls-panel,
+  .table-surface {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .title-block h1 {
+    font-size: clamp(1.55rem, 2.5vw, 2.4rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .title-block p {
+    font-size: 0.88rem;
+    line-height: 1.35;
+  }
+
+  .stat-row {
+    gap: 0.5rem;
+  }
+
+  .stat-chip {
+    padding: 0.65rem 0.75rem;
+    border-radius: 14px;
+  }
+
+  .stat-chip strong {
+    font-size: 0.92rem;
+  }
+
+  .bet-control input {
+    min-height: 2.35rem;
+  }
+
+  .quick-bet,
+  .primary-action,
+  .secondary-action {
+    min-height: 2.3rem;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.88rem;
+  }
+
+  .table-surface {
+    gap: 0.6rem;
+  }
+
+  .hand-zone {
+    gap: 0.4rem;
+  }
+
+  .hand-heading h3 {
+    font-size: 0.92rem;
+  }
+
+  .hand-total {
+    min-width: 2.9rem;
+    padding: 0.28rem 0.56rem;
+    font-size: 0.85rem;
+  }
+
+  .hand {
+    gap: 0.48rem;
+    min-height: 6.8rem;
+  }
+
+  .card {
+    width: 68px;
+    height: 96px;
+    border-radius: 11px;
+  }
+
+  .corner {
+    font-size: 0.82rem;
+  }
+
+  .top-left {
+    top: 7px;
+    left: 7px;
+  }
+
+  .bottom-right {
+    right: 7px;
+    bottom: 7px;
+  }
+
+  .center-icon {
+    font-size: 1.8rem;
+  }
+
+  .back-label {
+    bottom: 10px;
+    font-size: 0.56rem;
+  }
+
+  .center-divider {
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+  }
+}
+
 @media (max-width: 900px) {
+  .top-grid,
   .stat-row {
     grid-template-columns: 1fr;
+  }
+
+  .top-grid {
+    margin-bottom: 0.75rem;
   }
 
   .table-surface {
@@ -406,25 +537,35 @@
   }
 
   .card {
-    width: 84px;
-    height: 120px;
+    width: 76px;
+    height: 108px;
   }
 }
 
 @media (max-width: 640px) {
+  .top-grid {
+    gap: 0.65rem;
+  }
+
   .header-panel,
   .controls-panel,
   .table-surface {
     border-radius: 20px;
   }
 
+  .header-panel,
+  .controls-panel,
+  .table-surface {
+    padding-inline: 0.85rem;
+  }
+
   .hand {
-    gap: 0.6rem;
+    gap: 0.55rem;
   }
 
   .card {
-    width: 72px;
-    height: 104px;
+    width: 68px;
+    height: 98px;
   }
 
   .center-icon {
