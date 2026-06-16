@@ -40,7 +40,10 @@
           <span class="rank">#{{ player.rank }}</span>
 
           <div class="player-main">
-            <strong>{{ player.username }}</strong>
+            <strong>
+              {{ player.username }}
+              <span *ngIf="player.premium === 1" class="crown-badge" title="EduBet+ Member">👑</span>
+            </strong>
             <small>{{ player.games_played }} games played</small>
           </div>
 
@@ -59,7 +62,10 @@
         <div class="details-header">
           <div>
             <span class="eyebrow">Player Details</span>
-            <h2>{{ selectedDetails.stats.username }}</h2>
+            <h2>
+              {{ selectedDetails.stats.username }}
+              <span *ngIf="selectedDetails.stats.premium === 1" class="crown-badge" title="EduBet+ Member">👑</span>
+            </h2>
           </div>
 
           <span class="rank-badge"> #{{ selectedDetails.stats.rank || '-' }} </span>

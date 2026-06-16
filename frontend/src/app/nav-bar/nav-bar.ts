@@ -18,6 +18,7 @@ export class NavBar {
   protected premium = this.service.premium;
 
   protected isPremium = computed(() => Number(this.premium()) === 1);
+  protected avatarLetter = computed(() => this.service.username().charAt(0).toUpperCase());
 
   logOut() {
     this.service.logOut();

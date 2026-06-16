@@ -216,6 +216,13 @@
   color: #fff;
 }
 
+.crown-badge {
+  display: inline;
+  font-size: 0.85rem;
+  margin-left: 0.2rem;
+  filter: drop-shadow(0 0 5px rgba(248, 215, 107, 0.85));
+}
+
 .nav-status {
   text-decoration: none;
   transition:

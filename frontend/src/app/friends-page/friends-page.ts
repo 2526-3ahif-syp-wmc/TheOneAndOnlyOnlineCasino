@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { UserService } from '../services/user-service';
-import { Friend, FriendsService, PublicUser } from '../services/friends-service';
+import { Friend, FriendsService, PublicUser, FriendRequest } from '../services/friends-service';
 
 @Component({
   selector: 'app-friends-page',
@@ -18,11 +18,13 @@ export class FriendsPage implements OnInit {
 
   friends = signal<Friend[]>([]);
   publicUsers = signal<PublicUser[]>([]);
+  friendRequests = signal<FriendRequest[]>([]);
   selectedFriend = signal<Friend | null>(null);
   newFriendUsername = '';
   searchQuery = signal('');
   usersLoading = signal<boolean>(false);
   friendsLoading = signal<boolean>(false);
+  requestsLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
   filteredUsers = computed(() => {
@@ -34,6 +36,10 @@ export class FriendsPage implements OnInit {
         return false;
       }
 
+      if (this.isAlreadyAdded(user.username)) {
+        return false;
+      }
+
       if (!query) {
         return true;
       }
@@ -41,10 +47,11 @@ export class FriendsPage implements OnInit {
       return user.username.toLowerCase().includes(query);
     });
   });
-  
+
   ngOnInit(): void {
     this.loadPublicUsers();
     this.loadFriends();
+    this.loadFriendRequests();
   }
 
   loadPublicUsers(): void {
@@ -93,6 +100,27 @@ export class FriendsPage implements OnInit {
       });
   }
 
+  loadFriendRequests(): void {
+    const user = this.userService.currentUser();
+
+    if (!user) {
+      return;
+    }
+
+    this.requestsLoading.set(true);
+
+    this.friendsService.getFriendRequests(user.id)
+      .pipe(finalize(() => this.requestsLoading.set(false)))
+      .subscribe({
+        next: requests => {
+          this.friendRequests.set(requests);
+        },
+        error: () => {
+          this.errorMessage.set('Friend requests could not be loaded.');
+        }
+      });
+  }
+
   isAlreadyAdded(username: string): boolean {
     return this.friends().some(friend => friend.username.toLowerCase() === username.toLowerCase());
   }
@@ -110,13 +138,8 @@ export class FriendsPage implements OnInit {
       return;
     }
 
-    const exactMatch = users.find(user => user.username.toLowerCase() === query && !this.isAlreadyAdded(user.username));
-    const nextUser = exactMatch ?? users.find(user => !this.isAlreadyAdded(user.username));
-
-    if (!nextUser) {
-      this.errorMessage.set('All matching users are already in your friends list.');
-      return;
-    }
+    const exactMatch = users.find(user => user.username.toLowerCase() === query);
+    const nextUser = exactMatch ?? users[0];
 
     this.addFriendByUsername(nextUser.username);
   }
@@ -125,30 +148,55 @@ export class FriendsPage implements OnInit {
     const user = this.userService.currentUser();
     const normalizedUsername = username.trim();
 
-    if (!user || !normalizedUsername) return;
+    if (!user || !normalizedUsername) {
+      return;
+    }
 
     this.friendsLoading.set(true);
     this.errorMessage.set('');
 
-    this.friendsService.addFriend({
-      userId: user.id,
-      username: normalizedUsername
-    })
+    this.friendsService.sendFriendRequest(user.id, normalizedUsername)
       .pipe(finalize(() => this.friendsLoading.set(false)))
       .subscribe({
-        next: friend => {
-          this.friends.update(friends => [...friends, friend]);
-          this.selectedFriend.set(friend);
+        next: () => {
           this.newFriendUsername = '';
           this.searchQuery.set('');
+          this.errorMessage.set('Friend request sent.');
         },
         error: () => {
-          this.errorMessage.set('That user does not exist or is already added.');
+          this.errorMessage.set('Request could not be sent.');
         }
       });
   }
 
-  selectFriend(friend: Friend) {
+  acceptRequest(request: FriendRequest): void {
+    this.friendsService.acceptFriendRequest(request.id)
+      .subscribe({
+        next: () => {
+          this.loadFriends();
+          this.loadFriendRequests();
+          this.errorMessage.set('');
+        },
+        error: () => {
+          this.errorMessage.set('Friend request could not be accepted.');
+        }
+      });
+  }
+
+  declineRequest(request: FriendRequest): void {
+    this.friendsService.declineFriendRequest(request.id)
+      .subscribe({
+        next: () => {
+          this.loadFriendRequests();
+          this.errorMessage.set('');
+        },
+        error: () => {
+          this.errorMessage.set('Friend request could not be declined.');
+        }
+      });
+  }
+
+  selectFriend(friend: Friend): void {
     this.selectedFriend.set(this.selectedFriend() === friend ? null : friend);
   }
 
@@ -156,7 +204,7 @@ export class FriendsPage implements OnInit {
     return this.selectedFriend() === friend;
   }
 
-  addFriend() {
+  addFriend(): void {
     this.addBestMatch();
   }
 
@@ -164,7 +212,9 @@ export class FriendsPage implements OnInit {
     const user = this.userService.currentUser();
     const selectedFriend = this.selectedFriend();
 
-    if (!user || !selectedFriend) return;
+    if (!user || !selectedFriend) {
+      return;
+    }
 
     this.friendsLoading.set(true);
     this.errorMessage.set('');
@@ -174,7 +224,7 @@ export class FriendsPage implements OnInit {
       .subscribe({
         next: () => {
           this.friends.update(friends => friends.filter(friend => friend.id !== selectedFriend.id));
-          this.selectedFriend.set(this.friends()[0] ?? null);
+          this.selectedFriend.set(null);
         },
         error: () => {
           this.errorMessage.set('Freund konnte nicht entfernt werden.');
@@ -183,6 +233,6 @@ export class FriendsPage implements OnInit {
   }
 
   closeFriendProfile(): void {
-  this.selectedFriend.set(null);
-}
+    this.selectedFriend.set(null);
+  }
 }
