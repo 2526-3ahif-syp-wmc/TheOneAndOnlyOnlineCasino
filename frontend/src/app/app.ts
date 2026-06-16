@@ -16,7 +16,7 @@ export class App {
 
   constructor(private router: Router) {
     this.updateNavbar(this.router.url);
-
+  
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(() => {

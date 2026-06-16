@@ -30,55 +30,12 @@ export class UserProfile implements OnInit {
   protected statsLoading = signal(false);
   protected statsError = signal('');
 
-private readonly AVATAR_KEY = computed(
-  () => `profile_avatar_${this.userService.currentUser()?.id ?? 'guest'}`
-);
+  @ViewChild('avatarInput') private avatarInput!: ElementRef<HTMLInputElement>;
 
-@ViewChild('avatarInput') private avatarInput!: ElementRef<HTMLInputElement>;
-
-protected profileImage = signal<string | null>(null);
-protected avatarPreview = signal<string | null>(null);
-
-// Call this in ngOnInit, after the existing loadProfileStats() call
-private loadStoredAvatar(): void {
-  const stored = localStorage.getItem(this.AVATAR_KEY());
-  if (stored) this.profileImage.set(stored);
-}
-
-triggerAvatarUpload(): void {
-  this.avatarInput.nativeElement.click();
-}
-
-onAvatarSelected(event: Event): void {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (!file) return;
-
-  // Guard: images only, max 5 MB
-  if (!file.type.startsWith('image/')) return;
-  if (file.size > 5 * 1024 * 1024) {
-    alert('Please choose an image under 5 MB.');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = () => this.avatarPreview.set(reader.result as string);
-  reader.readAsDataURL(file);
-
-  // Reset input so the same file can be re-selected later
-  this.avatarInput.nativeElement.value = '';
-}
-
-confirmAvatar(): void {
-  const preview = this.avatarPreview();
-  if (!preview) return;
-  this.profileImage.set(preview);
-  localStorage.setItem(this.AVATAR_KEY(), preview);
-  this.avatarPreview.set(null);
-}
-
-cancelAvatarPreview(): void {
-  this.avatarPreview.set(null);
-}
+  protected avatarUrl = this.userService.avatarUrl;
+  protected avatarPreview = signal<string | null>(null);
+  protected avatarUploading = signal(false);
+  protected avatarError = signal('');
 
   totalGamesPlayed = computed(() => {
     return this.leaderboardDetails()?.stats.games_played ?? 0;
@@ -130,6 +87,50 @@ cancelAvatarPreview(): void {
         this.statsLoading.set(false);
       },
     });
+  }
+
+  triggerAvatarUpload(): void {
+    this.avatarInput.nativeElement.click();
+  }
+
+  onAvatarSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 5 * 1024 * 1024) {
+      this.avatarError.set('Please choose an image under 5 MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => this.avatarPreview.set(reader.result as string);
+    reader.readAsDataURL(file);
+    this.avatarInput.nativeElement.value = '';
+  }
+
+  confirmAvatar(): void {
+    const preview = this.avatarPreview();
+    if (!preview) return;
+
+    this.avatarUploading.set(true);
+    this.avatarError.set('');
+
+    this.userService.uploadAvatar(preview).subscribe({
+      next: () => {
+        this.avatarPreview.set(null);
+        this.avatarUploading.set(false);
+      },
+      error: () => {
+        this.avatarError.set('Upload failed. Please try again.');
+        this.avatarUploading.set(false);
+      },
+    });
+  }
+
+  cancelAvatarPreview(): void {
+    this.avatarPreview.set(null);
+    this.avatarError.set('');
   }
 
   protected gameIcon(gameName: string): string {

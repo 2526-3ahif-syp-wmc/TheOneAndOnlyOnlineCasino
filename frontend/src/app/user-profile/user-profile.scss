@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+.avatar-error {
+  color: #f87171;
+  font-size: 0.85rem;
+  text-align: center;
+}
 .profile-shell {
   position: relative;
   min-height: 100vh;

@@ -13,9 +13,9 @@
   <div class="profile-grid">
     <section class="profile-card card-glass">
       <div class="card-content">
-        <div class="profile-avatar" (click)="triggerAvatarUpload()" [title]="'Change profile picture'">
-  @if (profileImage()) {
-    <img [src]="profileImage()" alt="Profile picture" class="avatar-img" />
+        <div class="profile-avatar" (click)="triggerAvatarUpload()" title="Change profile picture">
+  @if (avatarUrl()) {
+    <img [src]="avatarUrl()" alt="Profile picture" class="avatar-img" />
   } @else {
     <span>{{ profileInitial() }}</span>
   }
@@ -23,6 +23,34 @@
     <span class="avatar-overlay-icon">📷</span>
   </div>
 </div>
+
+<input
+  #avatarInput
+  type="file"
+  accept="image/*"
+  class="avatar-file-input"
+  (change)="onAvatarSelected($event)"
+/>
+
+@if (avatarPreview()) {
+  <div class="avatar-modal-backdrop" (click)="cancelAvatarPreview()">
+    <div class="avatar-modal" (click)="$event.stopPropagation()">
+      <h3>Update Profile Picture</h3>
+      <img [src]="avatarPreview()" alt="Preview" class="avatar-preview-img" />
+      @if (avatarError()) {
+        <p class="avatar-error">{{ avatarError() }}</p>
+      }
+      <div class="avatar-modal-actions">
+        <button class="action action-primary" (click)="confirmAvatar()" [disabled]="avatarUploading()">
+          {{ avatarUploading() ? 'Saving…' : 'Save' }}
+        </button>
+        <button class="action action-secondary" (click)="cancelAvatarPreview()" [disabled]="avatarUploading()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+}
 
 <input
   #avatarInput

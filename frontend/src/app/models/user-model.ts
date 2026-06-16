@@ -6,6 +6,7 @@ export type User = {
   wins: number;
   losses: number;
   xp: number;
+  avatar_url?: string | null;
 };
 
 export type UpdateProfileRequest = {

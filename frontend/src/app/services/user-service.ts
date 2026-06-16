@@ -153,6 +153,28 @@ export class UserService {
     this.currentUserSignal.set(safeUser);
   }
 
+  public avatarUrl = computed(() => {
+  const url = this.currentUserSignal()?.avatar_url;
+  if (!url) return null;
+  // Prepend the backend base so the <img> src works
+  return `http://localhost:3000${url}`;
+});
+
+public uploadAvatar(base64: string) {
+  const user = this.getLoggedInUser();
+
+  return this.httpClient
+    .patch<{ avatar_url: string }>(`${this.apiUrl}/users/${user.id}/avatar`, {
+      avatar_base64: base64,
+    })
+    .pipe(
+      tap(({ avatar_url }) => {
+        const updated: User = { ...this.getLoggedInUser(), avatar_url };
+        this.saveUser(updated);
+      })
+    );
+}
+
   private loadUserFromStorage(): User | null {
     const user = localStorage.getItem('user');
 
