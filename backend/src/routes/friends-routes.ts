@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import {
-  addFriend,
+  declineFriendRequest,
   getFriendsByUserId,
-  removeFriend
+  removeFriend,
+  acceptFriendRequest,
+  getFriendRequests,
+  sendFriendRequest
 } from '../services/friends-service';
-import { findPublicUserByUsername } from '../services/user-service';
 
 export const friendsRouter = Router();
 
@@ -16,29 +18,6 @@ friendsRouter.get('/', (req, res) => {
   }
 
   return res.json(getFriendsByUserId(userId));
-});
-
-friendsRouter.post('/', (req, res) => {
-  const { userId, username } = req.body;
-
-  if (!userId || !username) {
-    return res.status(400).json({ message: 'userId and username are required' });
-  }
-
-  const normalizedUsername = String(username).trim();
-  const matchedUser = findPublicUserByUsername(normalizedUsername);
-
-  if (!matchedUser) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  const friend = addFriend(Number(userId), normalizedUsername);
-
-  if (!friend) {
-    return res.status(409).json({ message: 'Friend already exists' });
-  }
-
-  return res.status(201).json(friend);
 });
 
 friendsRouter.delete('/:id', (req, res) => {
@@ -56,4 +35,60 @@ friendsRouter.delete('/:id', (req, res) => {
   }
 
   return res.status(204).send();
+});
+
+friendsRouter.post('/requests', (req, res) => {
+  const userId = Number(req.body.userId);
+  const username = String(req.body.username ?? '').trim();
+
+  if (!userId || !username) {
+    return res.status(400).json({ message: 'userId and username are required' });
+  }
+
+  try {
+    const result = sendFriendRequest(userId, username);
+    return res.status(201).json(result);
+  } catch (error) {
+    return res.status(400).json({ message: 'Request could not be sent.' });
+  }
+});
+
+friendsRouter.get('/requests/:userId', (req, res) => {
+  const userId = Number(req.params.userId);
+
+  if (!userId) {
+    return res.status(400).json({ message: 'userId is required' });
+  }
+
+  return res.json(getFriendRequests(userId));
+});
+
+friendsRouter.post('/requests/:requestId/accept', (req, res) => {
+  const requestId = Number(req.params.requestId);
+
+  if (!requestId) {
+    return res.status(400).json({ message: 'requestId is required' });
+  }
+
+  try {
+    const result = acceptFriendRequest(requestId);
+    return res.json(result);
+  } catch (error) {
+    return res.status(400).json({ message: 'Request could not be accepted.' });
+  }
+});
+
+friendsRouter.post('/requests/:requestId/decline', (req, res) => {
+  const requestId = Number(req.params.requestId);
+
+  if (!requestId) {
+    return res.status(400).json({ message: 'requestId is required' });
+  }
+
+  try {
+    const result = declineFriendRequest(requestId);
+    return res.json(result);
+  } catch (error) {
+    return res.status(400).json({ message: 'Request could not be declined.' });
+  }
 });

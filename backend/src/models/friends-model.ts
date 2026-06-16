@@ -13,12 +13,20 @@ export type FriendRow = {
   updated_at: string;
 };
 
-export type Friend = {
+
+export interface FriendRequest {
+  id: number;
+  senderId: number;
+  receiverId: number;
+  senderUsername: string;
+  status: string;
+}
+
+export interface Friend {
   id: number;
   username: string;
-  status: FriendStatus;
   level: number;
   totalWins: number;
   balance: number;
   lastActive: string;
-};
+}
