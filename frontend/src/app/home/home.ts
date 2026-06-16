@@ -1,9 +1,20 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../services/user-service';
 import { MysteryBoxService } from '../services/mystery-box-service';
 import { firstValueFrom } from 'rxjs';
 import { AlertService } from '../services/alert-service';
+
+type TaskItem = {
+  id: string;
+  title: string;
+  description: string;
+  reward: number;
+  xpReward: number;
+  claimed: boolean;
+  completed: boolean;
+};
 
 interface GameTile {
   title: string;
@@ -18,7 +29,7 @@ interface GameTile {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
 })
@@ -44,6 +55,36 @@ export class Home {
 
   private today = new Date().toISOString().slice(0, 10);
 
+  protected tasks: TaskItem[] = [
+    {
+      id: 'login',
+      title: 'Daily Login',
+      description: 'Open the app and unlock today's reward.',
+      reward: 75,
+      xpReward: 10,
+      claimed: false,
+      completed: false,
+    },
+    {
+      id: 'play',
+      title: 'Play a Game',
+      description: 'Launch any game and play at least one round.',
+      reward: 120,
+      xpReward: 18,
+      claimed: false,
+      completed: false,
+    },
+    {
+      id: 'visit-shop',
+      title: 'Visit the Shop',
+      description: 'Browse the store and check out new offers.',
+      reward: 50,
+      xpReward: 8,
+      claimed: false,
+      completed: false,
+    },
+  ];
+
   private bonusStorageKey = computed(() => {
     return `daily-bonus-${this.username()}`;
   });
@@ -56,12 +97,19 @@ export class Home {
 
   protected lastClaimedMysteryBox = signal(localStorage.getItem(this.mysteryBoxStorageKey()) ?? '');
 
+  protected dailyTasksOpen = signal(false);
+
   protected mysteryRevealOpen = signal(false);
   protected mysteryRevealExplode = signal(false);
   protected mysteryRevealReward = signal('❓');
   protected mysteryRevealScale = signal(1);
 
   private mysteryVisualRewards = ['❌', '🪙', '⭐'];
+
+  constructor() {
+    this.loadDailyTasksState();
+    this.completeDailyLogin();
+  }
 
   protected readonly games: GameTile[] = [
     {
@@ -147,6 +195,10 @@ export class Home {
     return Math.ceil(timeRemaining / (60 * 60 * 1000));
   });
 
+  protected readyToClaimCount = computed(() => {
+    return this.tasks.filter((task) => task.completed && !task.claimed).length;
+  });
+
   protected scrollToGames(): void {
     const gameLobby = document.getElementById('game-lobby');
 
@@ -158,6 +210,119 @@ export class Home {
       behavior: 'smooth',
       block: 'start',
     });
+  }
+
+  protected taskStatus(task: TaskItem): string {
+    if (task.claimed) {
+      return 'Claimed';
+    }
+
+    if (task.completed) {
+      return 'Ready to claim';
+    }
+
+    return 'Incomplete';
+  }
+
+  protected async claimTask(task: TaskItem): Promise<void> {
+    if (task.claimed) {
+      this.alertService.info('Task already claimed');
+      return;
+    }
+
+    if (!task.completed) {
+      this.alertService.info('Complete the task before claiming it');
+      return;
+    }
+
+    try {
+      const newCoins = this.coins() + task.reward;
+      const newXp = this.xp() + task.xpReward;
+
+      await firstValueFrom(this.service.updateCoins(newCoins));
+      await firstValueFrom(this.service.updateXp(newXp));
+
+      task.claimed = true;
+      this.saveDailyTasksState();
+      this.alertService.success(`+${task.reward} EC · +${task.xpReward} XP`);
+    } catch (err) {
+      console.error(err);
+      this.alertService.error('Claim failed');
+    }
+  }
+
+  protected async claimAllTasks(): Promise<void> {
+    const ready = this.tasks.filter((task) => task.completed && !task.claimed);
+
+    if (ready.length === 0) {
+      this.alertService.info('No rewards ready to claim');
+      return;
+    }
+
+    const totalCoins = ready.reduce((sum, task) => sum + task.reward, 0);
+    const totalXp = ready.reduce((sum, task) => sum + task.xpReward, 0);
+
+    try {
+      await firstValueFrom(this.service.updateCoins(this.coins() + totalCoins));
+      await firstValueFrom(this.service.updateXp(this.xp() + totalXp));
+
+      ready.forEach((task) => (task.claimed = true));
+      this.saveDailyTasksState();
+      this.alertService.success(`+${totalCoins} EC · +${totalXp} XP`);
+    } catch (err) {
+      console.error(err);
+      this.alertService.error('Claim all failed');
+    }
+  }
+
+  private tasksStorageKey = computed(() => {
+    return `daily-tasks-state-${this.username()}-${this.today}`;
+  });
+
+  private loadDailyTasksState(): void {
+    try {
+      const raw = localStorage.getItem(this.tasksStorageKey());
+      if (!raw) {
+        return;
+      }
+
+      const obj = JSON.parse(raw) as Record<
+        string,
+        { claimed: boolean; completed: boolean }
+      >;
+
+      this.tasks.forEach((task) => {
+        const saved = obj[task.id];
+        if (saved) {
+          task.claimed = !!saved.claimed;
+          task.completed = !!saved.completed;
+        }
+      });
+    } catch {
+      // ignore invalid saved state
+    }
+  }
+
+  private saveDailyTasksState(): void {
+    const obj: Record<string, { claimed: boolean; completed: boolean }> = {};
+    this.tasks.forEach((task) => {
+      obj[task.id] = {
+        claimed: task.claimed,
+        completed: task.completed,
+      };
+    });
+
+    localStorage.setItem(this.tasksStorageKey(), JSON.stringify(obj));
+  }
+
+  private completeDailyLogin(): void {
+    const task = this.tasks.find((entry) => entry.id === 'login');
+    if (!task || task.completed) {
+      return;
+    }
+
+    task.completed = true;
+    this.saveDailyTasksState();
   }
 
   protected async claimDailyBonus(): Promise<void> {

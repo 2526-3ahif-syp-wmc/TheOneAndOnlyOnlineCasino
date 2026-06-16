@@ -1,0 +1,228 @@
+:host {
+  display: block;
+}
+
+.daily-tasks-shell {
+  min-height: 100vh;
+  padding: clamp(1.5rem, 2vw, 2.5rem);
+  color: #f6f7fb;
+  background: radial-gradient(circle at top right, rgba(63, 81, 181, 0.16), transparent 35%),
+    linear-gradient(180deg, #0b0e19 0%, #07090f 100%);
+}
+
+.page-inner {
+  width: min(1160px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.tasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(17, 24, 39, 0.88);
+  border: 1px solid rgba(130, 138, 159, 0.14);
+  box-shadow: 0 24px 80px rgba(10, 15, 25, 0.28);
+  border-radius: 24px;
+}
+
+.tasks-header .eyebrow {
+  display: inline-flex;
+  margin-bottom: 0.45rem;
+  color: #8ea7ff;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+}
+
+.tasks-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.6vw, 2.6rem);
+}
+
+.tasks-header p {
+  margin: 0.6rem 0 0;
+  max-width: 42rem;
+  color: rgba(246, 247, 251, 0.72);
+}
+
+.streak-panel {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem 1.2rem;
+  min-width: 190px;
+  text-align: right;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.streak-panel strong {
+  font-size: 1.4rem;
+}
+
+.streak-panel small {
+  color: rgba(246, 247, 251, 0.68);
+}
+
+.daily-overview,
+.progress-bar-shell {
+  padding: 1rem 1.3rem;
+  background: rgba(18, 25, 45, 0.9);
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(171, 184, 255, 0.08);
+}
+
+.daily-overview {
+  grid-template-columns: 1fr auto;
+}
+
+.overview-text {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.overview-text strong,
+.task-status {
+  font-weight: 700;
+}
+
+.overview-text span {
+  color: rgba(246, 247, 251, 0.72);
+}
+
+.progress-bar-shell {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.progress-bar-shell label {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: rgba(160, 174, 255, 0.78);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 14px;
+  margin: 0.75rem 0 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7865ff 0%, #6bc7ff 100%);
+  border-radius: 999px;
+  transition: width 0.28s ease;
+}
+
+.tasks-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  padding: 1.3rem;
+  border-radius: 22px;
+  background: rgba(13, 21, 35, 0.94);
+  border: 1px solid rgba(119, 126, 164, 0.12);
+}
+
+.task-item {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.task-copy h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.task-copy p {
+  margin: 0;
+  color: rgba(246, 247, 251, 0.72);
+  line-height: 1.6;
+}
+
+.task-rewards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.task-rewards .reward,
+.task-rewards .xp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.task-rewards .reward {
+  background: rgba(237, 211, 104, 0.16);
+  color: #f9e08d;
+}
+
+.task-rewards .xp {
+  background: rgba(132, 204, 255, 0.14);
+  color: #93d5ff;
+}
+
+.task-meta {
+  display: grid;
+  gap: 0.8rem;
+  justify-content: end;
+  align-items: center;
+  text-align: right;
+}
+
+.task-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(246, 247, 251, 0.85);
+}
+
+.task-card.completed .task-status {
+  background: rgba(102, 168, 255, 0.16);
+  color: #b9e3ff;
+}
+
+.task-card.claimed {
+  border-color: rgba(104, 192, 103, 0.3);
+}
+
+.task-card.claimed .task-status {
+  background: rgba(94, 200, 148, 0.18);
+  color: #b8f4d5;
+}
+
+button.action {
+  min-width: 10rem;
+}
+
+button.action[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

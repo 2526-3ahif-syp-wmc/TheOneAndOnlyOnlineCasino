@@ -1115,3 +1115,240 @@ h1 span {
     filter: brightness(1.2);
   }
 }
+
+/* Daily Tasks Card and Modal */
+
+.reward-card.daily-tasks-card {
+  border-color: rgba(132, 204, 255, 0.22);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  padding: 1.05rem;
+}
+
+.reward-card.daily-tasks-card .reward-icon {
+  color: #84ccff;
+  border-color: rgba(132, 204, 255, 0.25);
+  background: rgba(132, 204, 255, 0.12);
+}
+
+.reward-card.daily-tasks-card .card-kicker {
+  color: rgba(132, 204, 255, 0.85);
+  margin-bottom: 0.45rem;
+}
+
+.tasks-checkmark {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #84ccff;
+  line-height: 1;
+}
+
+.tasks-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+}
+
+.tasks-modal {
+  position: relative;
+  max-width: 600px;
+  width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  background: rgba(11, 13, 25, 0.96);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5);
+  animation: slideUp 280ms ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-header h2 {
+  color: #fff;
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 180ms ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal-summary {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(132, 204, 255, 0.08);
+  border: 1px solid rgba(132, 204, 255, 0.16);
+}
+
+.modal-summary strong {
+  color: #84ccff;
+  font-size: 1.1rem;
+}
+
+.modal-summary span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+}
+
+.tasks-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.task-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 180ms ease;
+}
+
+.task-item:hover {
+  border-color: rgba(132, 204, 255, 0.3);
+  background: rgba(132, 204, 255, 0.06);
+}
+
+.task-info {
+  min-width: 0;
+}
+
+.task-info h4 {
+  margin: 0 0 0.25rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.task-info p {
+  margin: 0 0 0.4rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.task-status {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.task-status.completed {
+  background: rgba(132, 204, 255, 0.15);
+  color: #84ccff;
+}
+
+.task-status.claimed {
+  background: rgba(94, 200, 148, 0.15);
+  color: #b8f4d5;
+}
+
+.task-rewards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.task-rewards .reward,
+.task-rewards .xp {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.task-rewards .reward {
+  background: rgba(237, 211, 104, 0.16);
+  color: #f9e08d;
+}
+
+.task-rewards .xp {
+  background: rgba(132, 204, 255, 0.14);
+  color: #93d5ff;
+}
+
+.task-btn {
+  min-width: 100px;
+  padding: 0.6rem 1rem;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.claim-all-btn {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .task-item {
+    grid-template-columns: 1fr;
+  }
+
+  .task-rewards {
+    align-items: flex-start;
+  }
+
+  .reward-grid {
+    grid-template-columns: 1fr;
+  }
+}

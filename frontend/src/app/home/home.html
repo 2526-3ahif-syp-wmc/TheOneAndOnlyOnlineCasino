@@ -43,7 +43,7 @@
       </div>
 
       <div class="daily-game-status upgraded-lucky-strip">
-        <span>Today’s lucky game: <strong>Roulette</strong></span>
+        <span>Today's lucky game: <strong>Roulette</strong></span>
         <small>+10% winnings today</small>
       </div>
 
@@ -97,6 +97,21 @@
 
             <button class="bonus-btn" type="button" disabled>Opened</button>
           }
+        </article>
+
+        <article class="reward-card card-glass daily-tasks-card">
+          <div class="reward-icon icon-tasks">
+            <span class="tasks-checkmark">✓</span>
+          </div>
+
+          <span class="card-kicker">Daily missions</span>
+          <h3>Daily Tasks</h3>
+
+          <p>{{ tasks.filter((t) => t.claimed).length }} / {{ tasks.length }} completed</p>
+
+          <button class="bonus-btn" type="button" (click)="dailyTasksOpen.set(!dailyTasksOpen())">
+            View tasks
+          </button>
         </article>
       </section>
     </div>
@@ -178,3 +193,47 @@
     </div>
   </section>
 </div>
+
+@if (dailyTasksOpen()) {
+  <div class="tasks-modal-overlay" (click)="dailyTasksOpen.set(false)">
+    <div class="tasks-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Daily Tasks</h2>
+        <button class="close-btn" (click)="dailyTasksOpen.set(false)">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-summary">
+          <strong>{{ tasks.filter((t) => t.claimed).length }} / {{ tasks.length }} completed</strong>
+          <span>Ready to claim: {{ readyToClaimCount() }}</span>
+        </div>
+
+        <div class="tasks-list">
+          <div class="task-item" *ngFor="let task of tasks">
+            <div class="task-info">
+              <h4>{{ task.title }}</h4>
+              <p>{{ task.description }}</p>
+              <span class="task-status" [ngClass]="{ completed: task.completed, claimed: task.claimed }">{{ taskStatus(task) }}</span>
+            </div>
+
+            <div class="task-rewards">
+              <span class="reward">+{{ task.reward }} EC</span>
+              <span class="xp">+{{ task.xpReward }} XP</span>
+              <button
+                class="action action-primary task-btn"
+                (click)="claimTask(task)"
+                [disabled]="task.claimed || !task.completed"
+              >
+                {{ task.claimed ? 'Claimed' : task.completed ? 'Claim' : 'Incomplete' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        @if (readyToClaimCount() > 0) {
+          <button class="action action-secondary claim-all-btn" (click)="claimAllTasks()">Claim All Ready</button>
+        }
+      </div>
+    </div>
+  </div>
+}

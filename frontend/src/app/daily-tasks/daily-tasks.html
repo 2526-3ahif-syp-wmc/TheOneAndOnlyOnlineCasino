@@ -1,0 +1,71 @@
+<div class="daily-tasks-shell">
+  <div class="page-inner">
+    <header class="tasks-header card-glass">
+      <div>
+        <span class="eyebrow">Daily Missions</span>
+        <h1>Daily Tasks</h1>
+        <p>Complete missions every day to earn coins, gain XP, and build your streak.</p>
+      </div>
+
+      <div class="streak-panel">
+        <strong>{{ streak }} Day Streak</strong>
+        <small>Keep playing daily to grow your rewards.</small>
+      </div>
+    </header>
+
+    <section class="daily-overview card-glass">
+      <div class="overview-text">
+        <strong>{{ tasks.filter((task) => task.claimed).length }} / {{ tasks.length }} completed</strong>
+        <span>Ready to claim: {{ readyToClaimCount }}</span>
+      </div>
+      <button
+        class="action action-secondary"
+        (click)="claimAll()"
+        [disabled]="readyToClaimCount === 0"
+      >
+        Claim All Ready
+      </button>
+    </section>
+
+    <div class="progress-bar-shell card-glass">
+      <label>Daily progress</label>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercent"></div>
+      </div>
+      <span>{{ progressPercent }}% completed</span>
+    </div>
+
+    <div class="tasks-list">
+      <article
+        class="task-card card-glass"
+        *ngFor="let task of tasks"
+        [class.completed]="task.completed"
+        [class.claimed]="task.claimed"
+      >
+        <div class="task-item">
+          <div class="task-copy">
+            <h2>{{ task.title }}</h2>
+            <p>{{ task.description }}</p>
+          </div>
+
+          <div class="task-rewards">
+            <span class="reward">+{{ task.reward }} EC</span>
+            <span class="xp">+{{ task.xpReward }} XP</span>
+          </div>
+        </div>
+
+        <div class="task-meta">
+          <span class="task-status">{{ taskStatus(task) }}</span>
+          <button
+            class="action action-primary"
+            type="button"
+            (click)="claimTask(task)"
+            [disabled]="task.claimed || !task.completed"
+          >
+            {{ task.claimed ? 'Claimed' : task.completed ? 'Claim reward' : 'Incomplete' }}
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
