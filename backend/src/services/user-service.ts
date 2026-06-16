@@ -12,13 +12,14 @@ function toPublicUser(row: PublicUserRow): PublicUser {
     wins: row.wins,
     losses: row.losses,
     xp: row.xp,
+    avatar_url: (row as any).avatar_url ?? null,
   };
 }
 
 export function getPublicUserById(id: number): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
+      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE id = ?
     `)
@@ -27,7 +28,7 @@ export function getPublicUserById(id: number): User | undefined {
 
 export function getPublicUsers(excludeUserId?: number): PublicUser[] {
   const query = `
-    SELECT id, username, coins, premium, wins, losses, xp
+    SELECT id, username, coins, premium, wins, losses, xp, avatar_url
     FROM users
     ${Number.isInteger(excludeUserId) ? "WHERE id != ?" : ""}
     ORDER BY username COLLATE NOCASE ASC
@@ -43,7 +44,7 @@ export function getPublicUsers(excludeUserId?: number): PublicUser[] {
 export function searchPublicUsers(queryText: string, excludeUserId?: number): PublicUser[] {
   const searchText = `%${queryText.trim()}%`;
   const query = `
-    SELECT id, username, coins, premium, wins, losses, xp
+    SELECT id, username, coins, premium, wins, losses, xp, avatar_url
     FROM users
     WHERE username LIKE ? COLLATE NOCASE
     ${Number.isInteger(excludeUserId) ? "AND id != ?" : ""}
@@ -60,7 +61,7 @@ export function searchPublicUsers(queryText: string, excludeUserId?: number): Pu
 export function findPublicUserByUsername(username: string): PublicUser | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
+      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE lower(username) = lower(?)
     `)
@@ -105,7 +106,7 @@ export function createUser(username: string, password: string, coins: number = 1
 export function findUserByLogin(username: string, password: string): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp
+      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE username = ? AND password = ?
     `)
@@ -115,7 +116,7 @@ export function findUserByLogin(username: string, password: string): User | unde
 export function getProfileUserById(id: number): ProfileUserRow | undefined {
   return db
     .prepare(`
-      SELECT id, username, password, coins, premium, wins, losses, xp
+      SELECT id, username, password, coins, premium, wins, losses, xp, avatar_url
       FROM users
       WHERE id = ?
     `)
@@ -182,6 +183,22 @@ export function updateProfile(
       WHERE id = ?
     `)
     .run(username, password, userId);
+
+  if (result.changes === 0) {
+    return undefined;
+  }
+
+  return getPublicUserById(userId);
+}
+
+export function updateAvatar(userId: number, avatarUrl: string): User | undefined {
+  const result = db
+    .prepare(`
+      UPDATE users
+      SET avatar_url = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .run(avatarUrl, userId);
 
   if (result.changes === 0) {
     return undefined;
