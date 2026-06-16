@@ -67,7 +67,6 @@ db.exec(`
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 `);
-
 console.log("Database tables created/updated successfully.");
 
 db.prepare(`

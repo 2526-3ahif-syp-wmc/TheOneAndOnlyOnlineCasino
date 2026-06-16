@@ -29,6 +29,14 @@ export class BlackjackComponent implements OnInit {
   protected dealing = signal(false);
   protected readonly quickBets = [25, 50, 100, 250, 500];
 
+  protected canDeal(): boolean {
+    return !this.loading() && !this.dealing() && this.game()?.status !== 'playing';
+  }
+
+  protected canPlay(): boolean {
+    return !this.loading() && !this.dealing() && this.game()?.status === 'playing';
+  }
+
   ngOnInit(): void {
     this.balance.set(this.userService.coins());
   }
@@ -36,6 +44,11 @@ export class BlackjackComponent implements OnInit {
   async start() {
     if (!this.userService.isLoggedIn()) {
       this.alertService.error('You must be logged in to play');
+      return;
+    }
+
+    if (!this.canDeal()) {
+      this.alertService.info('Finish the current hand before dealing again');
       return;
     }
 
@@ -112,6 +125,10 @@ export class BlackjackComponent implements OnInit {
 
         this.alertService.info('Busted! You lost.');
       }
+
+      if (updated.status !== 'playing') {
+        this.balance.set(this.userService.coins());
+      }
     } catch (err) {
       console.error(err);
       this.alertService.error('Hit failed');
@@ -175,6 +192,8 @@ export class BlackjackComponent implements OnInit {
         );
         this.alertService.info('You lost');
       }
+
+      this.balance.set(this.userService.coins());
     } catch (err) {
       console.error(err);
       this.alertService.error('Stand failed');

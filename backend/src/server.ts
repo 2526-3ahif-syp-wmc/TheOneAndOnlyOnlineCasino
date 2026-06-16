@@ -1,6 +1,7 @@
 import "./init-db";
 import express from "express";
 import cors from "cors";
+import path from "path";
 import { authRouter } from "./routes/user-routes";
 import { leaderboardRouter } from "./routes/leaderboard-routes";
 import { blackjackRouter } from "./routes/blackjack-routes";
@@ -16,6 +17,8 @@ app.use("/auth", authRouter);
 app.use("/leaderboard", leaderboardRouter);
 app.use("/blackjack", blackjackRouter);
 app.use("/friends", friendsRouter);
+app.use(express.json({ limit: "10mb" }));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (_, res) => {
   return res.json("Backend is running!");
@@ -26,7 +29,7 @@ app.get("/users", (_, res) => {
 
   return res.json(users);
 });
-
+console.log("Static path:", path.join(__dirname, "public"));
 app.listen(3000, () => {
   console.log("Backend running on http://localhost:3000");
 });
