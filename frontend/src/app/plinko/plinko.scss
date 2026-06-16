@@ -1,0 +1,744 @@
+:host {
+  display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.plinko-shell {
+  position: relative;
+  height: 100dvh;
+  padding: 0.75rem;
+  color: #fff;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background:
+    radial-gradient(circle at top left, rgba(168, 85, 247, 0.22), transparent 28%),
+    radial-gradient(circle at 82% 16%, rgba(34, 211, 238, 0.1), transparent 22%),
+    radial-gradient(circle at 48% 100%, rgba(248, 215, 107, 0.08), transparent 30%),
+    linear-gradient(180deg, #090912 0%, #0b0b11 44%, #060609 100%);
+}
+
+.plinko-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.5;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 78%);
+}
+
+.confetti-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: 18%;
+  width: var(--size, 8px);
+  height: calc(var(--size, 8px) * 0.55);
+  border-radius: 999px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  transform: translate3d(0, 0, 0) rotate(0deg);
+  animation: confettiBurst var(--duration, 1600ms) ease-out var(--delay, 0ms) forwards;
+}
+
+.ambient {
+  position: absolute;
+  width: 30rem;
+  height: 30rem;
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.32;
+  pointer-events: none;
+  animation: drift 16s ease-in-out infinite;
+}
+
+.ambient-left {
+  top: -9rem;
+  left: -10rem;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.28), transparent 68%);
+}
+
+.ambient-right {
+  right: -10rem;
+  bottom: -9rem;
+  background: radial-gradient(circle, rgba(76, 201, 240, 0.18), transparent 68%);
+  animation-delay: -6s;
+}
+
+.card-glass,
+.card-glass-soft {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.card-glass {
+  border: 1px solid rgba(168, 85, 247, 0.16);
+  background: linear-gradient(160deg, rgba(18, 18, 25, 0.92), rgba(10, 10, 16, 0.74));
+}
+
+.card-glass-soft {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 26px;
+  padding: 0.85rem 1.2rem;
+  overflow: hidden;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0.36rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(168, 85, 247, 0.24);
+  background: rgba(168, 85, 247, 0.08);
+  color: #f8d76b;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.35rem, 3.8vw, 3.7rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  color: #fff;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.balance-pill {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 145px;
+  padding: 0.68rem 0.9rem;
+  border-radius: 17px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.balance-pill span,
+.machine-label,
+.detail-heading span,
+.result-card span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 900;
+}
+
+.balance-pill strong {
+  color: #f8d76b;
+  font-size: 1.1rem;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(168, 85, 247, 0.22);
+  background: rgba(168, 85, 247, 0.08);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 900;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.back-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(168, 85, 247, 0.4);
+  background: rgba(168, 85, 247, 0.16);
+}
+
+.plinko-layout {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) 340px;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.board-card,
+.side-panel {
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+.board-card {
+  border-radius: 26px;
+  padding: 0.82rem;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.58rem;
+  overflow: hidden;
+}
+
+.board-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  min-height: 50px;
+}
+
+.machine-label {
+  display: inline-flex;
+  margin-bottom: 0.22rem;
+}
+
+.board-top h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.1vw, 1.9rem);
+  line-height: 1.05;
+  color: #a855f7;
+}
+
+.status-chip {
+  display: grid;
+  gap: 0.05rem;
+  min-width: 120px;
+  padding: 0.58rem 0.72rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.status-chip strong {
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.status-chip-win {
+  border-color: rgba(248, 215, 107, 0.24);
+  background: rgba(248, 215, 107, 0.06);
+}
+
+.plinko-board {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(168, 85, 247, 0.16), transparent 40%),
+    linear-gradient(180deg, #060609, #010102);
+  border: 1px solid rgba(248, 215, 107, 0.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 20px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.drop-zone {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-width: 5.2rem;
+  min-height: 2rem;
+  border-radius: 999px;
+  color: #f8d76b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(248, 215, 107, 0.08);
+  border: 1px solid rgba(248, 215, 107, 0.18);
+}
+
+.pin {
+  position: absolute;
+  z-index: 2;
+  width: 0.82rem;
+  height: 0.82rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #f8d76b;
+  box-shadow:
+    0 0 18px rgba(248, 215, 107, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  transition:
+    transform 90ms ease,
+    box-shadow 90ms ease,
+    background 90ms ease;
+}
+
+.pin-hit {
+  transform: translate(-50%, -50%) scale(1.75);
+  background: #fff;
+  box-shadow:
+    0 0 24px rgba(255, 255, 255, 0.9),
+    0 0 44px rgba(168, 85, 247, 0.7);
+}
+
+.plinko-ball {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 5%;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: radial-gradient(circle at 35% 30%, #fff, #f8d76b 28%, #a855f7 72%);
+  box-shadow:
+    0 0 28px rgba(248, 215, 107, 0.8),
+    0 0 44px rgba(168, 85, 247, 0.55);
+  will-change: left, top, transform;
+  transition: none;
+}
+.slot-row {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.multiplier-slot {
+  min-height: 2.7rem;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 950;
+  background:
+    radial-gradient(circle at 50% 0%, var(--slot-glow), transparent 62%), rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.multiplier-slot.hit {
+  outline: 3px solid rgba(248, 215, 107, 0.92);
+  box-shadow:
+    0 0 28px rgba(248, 215, 107, 0.45),
+    0 0 42px rgba(168, 85, 247, 0.35);
+  transform: translateY(-2px);
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.result-card {
+  padding: 0.62rem 0.7rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.result-card strong {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 1rem;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.result-card strong.negative {
+  color: #fb7185;
+}
+
+.side-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 0.55rem;
+  overflow: hidden;
+  padding-right: 0;
+}
+
+.control-card,
+.detail-card,
+.history-card {
+  border-radius: 20px;
+  padding: 0.65rem;
+  display: grid;
+  gap: 0.44rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.field input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  background: rgba(6, 6, 10, 0.78);
+  color: #fff;
+  outline: none;
+  font-size: 1rem;
+}
+
+.field input:focus {
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.14);
+}
+
+.quick-bets {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.32rem;
+}
+
+.quick-bet,
+.drop-button,
+.risk-tabs button {
+  border: 0;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
+.quick-bet {
+  min-height: 2.15rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.18);
+}
+
+.quick-bet:hover,
+.drop-button:hover,
+.risk-tabs button:hover {
+  transform: translateY(-1px);
+}
+
+.risk-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.risk-tabs button {
+  min-height: 2.3rem;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.risk-tabs button.active {
+  color: #0b0b0f;
+  background: linear-gradient(135deg, #f8d76b, #7c3aed);
+}
+
+.drop-button {
+  min-height: 2.8rem;
+  border-radius: 14px;
+  color: #0b0b0f;
+  font-weight: 950;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #f8d76b, #7c3aed);
+  box-shadow: 0 10px 24px rgba(168, 85, 247, 0.26);
+}
+
+.drop-button:disabled,
+.quick-bet:disabled,
+.risk-tabs button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.detail-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.detail-heading strong {
+  color: #f8d76b;
+  font-size: 0.86rem;
+  text-align: right;
+}
+
+.detail-empty {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.last-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.75rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.last-result span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.last-result strong {
+  font-size: 1.15rem;
+}
+
+.last-result.win strong {
+  color: #34d399;
+}
+
+.last-result.loss strong {
+  color: #fb7185;
+}
+
+.history-list {
+  display: grid;
+  gap: 0.35rem;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.history-item strong {
+  display: block;
+  color: #fff;
+}
+
+.history-item span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.history-item small {
+  font-weight: 950;
+  font-size: 0.9rem;
+}
+
+.history-item.win small {
+  color: #34d399;
+}
+
+.history-item.loss small {
+  color: #fb7185;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(168, 85, 247, 0.45);
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, 1.4rem, 0) scale(1.04);
+  }
+}
+
+@keyframes confettiBurst {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.7);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--x, 0px), var(--y, 220px), 0) rotate(var(--rotate, 220deg)) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient,
+  .confetti-piece {
+    animation: none;
+  }
+
+  .back-button,
+  .quick-bet,
+  .drop-button,
+  .risk-tabs button {
+    transition: none;
+  }
+}
+
+@media (max-width: 1250px) {
+  .plinko-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    display: block;
+  }
+
+  .plinko-layout {
+    height: auto;
+    overflow: visible;
+    grid-template-columns: 1fr;
+  }
+
+  .board-card,
+  .side-panel {
+    height: auto;
+    overflow: visible;
+  }
+
+  .plinko-board {
+    min-height: 620px;
+  }
+
+  .side-panel {
+    grid-template-rows: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .board-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quick-bets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .plinko-shell {
+    padding: 0.8rem;
+  }
+
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .plinko-board {
+    min-height: 540px;
+  }
+
+  .pin {
+    width: 0.62rem;
+    height: 0.62rem;
+  }
+
+  .plinko-ball {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .multiplier-slot {
+    font-size: 0.62rem;
+    min-height: 2.2rem;
+    border-radius: 10px;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .quick-bets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -11,6 +11,7 @@
             <a routerLink="/home" routerLinkActive="is-active">Home</a>
             <a routerLink="/shop" routerLinkActive="is-active">Shop</a>
             <a routerLink="/leaderboard" routerLinkActive="is-active">Leaderboard</a>
+            <a routerLink="/friends" routerLinkActive="is-active">Friends</a>
             <a routerLink="/contact-page" routerLinkActive="is-active">Contact</a>
         </div>
 
@@ -25,9 +26,14 @@
                 </button>
             }
             <a routerLink="/user-profile" class="nav-status">
-                <span class="user-avatar" aria-hidden="true">U</span>
+                <span class="user-avatar" aria-hidden="true">{{ avatarLetter() }}</span>
                 <span class="user-meta">
-                    <strong>{{ username() }}</strong>
+                    <strong>
+                        {{ username() }}
+                        @if (isPremium()) {
+                            <span class="crown-badge" title="EduBet+ Member">👑</span>
+                        }
+                    </strong>
                     <small>Balance: {{ coins() }} EC</small>
                 </span>
             </a>

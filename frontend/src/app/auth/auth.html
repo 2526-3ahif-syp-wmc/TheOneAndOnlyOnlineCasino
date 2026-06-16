@@ -16,29 +16,29 @@
         <h1 class="logo glow-text">Welcome Back</h1>
         <p class="form-subtitle">Log in and enter the lobby</p>
 
-        <input [formField]="loginForm.username" type="text" placeholder="Username">
+        <input [formField]="loginForm.username" type="text" placeholder="Username" />
 
         <div class="error-box">
           @if (loginForm.username().touched() || loginForm.username().dirty()) {
-            @for(error of loginForm.username().errors(); track error.kind) {
-            <mat-error>{{ error.message }}</mat-error>
-          }
+            @for (error of loginForm.username().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
           }
         </div>
 
-        <input [formField]="loginForm.password" type="password" placeholder="Password">
+        <input [formField]="loginForm.password" type="password" placeholder="Password" />
 
         <div class="error-box">
           @if (loginForm.password().touched() || loginForm.password().dirty()) {
-            @for(error of loginForm.password().errors(); track error.kind) {
-            <mat-error>{{ error.message }}</mat-error>
+            @for (error of loginForm.password().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
             }
           }
         </div>
 
         <div class="login-options">
           <label>
-            <input type="checkbox">
+            <input type="checkbox" />
             Remember me
           </label>
 
@@ -50,7 +50,8 @@
           [disabled]="loginForm().invalid() || loginForm().submitting()"
           type="button"
           class="auth-btn"
-          (click)="handleLogIn()">
+          (click)="handleLogIn()"
+        >
           Log In
         </button>
 
@@ -60,9 +61,7 @@
           <span>Slots</span>
         </div>
 
-        <label for="toggle" class="switch-link">
-          Don’t have an account? Register Now
-        </label>
+        <label for="toggle" class="switch-link"> Don’t have an account? Register Now </label>
       </form>
     </div>
 
@@ -76,31 +75,35 @@
         <h1 class="logo glow-text">Create Account</h1>
         <p class="form-subtitle">Join EduBet and start with free coins</p>
 
-        <input [formField]="registerForm.username" type="text" placeholder="Username">
+        <input [formField]="registerForm.username" type="text" placeholder="Username" />
 
         <div class="error-box">
           @if (registerForm.username().touched() || registerForm.username().dirty()) {
-            @for(error of registerForm.username().errors(); track error.kind) {
+            @for (error of registerForm.username().errors(); track error.kind) {
               <mat-error>{{ error.message }}</mat-error>
             }
           }
         </div>
 
-        <input [formField]="registerForm.password" type="password" placeholder="Password">
+        <input [formField]="registerForm.password" type="password" placeholder="Password" />
 
         <div class="error-box">
           @if (registerForm.password().touched() || registerForm.password().dirty()) {
-            @for(error of registerForm.password().errors(); track error.kind) {
+            @for (error of registerForm.password().errors(); track error.kind) {
               <mat-error>{{ error.message }}</mat-error>
             }
           }
         </div>
 
-        <input [formField]="registerForm.confirmPassword" type="password" placeholder="Confirm Password">
+        <input
+          [formField]="registerForm.confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+        />
 
         <div class="error-box">
           @if (registerForm.confirmPassword().touched() || registerForm.confirmPassword().dirty()) {
-            @for(error of registerForm.confirmPassword().errors(); track error.kind) {
+            @for (error of registerForm.confirmPassword().errors(); track error.kind) {
               <mat-error>{{ error.message }}</mat-error>
             }
           }
@@ -111,7 +114,8 @@
           [disabled]="registerForm().invalid() || registerForm().submitting()"
           type="button"
           class="auth-btn"
-          (click)="handleRegister()">
+          (click)="handleRegister()"
+        >
           Register
         </button>
 
@@ -121,9 +125,7 @@
           <span>No Risk</span>
         </div>
 
-        <label for="toggle" class="switch-link">
-          Already have an account? Log In
-        </label>
+        <label for="toggle" class="switch-link"> Already have an account? Log In </label>
       </form>
     </div>
 
@@ -140,9 +142,7 @@
               <p>Check your coins, play your favorite games and climb the leaderboard.</p>
             </div>
 
-            <label for="toggle" class="ghost-btn">
-              Log In
-            </label>
+            <label for="toggle" class="ghost-btn"> Log In </label>
           </div>
         </div>
 
@@ -157,9 +157,7 @@
               <p>Register now and try Blackjack, Roulette, Slots and more instantly.</p>
             </div>
 
-            <label for="toggle" class="ghost-btn">
-              Sign Up
-            </label>
+            <label for="toggle" class="ghost-btn"> Sign Up </label>
           </div>
         </div>
       </div>

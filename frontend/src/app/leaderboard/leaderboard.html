@@ -6,8 +6,8 @@
     <span class="eyebrow">Casino Ranking</span>
     <h1>Leaderboard</h1>
     <p>
-      Players are ranked by total wins. Click a player to see detailed game stats,
-      coins won from games, losses and match history.
+      Players are ranked by total wins. Click a player to see detailed game stats, coins won from
+      games, losses and match history.
     </p>
   </header>
 
@@ -25,9 +25,7 @@
       </div>
 
       <div class="leaderboard-scroll">
-        <div class="loading" *ngIf="loading">
-          Loading leaderboard...
-        </div>
+        <div class="loading" *ngIf="loading">Loading leaderboard...</div>
 
         <div class="empty-state" *ngIf="!loading && leaderboard.length === 0">
           No players found yet.
@@ -42,7 +40,10 @@
           <span class="rank">#{{ player.rank }}</span>
 
           <div class="player-main">
-            <strong>{{ player.username }}</strong>
+            <strong>
+              {{ player.username }}
+              <span *ngIf="player.premium === 1" class="crown-badge" title="EduBet+ Member">👑</span>
+            </strong>
             <small>{{ player.games_played }} games played</small>
           </div>
 
@@ -55,20 +56,19 @@
     </section>
 
     <section class="player-details card-glass">
-      <div class="loading" *ngIf="detailsLoading">
-        Loading player details...
-      </div>
+      <div class="loading" *ngIf="detailsLoading">Loading player details...</div>
 
       <ng-container *ngIf="!detailsLoading && selectedDetails">
         <div class="details-header">
           <div>
             <span class="eyebrow">Player Details</span>
-            <h2>{{ selectedDetails.stats.username }}</h2>
+            <h2>
+              {{ selectedDetails.stats.username }}
+              <span *ngIf="selectedDetails.stats.premium === 1" class="crown-badge" title="EduBet+ Member">👑</span>
+            </h2>
           </div>
 
-          <span class="rank-badge">
-            #{{ selectedDetails.stats.rank || '-' }}
-          </span>
+          <span class="rank-badge"> #{{ selectedDetails.stats.rank || '-' }} </span>
         </div>
 
         <div class="stats-grid">
@@ -109,7 +109,7 @@
             >
               <div>
                 <strong>{{ game.game_name }}</strong>
-                <small>{{ game.played_at | date:'short' }}</small>
+                <small>{{ formatPlayedAt(game.played_at) }}</small>
               </div>
 
               <span class="result">
@@ -117,13 +117,9 @@
               </span>
 
               <span class="coins">
-                <ng-container *ngIf="game.result === 'win'">
-                  +{{ game.coins_won }}
-                </ng-container>
+                <ng-container *ngIf="game.result === 'win'"> +{{ game.coins_won }} </ng-container>
 
-                <ng-container *ngIf="game.result === 'loss'">
-                  -{{ game.coins_lost }}
-                </ng-container>
+                <ng-container *ngIf="game.result === 'loss'"> -{{ game.coins_lost }} </ng-container>
               </span>
             </div>
           </div>

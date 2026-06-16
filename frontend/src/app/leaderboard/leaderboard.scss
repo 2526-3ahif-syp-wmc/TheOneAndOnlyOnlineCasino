@@ -157,7 +157,10 @@ p {
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.045);
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
 }
 
 .player-row:hover,
@@ -188,6 +191,13 @@ p {
   color: #fff;
   font-size: 1.05rem;
   word-break: break-word;
+}
+
+.crown-badge {
+  display: inline;
+  font-size: 0.9rem;
+  margin-left: 0.2rem;
+  filter: drop-shadow(0 0 5px rgba(248, 215, 107, 0.85));
 }
 
 .player-main small,

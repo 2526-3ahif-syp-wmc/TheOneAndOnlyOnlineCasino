@@ -1,4 +1,4 @@
-export type GameResult = 'win' | 'loss';
+export type GameResult = "win" | "loss";
 
 export interface GameHistory {
   id: number;

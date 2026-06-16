@@ -7,19 +7,17 @@ import {
   getLevelFromXp,
   getXpForLevel,
   getXpForNextLevel,
-  getXpPercent
+  getXpPercent,
 } from '../utils/level-utils';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   private httpClient = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/auth';
 
-  private currentUserSignal = signal<User | null>(
-    this.loadUserFromStorage()
-  );
+  private currentUserSignal = signal<User | null>(this.loadUserFromStorage());
 
   public currentUser = this.currentUserSignal.asReadonly();
 
@@ -55,17 +53,15 @@ export class UserService {
     return this.httpClient
       .post<User>(`${this.apiUrl}/login`, {
         username,
-        password
+        password,
       })
-      .pipe(
-        tap(user => this.saveUser(user))
-      );
+      .pipe(tap((user) => this.saveUser(user)));
   }
 
   public register(username: string, password: string) {
     return this.httpClient.post<User>(`${this.apiUrl}/users`, {
       username,
-      password
+      password,
     });
   }
 
@@ -74,9 +70,7 @@ export class UserService {
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}`, request)
-      .pipe(
-        tap(updatedUser => this.saveUser(updatedUser))
-      );
+      .pipe(tap((updatedUser) => this.saveUser(updatedUser)));
   }
 
   public updateCoins(coins: number) {
@@ -84,11 +78,9 @@ export class UserService {
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/coins`, {
-        coins
+        coins,
       })
-      .pipe(
-        tap(updatedUser => this.saveUser(updatedUser))
-      );
+      .pipe(tap((updatedUser) => this.saveUser(updatedUser)));
   }
 
   public decreaseCoins(amount: number) {
@@ -107,11 +99,9 @@ export class UserService {
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/xp`, {
-        xp
+        xp,
       })
-      .pipe(
-        tap(updatedUser => this.saveUser(updatedUser))
-      );
+      .pipe(tap((updatedUser) => this.saveUser(updatedUser)));
   }
 
   public addXp(amount: number) {
@@ -123,11 +113,9 @@ export class UserService {
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/premium`, {
-        premium: 1
+        premium: 1,
       })
-      .pipe(
-        tap(updatedUser => this.saveUser(updatedUser))
-      );
+      .pipe(tap((updatedUser) => this.saveUser(updatedUser)));
   }
 
   public unbuyPremium() {
@@ -135,21 +123,9 @@ export class UserService {
 
     return this.httpClient
       .patch<User>(`${this.apiUrl}/users/${user.id}/premium`, {
-        premium: 0
+        premium: 0,
       })
-      .pipe(
-        tap(updatedUser => this.saveUser(updatedUser))
-      );
-  }
-
-  public getLeaderboard(type: 'wins' | 'losses', period: string = 'all') {
-    return this.httpClient.get<User[]>(
-      `${this.apiUrl}/leaderboard?type=${type}&period=${period}`
-    );
-  }
-
-  public getTopPlayers() {
-    return this.httpClient.get<User[]>(`${this.apiUrl}/top-players`);
+      .pipe(tap((updatedUser) => this.saveUser(updatedUser)));
   }
 
   public logOut(): void {
@@ -170,7 +146,7 @@ export class UserService {
   private saveUser(user: User): void {
     const safeUser: User = {
       ...user,
-      xp: user.xp ?? 0
+      xp: user.xp ?? 0,
     };
 
     localStorage.setItem('user', JSON.stringify(safeUser));
@@ -189,7 +165,7 @@ export class UserService {
 
       return {
         ...parsedUser,
-        xp: parsedUser.xp ?? 0
+        xp: parsedUser.xp ?? 0,
       };
     } catch {
       localStorage.removeItem('user');

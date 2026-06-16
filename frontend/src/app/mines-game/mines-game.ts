@@ -129,10 +129,14 @@ export class MinesComponent implements OnInit, OnDestroy {
     }
 
     if (this.status === 'won') {
-      return 'Reset';
+      return 'Try Again';
     }
 
-    return this.roundStarted ? 'New Game' : 'Start New Game';
+    if (this.status === 'playing') {
+      return 'Start New Game';
+    }
+
+    return 'Start New Game';
   }
 
   get statusLabel(): string {
@@ -178,7 +182,6 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     if (this.status === 'lost' || this.status === 'won') {
       this.resetRound(false);
-      return;
     }
 
     if (this.status === 'playing') {
@@ -212,9 +215,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.balance = newBalance;
 
     try {
-      const updatedUser = await firstValueFrom(
-        this.userService.updateCoins(newBalance)
-      );
+      const updatedUser = await firstValueFrom(this.userService.updateCoins(newBalance));
 
       this.balance = updatedUser.coins;
     } catch (err) {
@@ -257,9 +258,7 @@ export class MinesComponent implements OnInit, OnDestroy {
 
     this.pendingCashOut = (async () => {
       try {
-        const updatedUser = await firstValueFrom(
-          this.userService.updateCoins(newBalance)
-        );
+        const updatedUser = await firstValueFrom(this.userService.updateCoins(newBalance));
 
         this.balance = updatedUser.coins;
         this.saveGameHistory('win', winnings, 0);
@@ -300,9 +299,7 @@ export class MinesComponent implements OnInit, OnDestroy {
       this.roundStarted = false;
 
       try {
-        const updatedUser = await firstValueFrom(
-          this.userService.updateCoins(this.balance)
-        );
+        const updatedUser = await firstValueFrom(this.userService.updateCoins(this.balance));
 
         this.balance = updatedUser.coins;
         this.saveGameHistory('loss', 0, this.bet);
@@ -314,9 +311,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     }
 
     this.safeReveals += 1;
-    this.multiplier = Number(
-      (1 + this.safeReveals * this.config.multiplierStep).toFixed(2)
-    );
+    this.multiplier = Number((1 + this.safeReveals * this.config.multiplierStep).toFixed(2));
 
     this.currentWin = Math.max(1, Math.floor(this.bet * this.multiplier));
 
@@ -324,9 +319,7 @@ export class MinesComponent implements OnInit, OnDestroy {
       const newBalance = this.balance + this.currentWin;
 
       try {
-        const updatedUser = await firstValueFrom(
-          this.userService.updateCoins(newBalance)
-        );
+        const updatedUser = await firstValueFrom(this.userService.updateCoins(newBalance));
 
         this.balance = updatedUser.coins;
         this.saveGameHistory('win', this.currentWin, 0);
@@ -357,21 +350,18 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.roundStarted = false;
     this.status = 'idle';
 
-        if (resetBet) {
+    if (resetBet) {
       this.bet = Math.min(this.bet, this.balance || 1);
     }
   }
 
   private buildBoard() {
-    this.cells = Array.from(
-      { length: this.gridSize * this.gridSize },
-      (_, idx) => ({
-        idx,
-        mine: false,
-        revealed: false,
-        exploded: false,
-      })
-    );
+    this.cells = Array.from({ length: this.gridSize * this.gridSize }, (_, idx) => ({
+      idx,
+      mine: false,
+      revealed: false,
+      exploded: false,
+    }));
   }
 
   private placeBombs() {
@@ -405,15 +395,17 @@ export class MinesComponent implements OnInit, OnDestroy {
         result,
         betAmount: this.bet,
         coinsWon,
-        coinsLost
+        coinsLost,
+      }),
+    )
+      .then(() => {
+        if (result === 'win') {
+          this.mysteryBoxService.applyBuffToWin(user.id, 'Mines', this.bet);
+        }
       })
-    ).then(() => {
-      if (result === 'win') {
-        this.mysteryBoxService.applyBuffToWin(user.id, 'Mines', this.bet);
-      }
-    }).catch(error => {
-      console.error('Could not save Mines game history', error);
-    });
+      .catch((error) => {
+        console.error('Could not save Mines game history', error);
+      });
   }
 
   exitGame() {
@@ -430,10 +422,7 @@ export class MinesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const elements = [
-      document.querySelector('app-nav-bar'),
-      document.querySelector('footer')
-    ];
+    const elements = [document.querySelector('app-nav-bar'), document.querySelector('footer')];
 
     for (const element of elements) {
       if (!(element instanceof HTMLElement)) {

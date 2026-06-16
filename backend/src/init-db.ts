@@ -1,8 +1,8 @@
-import Database from 'better-sqlite3';
+import Database from "better-sqlite3";
 
-const db = new Database('users.db');
+const db = new Database("users.db");
 
-db.pragma('foreign_keys = ON');
+db.pragma("foreign_keys = ON");
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
@@ -30,8 +30,36 @@ db.exec(`
 
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS blackjack_games (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    bet INTEGER NOT NULL,
+    status TEXT NOT NULL CHECK(status IN ('playing', 'player_bust', 'dealer_bust', 'player_win', 'dealer_win', 'push')),
+    player_hand TEXT NOT NULL,
+    dealer_hand TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  ) STRICT;
+   
+  CREATE TABLE IF NOT EXISTS friends (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    friend_name TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'offline' CHECK(status IN ('online', 'offline', 'gaming')),
+    level INTEGER NOT NULL DEFAULT 1,
+    total_wins INTEGER NOT NULL DEFAULT 0,
+    balance INTEGER NOT NULL DEFAULT 0,
+    last_active TEXT NOT NULL DEFAULT 'just now',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
 
-console.log('Database tables created/updated successfully.');
+console.log("Database tables created/updated successfully.");
 
 db.close();

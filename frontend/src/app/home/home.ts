@@ -35,8 +35,12 @@ export class Home {
   protected xpNeeded = this.service.xpNeeded;
   protected xpPercent = this.service.xpPercent;
 
+  protected profileInitial = computed(() => {
+    return (this.username().charAt(0) || 'E').toUpperCase();
+  });
+
   protected dailyBonusAmount = 1000;
-  private readonly MYSTERY_BOX_COOLDOWN_MS = 6 * 60 * 60 * 1000; // 6 hours
+  private readonly MYSTERY_BOX_COOLDOWN_MS = 6 * 60 * 60 * 1000;
 
   private today = new Date().toISOString().slice(0, 10);
 
@@ -48,21 +52,22 @@ export class Home {
     return `mystery-box-${this.username()}`;
   });
 
-  protected lastClaimedDay = signal(
-    localStorage.getItem(this.bonusStorageKey()) ?? ''
-  );
+  protected lastClaimedDay = signal(localStorage.getItem(this.bonusStorageKey()) ?? '');
 
-  protected lastClaimedMysteryBox = signal(
-    localStorage.getItem(this.mysteryBoxStorageKey()) ?? ''
-  );
+  protected lastClaimedMysteryBox = signal(localStorage.getItem(this.mysteryBoxStorageKey()) ?? '');
 
-  constructor() {}
+  protected mysteryRevealOpen = signal(false);
+  protected mysteryRevealExplode = signal(false);
+  protected mysteryRevealReward = signal('❓');
+  protected mysteryRevealScale = signal(1);
+
+  private mysteryVisualRewards = ['❌', '🪙', '⭐'];
 
   protected readonly games: GameTile[] = [
     {
       title: 'Mines',
-      subtitle: 'Risk every tile',
-      badge: 'Hot',
+      subtitle: 'Reveal tiles, avoid bombs, cash out in time.',
+      badge: 'Risk',
       icon: '✦',
       players: 94,
       coverImage: '/mines.jpeg',
@@ -70,7 +75,7 @@ export class Home {
     },
     {
       title: 'Slot Machine',
-      subtitle: 'Spin for coins',
+      subtitle: 'Spin reels, hit lines, try the 2x gamble.',
       badge: 'Fast',
       icon: '★',
       players: 211,
@@ -79,12 +84,30 @@ export class Home {
     },
     {
       title: 'Roulette',
-      subtitle: 'Follow the wheel',
-      badge: 'Classic',
+      subtitle: 'Pick your color, number or section.',
+      badge: 'Lucky',
       icon: '●',
       players: 76,
       coverImage: '/roulette.jpeg',
       route: '/games/roulette',
+    },
+    {
+      title: 'Blackjack',
+      subtitle: 'Hit, stand and beat the dealer at 21.',
+      badge: 'Classic',
+      icon: '♠',
+      players: 104,
+      coverImage: '/blackjack.jpeg',
+      route: '/games/blackjack',
+    },
+    {
+      title: 'Plinko',
+      subtitle: 'Drop the ball and chase huge multipliers.',
+      badge: 'New',
+      icon: '◆',
+      players: 128,
+      coverImage: '/plinko.jpeg',
+      route: '/games/plinko',
     },
   ];
 
@@ -92,38 +115,22 @@ export class Home {
     return this.lastClaimedDay() !== this.today;
   });
 
-  protected async claimDailyBonus(): Promise<void> {
-    if (!this.canClaimDailyBonus()) {
-      return;
-    }
-
-    try {
-      await firstValueFrom(
-        this.service.updateCoins(this.coins() + this.dailyBonusAmount)
-      );
-
-      this.alertService.info(`+${this.dailyBonusAmount} EC`);
-      localStorage.setItem(this.bonusStorageKey(), this.today);
-      this.lastClaimedDay.set(this.today);
-    } catch (err) {
-      console.error(err);
-      this.alertService.error('Claiming daily bonus failed');
-    }
-  }
-
   protected canClaimMysteryBox = computed(() => {
     const lastClaimStr = this.lastClaimedMysteryBox();
+
     if (!lastClaimStr) {
       return true;
     }
 
     const lastClaimTime = parseInt(lastClaimStr, 10);
     const now = Date.now();
+
     return now - lastClaimTime >= this.MYSTERY_BOX_COOLDOWN_MS;
   });
 
   protected timeUntilNextMysteryBox = computed(() => {
     const lastClaimStr = this.lastClaimedMysteryBox();
+
     if (!lastClaimStr) {
       return 0;
     }
@@ -137,8 +144,38 @@ export class Home {
       return 0;
     }
 
-    return Math.ceil(timeRemaining / (60 * 60 * 1000)); // Convert to hours
+    return Math.ceil(timeRemaining / (60 * 60 * 1000));
   });
+
+  protected scrollToGames(): void {
+    const gameLobby = document.getElementById('game-lobby');
+
+    if (!gameLobby) {
+      return;
+    }
+
+    gameLobby.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+
+  protected async claimDailyBonus(): Promise<void> {
+    if (!this.canClaimDailyBonus()) {
+      return;
+    }
+
+    try {
+      await firstValueFrom(this.service.updateCoins(this.coins() + this.dailyBonusAmount));
+
+      this.alertService.info(`+${this.dailyBonusAmount} EC`);
+      localStorage.setItem(this.bonusStorageKey(), this.today);
+      this.lastClaimedDay.set(this.today);
+    } catch (err) {
+      console.error(err);
+      this.alertService.error('Claiming daily bonus failed');
+    }
+  }
 
   protected async claimMysteryBox(): Promise<void> {
     if (!this.canClaimMysteryBox()) {
@@ -147,14 +184,18 @@ export class Home {
 
     try {
       const reward = this.mysteryBoxService.generateReward();
+
+      const finalReward = reward.type === 'zero' ? '❌' : reward.type === 'coins' ? '🪙' : '⭐';
+
+      await this.playMysteryReveal(finalReward);
+
       const now = Date.now();
 
       if (reward.type === 'zero') {
         this.alertService.info('Mystery Box: Nothing this time!');
       } else if (reward.type === 'coins') {
-        await firstValueFrom(
-          this.service.updateCoins(this.coins() + reward.amount)
-        );
+        await firstValueFrom(this.service.updateCoins(this.coins() + reward.amount));
+
         this.alertService.info(`Mystery Box: +${reward.amount} EC!`);
       } else if (reward.type === 'buff') {
         this.mysteryBoxService.activateBuff();
@@ -169,4 +210,36 @@ export class Home {
     }
   }
 
+  private wait(milliseconds: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  }
+
+  private async playMysteryReveal(finalReward: string): Promise<void> {
+    this.mysteryRevealOpen.set(true);
+    this.mysteryRevealExplode.set(false);
+
+    const start = performance.now();
+    const duration = 3800;
+
+    while (performance.now() - start < duration) {
+      const progress = (performance.now() - start) / duration;
+      const delay = 45 + progress * 260;
+
+      this.mysteryRevealScale.set(1 + progress * 1.6);
+      this.mysteryRevealReward.set(
+        this.mysteryVisualRewards[Math.floor(Math.random() * this.mysteryVisualRewards.length)],
+      );
+
+      await this.wait(delay);
+    }
+
+    this.mysteryRevealReward.set(finalReward);
+    this.mysteryRevealExplode.set(true);
+
+    await this.wait(1000);
+
+    this.mysteryRevealOpen.set(false);
+    this.mysteryRevealExplode.set(false);
+    this.mysteryRevealScale.set(1);
+  }
 }

@@ -1,296 +1,324 @@
 :host {
-    display: block;
+  display: block;
 }
 
 .site-nav-shell {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    padding: 1rem;
-    background: linear-gradient(180deg, rgba(8, 8, 12, 0.96), rgba(8, 8, 12, 0.84));
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(168, 85, 247, 0.14);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 1rem;
+  background: linear-gradient(180deg, rgba(8, 8, 12, 0.96), rgba(8, 8, 12, 0.84));
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.14);
 }
 
 .site-nav-shell::before {
-    content: '';
-    display: block;
-    height: 2px;
-    width: min(1200px, 100%);
-    margin: 0 auto 0.85rem;
-    border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.95), rgba(255, 255, 255, 0.2), transparent);
-    box-shadow: 0 0 18px rgba(168, 85, 247, 0.32);
+  content: '';
+  display: block;
+  height: 2px;
+  width: min(1200px, 100%);
+  margin: 0 auto 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.95),
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.32);
 }
 
 .site-nav {
-    width: min(1200px, 100%);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.9rem 1rem;
-    border-radius: 1.25rem;
-    background: linear-gradient(135deg, rgba(20, 20, 26, 0.94), rgba(12, 12, 17, 0.94));
-    border: 1px solid rgba(168, 85, 247, 0.16);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, rgba(20, 20, 26, 0.94), rgba(12, 12, 17, 0.94));
+  border: 1px solid rgba(168, 85, 247, 0.16);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.85rem;
-    text-decoration: none;
-    color: #fff;
-    flex: 0 0 auto;
-    transition: transform 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: #fff;
+  flex: 0 0 auto;
+  transition: transform 180ms ease;
 }
 
 .brand:hover {
-    transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .brand-mark {
-    width: 3rem;
-    height: 3rem;
-    display: grid;
-    place-items: center;
-    border-radius: 1rem;
-    background: linear-gradient(135deg, var(--gold), #7c3aed);
-    color: #0b0b0f;
-    font-weight: 900;
-    letter-spacing: 0.06em;
-    box-shadow: 0 12px 28px rgba(168, 85, 247, 0.26);
-    transition: transform 220ms ease, box-shadow 220ms ease;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--gold), #7c3aed);
+  color: #0b0b0f;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  box-shadow: 0 12px 28px rgba(168, 85, 247, 0.26);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .brand:hover .brand-mark {
-    transform: rotate(-4deg) scale(1.03);
-    box-shadow: 0 14px 34px rgba(168, 85, 247, 0.34);
+  transform: rotate(-4deg) scale(1.03);
+  box-shadow: 0 14px 34px rgba(168, 85, 247, 0.34);
 }
 
 .brand-copy {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
 }
 
 .brand-copy strong {
-    font-size: 1.05rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .brand-copy small {
-    color: rgba(255, 255, 255, 0.62);
-    font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.8rem;
 }
 
 .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .nav-links a {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.7rem;
-    padding: 0.7rem 1rem;
-    border-radius: 999px;
-    text-decoration: none;
-    font-weight: 700;
-    transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .nav-links a {
-    color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .nav-links a::after {
-    content: '';
-    position: absolute;
-    left: 1rem;
-    right: 1rem;
-    bottom: 0.42rem;
-    height: 2px;
-    border-radius: 999px;
-    background: transparent;
-    transition: background-color 180ms ease, transform 180ms ease;
-    transform: scaleX(0.35);
-    transform-origin: center;
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.42rem;
+  height: 2px;
+  border-radius: 999px;
+  background: transparent;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+  transform: scaleX(0.35);
+  transform-origin: center;
 }
 
 .nav-links a:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .nav-links a:hover::after {
-    background: rgba(168, 85, 247, 0.42);
-    transform: scaleX(1);
+  background: rgba(168, 85, 247, 0.42);
+  transform: scaleX(1);
 }
 
 .nav-links a.is-active {
-    color: #0b0b0f;
-    background: linear-gradient(135deg, var(--gold), #7c3aed);
-    box-shadow: 0 10px 24px rgba(168, 85, 247, 0.2);
+  color: #0b0b0f;
+  background: linear-gradient(135deg, var(--gold), #7c3aed);
+  box-shadow: 0 10px 24px rgba(168, 85, 247, 0.2);
 }
 
 .nav-links a.is-active::after {
-    background: rgba(11, 11, 15, 0.22);
-    transform: scaleX(1);
+  background: rgba(11, 11, 15, 0.22);
+  transform: scaleX(1);
 }
 
 .nav-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 0 0 auto;
 }
 
 .nav-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.45rem 0.55rem 0.45rem 0.45rem;
-    border-radius: 999px;
-    border: 1px solid rgba(168, 85, 247, 0.24);
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(255, 255, 255, 0.04));
-    color: #fff;
-    min-height: 2.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(168, 85, 247, 0.24);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(255, 255, 255, 0.04));
+  color: #fff;
+  min-height: 2.7rem;
 }
 
 .user-avatar {
-    width: 2rem;
-    height: 2rem;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--gold), #7c3aed);
-    color: #0b0b0f;
-    font-weight: 900;
-    font-size: 0.84rem;
-    letter-spacing: 0.03em;
-    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.25);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold), #7c3aed);
+  color: #0b0b0f;
+  font-weight: 900;
+  font-size: 0.84rem;
+  letter-spacing: 0.03em;
+  box-shadow: 0 8px 20px rgba(168, 85, 247, 0.25);
 }
 
 .user-meta {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.05;
-    padding-right: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  padding-right: 0.25rem;
 }
 
 .user-meta small {
-    color: rgba(255, 255, 255, 0.62);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .user-meta strong {
-    font-size: 0.9rem;
-    letter-spacing: 0.02em;
-    color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.crown-badge {
+  display: inline;
+  font-size: 0.85rem;
+  margin-left: 0.2rem;
+  filter: drop-shadow(0 0 5px rgba(248, 215, 107, 0.85));
 }
 
 .nav-status {
-    text-decoration: none;
-    transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
 }
 
 .nav-status:hover {
-    transform: translateY(-1px);
-    border-color: rgba(168, 85, 247, 0.42);
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(255, 255, 255, 0.08));
+  transform: translateY(-1px);
+  border-color: rgba(168, 85, 247, 0.42);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(255, 255, 255, 0.08));
 }
 
 .nav-logout {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.7rem;
-    padding: 0.7rem 1rem;
-    border-radius: 999px;
-    border: 1px solid rgba(168, 85, 247, 0.24);
-    background: rgba(168, 85, 247, 0.08);
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.88rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(168, 85, 247, 0.24);
+  background: rgba(168, 85, 247, 0.08);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .nav-logout:hover {
-    transform: translateY(-1px);
-    border-color: rgba(168, 85, 247, 0.42);
-    background: rgba(168, 85, 247, 0.16);
-    box-shadow: 0 8px 18px rgba(168, 85, 247, 0.15);
+  transform: translateY(-1px);
+  border-color: rgba(168, 85, 247, 0.42);
+  background: rgba(168, 85, 247, 0.16);
+  box-shadow: 0 8px 18px rgba(168, 85, 247, 0.15);
 }
 
 .nav-links a:hover {
-    transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .brand,
-    .brand-mark,
-    .nav-links a,
-    .nav-status,
-    .nav-logout,
-    .nav-links a::after {
-        transition: none;
-    }
+  .brand,
+  .brand-mark,
+  .nav-links a,
+  .nav-status,
+  .nav-logout,
+  .nav-links a::after {
+    transition: none;
+  }
 }
 
 @media (max-width: 980px) {
-    .site-nav {
-        flex-wrap: wrap;
-    }
+  .site-nav {
+    flex-wrap: wrap;
+  }
 
-    .nav-links {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 640px) {
-    .site-nav-shell {
-        padding: 0.75rem;
-    }
+  .site-nav-shell {
+    padding: 0.75rem;
+  }
 
-    .site-nav {
-        padding: 0.85rem;
-    }
+  .site-nav {
+    padding: 0.85rem;
+  }
 
-    .brand-copy small {
-        display: none;
-    }
+  .brand-copy small {
+    display: none;
+  }
 
-    .nav-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
 
-    .nav-status {
-        flex: 1;
-        justify-content: center;
-    }
+  .nav-status {
+    flex: 1;
+    justify-content: center;
+  }
 
-    .nav-logout {
-        flex: 0 0 auto;
-    }
+  .nav-logout {
+    flex: 0 0 auto;
+  }
 }
 
 button:disabled {

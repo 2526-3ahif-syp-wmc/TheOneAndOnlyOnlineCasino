@@ -13,6 +13,7 @@ export interface LeaderboardEntry {
   losses: number;
   coins_won: number;
   coins_lost: number;
+  premium?: number;
 }
 
 export interface GameHistory {
@@ -41,7 +42,7 @@ export interface CreateGameHistoryDto {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LeaderboardService {
   private apiUrl = 'http://localhost:3000/leaderboard';

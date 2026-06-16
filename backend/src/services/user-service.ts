@@ -1,5 +1,19 @@
-import { db } from '../databases/db';
-import { ProfileUserRow, User } from '../models/user-model';
+import { db } from "../databases/db";
+import { ProfileUserRow, PublicUser, User } from "../models/user-model";
+
+type PublicUserRow = PublicUser;
+
+function toPublicUser(row: PublicUserRow): PublicUser {
+  return {
+    id: row.id,
+    username: row.username,
+    coins: row.coins,
+    premium: row.premium,
+    wins: row.wins,
+    losses: row.losses,
+    xp: row.xp,
+  };
+}
 
 export function getPublicUserById(id: number): User | undefined {
   return db
@@ -9,6 +23,48 @@ export function getPublicUserById(id: number): User | undefined {
       WHERE id = ?
     `)
     .get(id) as User | undefined;
+}
+
+export function getPublicUsers(excludeUserId?: number): PublicUser[] {
+  const query = `
+    SELECT id, username, coins, premium, wins, losses, xp
+    FROM users
+    ${Number.isInteger(excludeUserId) ? "WHERE id != ?" : ""}
+    ORDER BY username COLLATE NOCASE ASC
+  `;
+
+  const rows = Number.isInteger(excludeUserId)
+    ? (db.prepare(query).all(excludeUserId) as PublicUserRow[])
+    : (db.prepare(query).all() as PublicUserRow[]);
+
+  return rows.map(toPublicUser);
+}
+
+export function searchPublicUsers(queryText: string, excludeUserId?: number): PublicUser[] {
+  const searchText = `%${queryText.trim()}%`;
+  const query = `
+    SELECT id, username, coins, premium, wins, losses, xp
+    FROM users
+    WHERE username LIKE ? COLLATE NOCASE
+    ${Number.isInteger(excludeUserId) ? "AND id != ?" : ""}
+    ORDER BY username COLLATE NOCASE ASC
+  `;
+
+  const rows = Number.isInteger(excludeUserId)
+    ? (db.prepare(query).all(searchText, excludeUserId) as PublicUserRow[])
+    : (db.prepare(query).all(searchText) as PublicUserRow[]);
+
+  return rows.map(toPublicUser);
+}
+
+export function findPublicUserByUsername(username: string): PublicUser | undefined {
+  return db
+    .prepare(`
+      SELECT id, username, coins, premium, wins, losses, xp
+      FROM users
+      WHERE lower(username) = lower(?)
+    `)
+    .get(username) as PublicUser | undefined;
 }
 
 export function usernameExists(username: string): boolean {

@@ -1,29 +1,34 @@
-import { db } from '../databases/db';
+import { db } from "../databases/db";
 import {
   CreateGameHistoryDto,
   GameHistory,
   LeaderboardDetails,
-  LeaderboardEntry
-} from '../models/leaderboard-model';
+  LeaderboardEntry,
+} from "../models/leaderboard-model";
 
-export function createGameHistory(data: CreateGameHistoryDto): GameHistory | undefined {
+export function createGameHistory(
+  data: CreateGameHistoryDto,
+): GameHistory | undefined {
   const user = db
-    .prepare(`
+    .prepare(
+      `
       SELECT id
       FROM users
       WHERE id = ?
-    `)
+    `,
+    )
     .get(data.userId) as { id: number } | undefined;
 
   if (!user) {
     return undefined;
   }
 
-  const coinsWon = data.result === 'win' ? data.coinsWon : 0;
-  const coinsLost = data.result === 'loss' ? data.coinsLost : 0;
+  const coinsWon = data.result === "win" ? data.coinsWon : 0;
+  const coinsLost = data.result === "loss" ? data.coinsLost : 0;
 
   const result = db
-    .prepare(`
+    .prepare(
+      `
       INSERT INTO game_history (
         user_id,
         game_name,
@@ -33,28 +38,32 @@ export function createGameHistory(data: CreateGameHistoryDto): GameHistory | und
         coins_lost
       )
       VALUES (?, ?, ?, ?, ?, ?)
-    `)
+    `,
+    )
     .run(
       data.userId,
       data.gameName,
       data.result,
       data.betAmount,
       coinsWon,
-      coinsLost
+      coinsLost,
     );
 
   return db
-    .prepare(`
+    .prepare(
+      `
       SELECT *
       FROM game_history
       WHERE id = ?
-    `)
+    `,
+    )
     .get(Number(result.lastInsertRowid)) as GameHistory;
 }
 
 export function getLeaderboard(): LeaderboardEntry[] {
   return db
-    .prepare(`
+    .prepare(
+      `
       SELECT
         u.id,
         u.username,
@@ -67,13 +76,17 @@ export function getLeaderboard(): LeaderboardEntry[] {
       LEFT JOIN game_history g ON g.user_id = u.id
       GROUP BY u.id, u.username
       ORDER BY wins DESC, coins_won DESC
-    `)
+    `,
+    )
     .all() as LeaderboardEntry[];
 }
 
-export function getLeaderboardUserDetails(userId: number): LeaderboardDetails | undefined {
+export function getLeaderboardUserDetails(
+  userId: number,
+): LeaderboardDetails | undefined {
   const stats = db
-    .prepare(`
+    .prepare(
+      `
       SELECT
         u.id,
         u.username,
@@ -86,7 +99,8 @@ export function getLeaderboardUserDetails(userId: number): LeaderboardDetails | 
       LEFT JOIN game_history g ON g.user_id = u.id
       WHERE u.id = ?
       GROUP BY u.id, u.username
-    `)
+    `,
+    )
     .get(userId) as LeaderboardEntry | undefined;
 
   if (!stats) {
@@ -94,16 +108,18 @@ export function getLeaderboardUserDetails(userId: number): LeaderboardDetails | 
   }
 
   const history = db
-    .prepare(`
+    .prepare(
+      `
       SELECT *
       FROM game_history
       WHERE user_id = ?
       ORDER BY played_at DESC
-    `)
+    `,
+    )
     .all(userId) as GameHistory[];
 
   return {
     stats,
-    history
+    history,
   };
 }
