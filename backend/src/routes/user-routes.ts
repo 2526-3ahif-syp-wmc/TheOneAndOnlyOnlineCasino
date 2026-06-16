@@ -161,6 +161,7 @@ authRouter.patch("/users/:id", (req, res) => {
   return res.json(updatedUser);
 });
 
+
 // PREMIUM
 authRouter.patch("/users/:id/premium", (req, res) => {
   const userId = Number(req.params.id);
