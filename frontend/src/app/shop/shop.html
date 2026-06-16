@@ -60,11 +60,35 @@
         <h2>Special Packs</h2>
       </div>
 
+      @if (isPremium() && discountAvailable) {
+        <div class="premium-discount-banner">
+          <span class="crown-icon">👑</span>
+          <div>
+            <strong>EduBet+ Discount Active</strong>
+            <p>You get 20% off your next coin purchase today!</p>
+          </div>
+        </div>
+      }
+
+      @if (isPremium() && !discountAvailable) {
+        <div class="premium-discount-banner used">
+          <span class="crown-icon">👑</span>
+          <div>
+            <strong>Daily Discount Used</strong>
+            <p>You've used your 20% EduBet+ discount today. Come back tomorrow!</p>
+          </div>
+        </div>
+      }
+
       <div class="coin-grid">
         @for (pack of coinPacks; track pack.coins) {
-          <article class="coin-card card-glass" [class.popular]="pack.popular">
+          <article class="coin-card card-glass" [class.popular]="pack.popular" [class.discounted]="isPremium() && discountAvailable">
             @if (pack.popular) {
               <div class="popular-ribbon">Most Popular</div>
+            }
+
+            @if (isPremium() && discountAvailable) {
+              <div class="discount-ribbon">-20%</div>
             }
 
             <div class="coin-card-head">
@@ -82,8 +106,15 @@
 
             <div class="price-box">
               <div>
-                <span>Special price</span>
-                <strong>{{ pack.price.toFixed(2) }}€</strong>
+                <span>{{ isPremium() && discountAvailable ? 'EduBet+ price' : 'Special price' }}</span>
+                @if (isPremium() && discountAvailable) {
+                  <div class="price-with-discount">
+                    <s class="original-price">{{ pack.price.toFixed(2) }}€</s>
+                    <strong class="discounted-price">{{ getDisplayPrice(pack.price) }}€</strong>
+                  </div>
+                } @else {
+                  <strong>{{ pack.price.toFixed(2) }}€</strong>
+                }
               </div>
 
               <button type="button" (click)="buyCoins(pack)">Buy</button>

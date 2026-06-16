@@ -193,6 +193,13 @@ p {
   word-break: break-word;
 }
 
+.crown-badge {
+  display: inline;
+  font-size: 0.9rem;
+  margin-left: 0.2rem;
+  filter: drop-shadow(0 0 5px rgba(248, 215, 107, 0.85));
+}
+
 .player-main small,
 .player-stats small {
   display: block;
