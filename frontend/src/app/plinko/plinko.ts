@@ -8,6 +8,7 @@ import { AlertService } from '../services/alert-service';
 import { UserService } from '../services/user-service';
 import { LeaderboardService } from '../services/leaderboard-service';
 import { MysteryBoxService } from '../services/mystery-box-service';
+import { SoundService } from '../services/sound-service';
 
 type RiskLevel = 'low' | 'medium' | 'high';
 
@@ -74,6 +75,7 @@ export class PlinkoComponent implements OnInit, OnDestroy {
   private readonly alertService = inject(AlertService);
   private readonly leaderboardService = inject(LeaderboardService);
   private readonly mysteryBoxService = inject(MysteryBoxService);
+  private soundService = inject(SoundService);
 
   private hiddenChrome: Array<{ element: HTMLElement; previousDisplay: string }> = [];
 
@@ -489,7 +491,10 @@ export class PlinkoComponent implements OnInit, OnDestroy {
     )
       .then(() => {
         if (won) {
+          this.soundService.playWin();
           this.mysteryBoxService.applyBuffToWin(user.id, 'Plinko', wager);
+        } else {
+          this.soundService.playLose();
         }
       })
       .catch((error) => {

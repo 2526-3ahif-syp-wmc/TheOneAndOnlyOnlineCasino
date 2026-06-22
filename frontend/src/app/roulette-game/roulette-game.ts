@@ -15,6 +15,7 @@ import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
 import { MysteryBoxService } from '../services/mystery-box-service';
 import { firstValueFrom } from 'rxjs';
+import { SoundService } from '../services/sound-service';
 
 interface Bet {
 type: 'number' | 'color' | 'evenodd' | 'highlow' | 'dozen';
@@ -55,6 +56,7 @@ private wheelElement?: ElementRef<HTMLElement>;
 protected userService = inject(UserService);
 private leaderboardService = inject(LeaderboardService);
 private mysteryBoxService = inject(MysteryBoxService);
+private soundService = inject(SoundService);
 
 balance: number = this.userService.coins();
 currentBet: number = 50;
@@ -353,6 +355,7 @@ this.cdr.detectChanges();
 }
 
 async spinWheel(): Promise<void> {
+  this.soundService.playRouletteSpin();
 if (this.isSpinning) {
 this.alertService.info('The roulette is already spinning.');
 return;
@@ -463,6 +466,7 @@ return ((angle % 360) + 360) % 360;
 
 
 private async determineWinner(winningNumber: number, winnerIndex: number): Promise<void> {
+  this.soundService.stopRouletteSpin();
 this.winningIndex = winnerIndex;
 
 
@@ -577,6 +581,7 @@ if (this.resultsHistory.length > 15) {
 }
 
 if (finalPayout > 0) {
+  this.soundService.playWin();
   this.lastWin = finalPayout;
   this.lastLoss = 0;
   this.showWinAnimation = true;
@@ -589,6 +594,7 @@ if (finalPayout > 0) {
     this.cdr.detectChanges();
   }, 2000);
 } else {
+  this.soundService.playLose();
   this.lastLoss = totalBet;
   this.lastWin = 0;
   this.showLossAnimation = true;

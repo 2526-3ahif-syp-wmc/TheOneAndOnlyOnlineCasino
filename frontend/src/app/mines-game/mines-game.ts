@@ -7,6 +7,7 @@ import { UserService } from '../services/user-service';
 import { AlertService } from '../services/alert-service';
 import { LeaderboardService } from '../services/leaderboard-service';
 import { MysteryBoxService } from '../services/mystery-box-service';
+import { SoundService } from '../services/sound-service';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost' | 'cashed-out';
@@ -59,6 +60,7 @@ export class MinesComponent implements OnInit, OnDestroy {
   private alertService = inject(AlertService);
   private leaderboardService = inject(LeaderboardService);
   private mysteryBoxService = inject(MysteryBoxService);
+  private soundService = inject(SoundService);
 
   balance = this.userService.coins();
   xp = this.userService.xp();
@@ -71,6 +73,8 @@ export class MinesComponent implements OnInit, OnDestroy {
   multiplier = 1;
   safeReveals = 0;
   showHowTo = false;
+
+  difficultyOpen: boolean = false;
 
   private roundStarted = false;
   isStartingGame = false;
@@ -156,6 +160,12 @@ export class MinesComponent implements OnInit, OnDestroy {
 
   get remainingSafeTiles(): number {
     return Math.max(this.safeTilesTotal - this.safeReveals, 0);
+  }
+
+  chooseDifficulty(value: Difficulty): void {
+    this.difficulty = value;
+    this.setDifficulty(value);
+    this.difficultyOpen = false;
   }
 
   setDifficulty(level: Difficulty) {
@@ -262,6 +272,7 @@ export class MinesComponent implements OnInit, OnDestroy {
 
         this.balance = updatedUser.coins;
         this.saveGameHistory('win', winnings, 0);
+        this.soundService.playCashout();
       } catch (err) {
         console.log(err);
         this.balance = previousBalance;
@@ -290,6 +301,7 @@ export class MinesComponent implements OnInit, OnDestroy {
     cell.revealed = true;
 
     if (cell.mine) {
+      this.soundService.playLose();
       cell.exploded = true;
       this.revealAllBombs();
 
@@ -314,6 +326,8 @@ export class MinesComponent implements OnInit, OnDestroy {
     this.multiplier = Number((1 + this.safeReveals * this.config.multiplierStep).toFixed(2));
 
     this.currentWin = Math.max(1, Math.floor(this.bet * this.multiplier));
+
+    this.soundService.playWin();
 
     if (this.safeReveals >= this.safeTilesTotal) {
       const newBalance = this.balance + this.currentWin;

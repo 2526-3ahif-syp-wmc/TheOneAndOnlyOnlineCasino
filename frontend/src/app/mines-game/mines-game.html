@@ -39,28 +39,38 @@
 
     <aside class="panel card-glass">
       <div class="controls card-glass-soft">
-        <label class="field">
+        <label class="field balance-field">
           <span>EC Balance</span>
           <input type="number" [value]="balance" readonly />
         </label>
 
-        <label class="field">
+        <label class="field bet-field">
           <span>Bet</span>
           <input type="number" [(ngModel)]="bet" min="1" [max]="balance" />
         </label>
 
-        <label class="field difficulty-field">
+        <div class="field difficulty-field">
           <span>Difficulty</span>
-          <select
-            class="difficulty-select"
-            [(ngModel)]="difficulty"
-            (ngModelChange)="setDifficulty($event)"
-          >
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </label>
+
+          <div class="difficulty-dropdown">
+            <button
+              class="difficulty-button"
+              type="button"
+              (click)="difficultyOpen = !difficultyOpen"
+            >
+              <span>{{ config.label }}</span>
+              <span class="arrow">▼</span>
+            </button>
+
+            <div class="difficulty-menu" *ngIf="difficultyOpen">
+              <button type="button" (click)="chooseDifficulty('easy')">Easy</button>
+
+              <button type="button" (click)="chooseDifficulty('medium')">Medium</button>
+
+              <button type="button" (click)="chooseDifficulty('hard')">Hard</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="stats">
