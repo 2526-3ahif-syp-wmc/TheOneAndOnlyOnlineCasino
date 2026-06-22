@@ -12,7 +12,7 @@
   <p class="error-message">{{ errorMessage() }}</p>
   }
 
-  <div class="friends-layout">
+  <div class="friends-layout">          
     <section class="friends-list card-glass">
       <div class="section-heading compact-heading">
         <div>
@@ -30,7 +30,7 @@
         </div>
         } @else {
         @for (friend of friends(); track friend.id) {
-        <button class="friend-card" [class.active]="isSelected(friend)" (click)="selectFriend(friend)">
+        <button class="friend-card" [class.premium-friend]="friend.premium === 1" [class.active]="isSelected(friend)" (click)="selectFriend(friend)">
           <div class="friend-avatar">
             @if (friend.avatar_url) {
             <img [src]="'http://localhost:3000' + friend.avatar_url" alt="avatar" class="avatar-img" />
@@ -40,7 +40,12 @@
           </div>
 
           <div class="friend-main">
-            <strong>{{ friend.username }}</strong>
+            <strong>
+              {{ friend.username }}
+              @if (friend.premium === 1) {
+                 <span title="Premium">👑</span>
+              }
+            </strong>
             <small>
               {{ friend.level }} lvl ·
               {{ friend.totalWins }} wins ·
@@ -65,7 +70,12 @@
 
       <div class="section-heading">
         <span class="eyebrow">Friend Profile</span>
-        <h2>{{ selectedFriend()!.username }}</h2>
+        <h2>
+          {{ selectedFriend()!.username }}
+          @if (selectedFriend()!.premium === 1) {
+            <span title="Premium">👑</span>
+          }
+        </h2>
       </div>
 
       <div class="detail-content">
@@ -86,8 +96,8 @@
           </div>
 
           <div class="stat-card">
-            <strong>{{ selectedFriend()!.lastActive }}</strong>
-            <span>Last Active</span>
+            <strong>{{ selectedFriend()!.favoriteGame }}</strong>
+            <span>Favorite Game</span>
           </div>
         </div>
 
@@ -154,7 +164,7 @@
         </div>
         } @else {
         @for (user of filteredUsers(); track user.id) {
-        <div class="suggestion-card">
+        <div class="suggestion-card" [class.premium-friend]="user.premium === 1">
           <div class="suggestion-avatar">
             @if (user.avatar_url) {
             <img [src]="'http://localhost:3000' + user.avatar_url" alt="avatar" class="avatar-img" />

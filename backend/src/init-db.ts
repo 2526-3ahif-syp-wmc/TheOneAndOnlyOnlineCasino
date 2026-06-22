@@ -69,6 +69,17 @@ db.exec(`
 `);
 console.log("Database tables created/updated successfully.");
 
+const userColumns = db.prepare(`PRAGMA table_info(users)`).all() as { name: string }[];
+
+const hasAvatarUrl = userColumns.some(column => column.name === 'avatar_url');
+
+if (!hasAvatarUrl) {
+  db.prepare(`
+    ALTER TABLE users
+    ADD COLUMN avatar_url TEXT NOT NULL DEFAULT ''
+  `).run();
+}
+
 db.prepare(`
   CREATE TABLE IF NOT EXISTS friend_requests (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

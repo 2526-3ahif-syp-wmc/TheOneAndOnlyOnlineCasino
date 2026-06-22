@@ -9,8 +9,10 @@ export type FriendRow = {
   total_wins: number;
   balance: number;
   last_active: string;
+  favorite_game: string;
   created_at: string;
   updated_at: string;
+  premium: number;
 };
 
 
@@ -28,5 +30,6 @@ export interface Friend {
   level: number;
   totalWins: number;
   balance: number;
-  lastActive: string;
+  favoriteGame: string;
+  premium: number;
 }

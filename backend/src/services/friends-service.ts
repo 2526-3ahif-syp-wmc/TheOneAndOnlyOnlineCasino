@@ -13,7 +13,8 @@ function mapFriend(row: FriendRow): Friend {
     level: row.level,
     totalWins: row.total_wins,
     balance: row.balance,
-    lastActive: row.last_active
+    favoriteGame: row.favorite_game ?? 'No games yet',
+    premium: row.premium,
   };
 }
 
@@ -27,37 +28,39 @@ export interface FriendRequest {
 
 export function getFriendsByUserId(userId: number): Friend[] {
   const rows = db
-    .prepare(
-      `
+    .prepare(`
       SELECT
         f.id,
         f.user_id,
         f.friend_name,
-        f.status,
-        COALESCE(u.xp, f.level) as xp,
-        COALESCE(u.wins, f.total_wins) as total_wins,
-        COALESCE(u.coins, f.balance) as balance,
+        f.level,
+        COALESCE((
+          SELECT COUNT(*)
+          FROM game_history g
+          JOIN users u2 ON u2.id = g.user_id
+          WHERE lower(u2.username) = lower(f.friend_name)
+          AND g.result = 'win'
+        ), 0) AS total_wins,
+        COALESCE(u.coins, f.balance) AS balance,
+        COALESCE(u.premium, 0) AS premium,
         f.last_active,
-        f.created_at,
-        f.updated_at
+        COALESCE((
+          SELECT gh.game_name
+          FROM game_history gh
+          JOIN users u3 ON u3.id = gh.user_id
+          WHERE lower(u3.username) = lower(f.friend_name)
+          GROUP BY gh.game_name
+          ORDER BY COUNT(*) DESC
+          LIMIT 1
+        ), 'No games yet') AS favorite_game
       FROM friends f
       LEFT JOIN users u ON lower(u.username) = lower(f.friend_name)
       WHERE f.user_id = ?
-      ORDER BY datetime(f.updated_at) DESC, f.id DESC
-    `
-    )
-    .all(userId) as any[];
+      ORDER BY total_wins DESC, balance DESC
+    `)
+    .all(userId) as FriendRow[];
 
-  return rows.map(row => {
-    return {
-      id: row.id,
-      username: row.friend_name,
-      level: getLevelFromXp(row.xp),
-      totalWins: row.total_wins,
-      balance: row.balance,
-      lastActive: row.last_active
-    };
-  });
+  return rows.map(mapFriend);
 }
 
 export function sendFriendRequest(senderId: number, receiverUsername: string) {
@@ -213,6 +216,8 @@ export function acceptFriendRequest(requestId: number) {
   return { success: true };
 }
 
+
+
 export function declineFriendRequest(requestId: number) {
   const request = db.prepare(`
     SELECT
@@ -285,3 +290,4 @@ export function removeFriend(userId: number, friendId: number): boolean {
 
   return result.changes > 0;
 }
+

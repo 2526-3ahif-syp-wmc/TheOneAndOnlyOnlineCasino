@@ -19,19 +19,39 @@ function toPublicUser(row: PublicUserRow): PublicUser {
 export function getPublicUserById(id: number): User | undefined {
   return db
     .prepare(`
-      SELECT id, username, coins, premium, wins, losses, xp, avatar_url
-      FROM users
-      WHERE id = ?
+      SELECT
+        u.id,
+        u.username,
+        u.coins,
+        u.premium,
+        COALESCE(SUM(CASE WHEN g.result = 'win' THEN 1 ELSE 0 END), 0) AS wins,
+        COALESCE(SUM(CASE WHEN g.result = 'loss' THEN 1 ELSE 0 END), 0) AS losses,
+        u.xp,
+        u.avatar_url
+      FROM users u
+      LEFT JOIN game_history g ON g.user_id = u.id
+      WHERE u.id = ?
+      GROUP BY u.id, u.username, u.coins, u.premium, u.xp, u.avatar_url
     `)
     .get(id) as User | undefined;
 }
 
 export function getPublicUsers(excludeUserId?: number): PublicUser[] {
   const query = `
-    SELECT id, username, coins, premium, wins, losses, xp, avatar_url
-    FROM users
-    ${Number.isInteger(excludeUserId) ? "WHERE id != ?" : ""}
-    ORDER BY username COLLATE NOCASE ASC
+    SELECT
+      u.id,
+      u.username,
+      u.coins,
+      u.premium,
+      COALESCE(SUM(CASE WHEN g.result = 'win' THEN 1 ELSE 0 END), 0) AS wins,
+      COALESCE(SUM(CASE WHEN g.result = 'loss' THEN 1 ELSE 0 END), 0) AS losses,
+      u.xp,
+      u.avatar_url
+    FROM users u
+    LEFT JOIN game_history g ON g.user_id = u.id
+    ${Number.isInteger(excludeUserId) ? "WHERE u.id != ?" : ""}
+    GROUP BY u.id, u.username, u.coins, u.premium, u.xp, u.avatar_url
+    ORDER BY u.username COLLATE NOCASE ASC
   `;
 
   const rows = Number.isInteger(excludeUserId)
@@ -43,12 +63,23 @@ export function getPublicUsers(excludeUserId?: number): PublicUser[] {
 
 export function searchPublicUsers(queryText: string, excludeUserId?: number): PublicUser[] {
   const searchText = `%${queryText.trim()}%`;
+
   const query = `
-    SELECT id, username, coins, premium, wins, losses, xp, avatar_url
-    FROM users
-    WHERE username LIKE ? COLLATE NOCASE
-    ${Number.isInteger(excludeUserId) ? "AND id != ?" : ""}
-    ORDER BY username COLLATE NOCASE ASC
+    SELECT
+      u.id,
+      u.username,
+      u.coins,
+      u.premium,
+      COALESCE(SUM(CASE WHEN g.result = 'win' THEN 1 ELSE 0 END), 0) AS wins,
+      COALESCE(SUM(CASE WHEN g.result = 'loss' THEN 1 ELSE 0 END), 0) AS losses,
+      u.xp,
+      u.avatar_url
+    FROM users u
+    LEFT JOIN game_history g ON g.user_id = u.id
+    WHERE u.username LIKE ? COLLATE NOCASE
+    ${Number.isInteger(excludeUserId) ? "AND u.id != ?" : ""}
+    GROUP BY u.id, u.username, u.coins, u.premium, u.xp, u.avatar_url
+    ORDER BY u.username COLLATE NOCASE ASC
   `;
 
   const rows = Number.isInteger(excludeUserId)

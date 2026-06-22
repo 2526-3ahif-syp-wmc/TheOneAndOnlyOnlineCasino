@@ -8,8 +8,9 @@ export interface Friend {
   level: number;
   totalWins: number;
   balance: number;
-  lastActive: string;
+  favoriteGame: string;
   avatar_url?: string | null;
+  premium: number;
 }
 
 export interface FriendRequest {
