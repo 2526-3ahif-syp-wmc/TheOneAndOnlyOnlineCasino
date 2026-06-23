@@ -1,347 +1,1104 @@
-# Online Casino – Pflichtenheft
+# EduBet – Projektantrag / Pflichtenheft
+
+
 
 **Projektteam:** Metehan, David, Aldin, Sulejman, Hamlet, Osama aus der 3AHIF
 
+
+
 ---
+
+
 
 ## Inhaltsverzeichnis
 
-- [1. Ausgangslage](#1-ausgangslage)
-  - [1.1 Ist-Situation](#11-ist-situation)
-  - [1.2 Verbesserungspotenziale](#12-verbesserungspotenziale)
-- [2. Zielsetzung](#2-zielsetzung)
-- [3. Funktionale Anforderungen](#3-funktionale-anforderungen)
-  - [3.1 Use Case A – Homepage](#31-use-case-a--homepage)
-  - [3.2 Use Case B – Leaderboard](#32-use-case-b--leaderboard)
-  - [3.3 Use Case C – Shop](#33-use-case-c--shop)
 
-- [5. Mengengerüst](#5-mengengerüst)
+
+* [1. Ausgangslage](#1-ausgangslage)
+
+
+
+  * [1.1 Ist-Situation](#11-ist-situation)
+
+  * [1.2 Verbesserungspotenziale](#12-verbesserungspotenziale)
+
+  * [1.3 SWOT-Analyse](#13-swot-analyse)
+
+* [2. Zielsetzung](#2-zielsetzung)
+
+
+
+  * [2.1 Umgesetzte Hauptfunktionen](#21-umgesetzte-hauptfunktionen)
+
+  * [2.2 Umgesetzte Spiele](#22-umgesetzte-spiele)
+
+  * [2.3 Nicht oder nur teilweise umgesetzte Features](#23-nicht-oder-nur-teilweise-umgesetzte-features)
+
+* [3. Systemarchitektur](#3-systemarchitektur)
+
+* [4. Datenmodell](#4-datenmodell)
+
+* [5. Funktionale Anforderungen](#5-funktionale-anforderungen)
+
+
+
+  * [5.1 Use Case A – Homepage](#51-use-case-a--homepage)
+
+  * [5.2 Use Case B – Spiele](#52-use-case-b--spiele)
+
+  * [5.3 Use Case C – Leaderboard](#53-use-case-c--leaderboard)
+
+  * [5.4 Use Case D – Friends Page](#54-use-case-d--friends-page)
+
+  * [5.5 Use Case E – Rewards](#55-use-case-e--rewards)
+
+  * [5.6 Use Case F – EduBet+](#56-use-case-f--edubet)
+
+* [6. Spieleübersicht](#6-spieleübersicht)
+
+* [7. Mengengerüst](#7-mengengerüst)
+
+* [8. Fazit](#8-fazit)
+
+
 
 ---
+
+
 
 ## 1. Ausgangslage
 
-Casinos gibt es meistens nur an bestimmten Orten und zu bestimmten Zeiten.  
-Oft braucht man dort auch viel Geld. Für viele Leute ist das daher nicht praktisch.
 
-Online-Casinos gibt es zwar, aber viele davon sind kompliziert aufgebaut oder kosten Geld.  
-Deshalb wollen wir ein einfaches Online-Casino als Webprojekt umsetzen.
 
----
+Viele Casino-Webseiten sind entweder unübersichtlich, kostenpflichtig oder auf echtes Geld ausgelegt. Für unser Schulprojekt wollten wir deshalb eine eigene Casino-Web-App entwickeln, die nur mit virtuellen Coins funktioniert.
 
-### 1.1 Ist-Situation
 
-- Casinos sind ortsgebunden
-- Nicht jederzeit verfügbar
-- Meist hoher Geldeinsatz notwendig
-- Kaum Anpassungsmöglichkeiten
-- Online-Angebote oft unübersichtlich oder kostenpflichtig
+
+Unser Projekt heißt **EduBet**. Es handelt sich um eine browserbasierte Online-Casino-Web-App mit mehreren Spielen, Benutzerprofilen, Leaderboard, Friends Page und Reward-Systemen.
+
+
+
+Wichtig ist: In unserer App wird **kein echtes Geld** verwendet. Alle Einsätze und Gewinne passieren nur mit virtuellen Coins.
+
+
 
 ---
 
-### 1.2 Verbesserungspotenziale
 
-#### Vorteile des Projekts
 
-- Jederzeit spielbar (browserbasiert)
-- Komplett kostenlos
-- Mehrere Spiele auf einer Plattform
-- Moderne, übersichtliche Benutzeroberfläche
-- Fortschritt wird gespeichert
+## 1.1 Ist-Situation
 
-#### Mögliche Probleme
 
-- Keine Serverfunktionen
-- Teilweise komplexe Spiellogik
-- Erhöhter Zeitaufwand durch mehrere Spiele
 
-#### Lösungen
+* Viele Casino-Seiten sind auf echtes Geld ausgelegt
 
-- Speicherung im Server
-- Wichtige Funktionen zuerst umsetzen
-- Schrittweise Umsetzung
+* Einige Online-Casinos sind unübersichtlich
 
-#### SWOT-Analyse
+* Viele Funktionen sind für Anfänger schwer verständlich
 
-| **Stärken**                   | **Schwächen**            |
-| ----------------------------- | ------------------------ |
-| Motivierendes Projekt         | Keine Serveranbindung    |
-| Gute Übung für HTML/CSS/JS/TS | Daten nur lokal          |
-| Mehrere Spielarten            | Teilweise komplexe Logik |
+* Es gibt oft keine einfache Social-Funktion für Freunde
 
-| **Chancen**             | **Risiken**                     |
-| ----------------------- | ------------------------------- |
-| Gutes Portfolio-Projekt | Zeitmangel                      |
-| Erweiterbar             | Fehleranfällige Spielmechaniken |
+* Für ein Schulprojekt wollten wir eine sichere und kostenlose Alternative erstellen
+
+
 
 ---
+
+
+
+## 1.2 Verbesserungspotenziale
+
+
+
+### Vorteile unseres Projekts
+
+
+
+* Kostenlos spielbar
+
+* Keine echten Geldeinsätze
+
+* Mehrere Spiele auf einer Plattform
+
+* Benutzerkonten mit Coinsystem
+
+* Leaderboard für Statistiken
+
+* Friends Page als Social Feature
+
+* Daily Reward und Mystery Box als Belohnungssystem
+
+* EduBet+ als Premium-Feature
+
+* Moderne Benutzeroberfläche
+
+
+
+### Mögliche Probleme
+
+
+
+* Mehrere Spiele bedeuten mehr Aufwand
+
+* Spiellogik und Animationen sind teilweise komplex
+
+* Frontend, Backend und Datenbank müssen zusammenarbeiten
+
+* Hosting ist schwieriger, weil nicht nur ein Frontend, sondern auch ein Backend und eine SQLite-Datenbank benötigt werden
+
+
+
+### Lösungen
+
+
+
+* Schrittweise Umsetzung der wichtigsten Features
+
+* Trennung von Frontend, Backend und Datenbank
+
+* Speicherung von Usern, Coins und Spielverlauf in SQLite
+
+* Fokus auf stabile lokale Version für die Präsentation
+
+* Nicht umgesetzte Features wurden entfernt oder vereinfacht
+
+
+
+---
+
+
+
+## 1.3 SWOT-Analyse
+
+
+
+| Stärken                                                | Schwächen                                |
+
+| ------------------------------------------------------ | ---------------------------------------- |
+
+| Mehrere spielbare Games                                | Hosting nicht umgesetzt                  |
+
+| Full-Stack-Projekt mit Frontend, Backend und Datenbank | SQLite nur lokal verwendet               |
+
+| Coinsystem und Spielverlauf                            | Manche Features vereinfacht              |
+
+| Leaderboard, Friends und Rewards                       | Keine echte Zahlung / kein echtes Casino |
+
+
+
+| Chancen                                    | Risiken                                   |
+
+| ------------------------------------------ | ----------------------------------------- |
+
+| Gutes Portfolio-Projekt                    | Zeitmangel                                |
+
+| Erweiterbar mit neuen Games                | Fehler in Spiellogik                      |
+
+| Gute Übung für Angular, Express und SQLite | Animationen können aufwendig sein         |
+
+| Präsentierbares Schulprojekt               | Backend-Hosting wäre zusätzlicher Aufwand |
+
+
+
+---
+
+
 
 ## 2. Zielsetzung
 
-Ziel ist es, ein einfaches Online-Casino zu erstellen, das komplett im Browser läuft.  
-Der Benutzer soll verschiedene Spiele spielen und Coins gewinnen oder verlieren können.
 
-### Hauptfunktionen
 
-- Benutzerprofil
-- Coins-System
-- Daily Reward
-- Shop für Skins / Themes
-- Level- & Win-Streak-System
-- Leaderboard
+Ziel des Projekts war es, eine vollständige Online-Casino-Web-App zu entwickeln. Benutzer sollen sich registrieren, einloggen und mit virtuellen Coins verschiedene Spiele spielen können.
+
+
+
+Zusätzlich soll die App nicht nur aus Spielen bestehen, sondern auch moderne Plattform-Features enthalten. Dazu gehören ein Leaderboard, eine Friends Page, Daily Reward, Mystery Box und EduBet+.
+
+
+
+---
+
+
+
+## 2.1 Umgesetzte Hauptfunktionen
+
+
+
+* Registrierung und Login
+
+* Benutzerprofil
+
+* Virtuelles Coinsystem
+
+* Spielverlauf
+
+* Leaderboard
+
+* Friends Page
+
+* Daily Reward
+
+* Mystery Box
+
+* EduBet+ Premium-System
+
+* Profilbild-Funktion
+
+* Speicherung in SQLite
+
+* REST-API mit Express
+
+* Angular Frontend
+
+
+
+---
+
+
+
+## 2.2 Umgesetzte Spiele
+
+
+
+Unsere App enthält fünf Spiele:
+
+
+
+* Slot Machine
+
+* Roulette
+
+* Blackjack
+
+* Plinko
+
+* Mines
+
+
+
+---
+
+
+
+## 2.3 Nicht oder nur teilweise umgesetzte Features
+
+
+
+Einige ursprünglich geplante Features wurden angepasst oder nicht umgesetzt, weil der Fokus auf den wichtigsten Funktionen lag.
+
+
+
+Nicht umgesetzt oder vereinfacht wurden:
+
+
+
+* Shop für Skins und Themes
+
+* Hosting der fertigen Web-App
+
+* erweiterte Leaderboard-Filter
+
+* Blackjack-Funktionen wie Double und Split
+
+
+
+Diese Funktionen könnten in einer zukünftigen Version ergänzt werden.
+
+
+
+---
+
+
+
+## 3. Systemarchitektur
+
+
+
+Die App besteht aus drei Hauptteilen:
+
+
+
+### Frontend
+
+
+
+Das Frontend wurde mit **Angular**, **TypeScript**, **HTML** und **SCSS** umgesetzt.
+
+
+
+Es zeigt die Benutzeroberfläche, Spiele, Profile, Leaderboard, Friends Page und Rewards an.
+
+
+
+### Backend
+
+
+
+Das Backend wurde mit **Node.js**, **Express** und **TypeScript** umgesetzt.
+
+
+
+Es verarbeitet API-Requests, führt Logik aus und verbindet das Frontend mit der Datenbank.
+
+
+
+### Datenbank
+
+
+
+Als Datenbank verwenden wir **SQLite** mit **better-sqlite3**.
+
+
+
+Darin speichern wir User, Coins, Spielverläufe, Freunde, Rewards und Premium-Status.
+
+
+
+### Einfacher Ablauf
+
+
+
+```txt
+
+User → Angular Frontend → Express Backend → SQLite Datenbank
+
+```
+
+
+
+---
+
+
+
+## 4. Datenmodell
+
+
+
+Die wichtigsten Tabellen sind:
+
+
+
+### users
+
+
+
+In der Tabelle `users` speichern wir Benutzerinformationen.
+
+
+
+Beispiele:
+
+
+
+* Username
+
+* Passwort
+
+* Coins
+
+* XP
+
+* Premium-Status
+
+* Profilbild
+
+* Wins und Losses
+
+
+
+### game_history
+
+
+
+In der Tabelle `game_history` speichern wir jede gespielte Runde.
+
+
+
+Beispiele:
+
+
+
+* User-ID
+
+* Spielname
+
+* Ergebnis
+
+* Einsatz
+
+* gewonnene Coins
+
+* verlorene Coins
+
+* Zeitpunkt
+
+
+
+Dadurch können wir Statistiken und das Leaderboard berechnen.
+
+
+
+### friends
+
+
+
+In der Tabelle `friends` speichern wir Freunde eines Benutzers.
+
+
+
+Beispiele:
+
+
+
+* User-ID
+
+* Freundesname
+
+* Level
+
+* Wins
+
+* Balance
+
+* Erstellungsdatum
+
+
+
+Dadurch kann die Friends Page anzeigen, welche Freunde ein User hat.
+
+
+
+### Beispiel `friends` Tabelle
+
+
+
+```sql
+
+CREATE TABLE IF NOT EXISTS friends (
+
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  user_id INTEGER NOT NULL,
+
+  friend_name TEXT NOT NULL,
+
+  level INTEGER NOT NULL DEFAULT 1,
+
+  total_wins INTEGER NOT NULL DEFAULT 0,
+
+  balance INTEGER NOT NULL DEFAULT 0,
+
+  last_active TEXT NOT NULL DEFAULT 'just now',
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+
+
+  FOREIGN KEY (user_id) REFERENCES users(id)
+
+);
+
+```
+
+
+
+---
+
+
+
+## 5. Funktionale Anforderungen
+
+
+
+---
+
+
+
+## 5.1 Use Case A – Homepage
+
+
+
+### Beschreibung
+
+
+
+Die Homepage ist die Startseite der App. Dort bekommt der Benutzer einen schnellen Überblick über die wichtigsten Funktionen.
+
+
+
+### Funktionen
+
+
+
+* Anzeige der wichtigsten Spiele
+
+* Navigation zu Games, Profil, Leaderboard und Friends
+
+* Anzeige des Coin-Stands
+
+* Zugriff auf Rewards und andere Features
+
+* Moderner Einstieg in die App
+
+
+
+### Ziel
+
+
+
+Der Benutzer soll schnell verstehen, was die App bietet, und direkt mit dem Spielen beginnen können.
+
+
+
+---
+
+
+
+## 5.2 Use Case B – Spiele
+
+
+
+### Beschreibung
+
+
+
+Der Benutzer kann zwischen mehreren Casino-Spielen wählen und mit virtuellen Coins Einsätze machen.
+
+
+
+### Funktionen
+
+
+
+* Einsatz auswählen
+
+* Spiel starten
+
+* Gewinn oder Verlust berechnen
+
+* Coins aktualisieren
+
+* Spielverlauf speichern
+
+
 
 ### Spiele
 
-- Mines
-- Roulette
-- Blackjack
-- Plinko
-- Slot Machine
 
-## Slot-Machine Übersicht
 
-<img src="pics/slot-machine.jpg" width="400">
+* Slot Machine
 
-### Definition
+* Roulette
 
-Ein Spielautomat mit einem Raster aus Symbolen, z.B:
+* Blackjack
 
-- 3×1
-- 3×3
-- 7×3
+* Plinko
+
+* Mines
+
+
+
+### Ziel
+
+
+
+Der Benutzer soll verschiedene Spiele ausprobieren können und durch Gewinne oder Verluste seinen Coin-Stand verändern.
+
+
+
+---
+
+
+
+## 5.3 Use Case C – Leaderboard
+
+
+
+### Beschreibung
+
+
+
+Im Leaderboard sieht der Benutzer, wie gut andere Spieler sind.
+
+
+
+### Funktionen
+
+
+
+* Anzeige der Top-Spieler
+
+* Anzeige von Wins und Losses
+
+* Anzeige von gewonnenen und verlorenen Coins
+
+* Berechnung aus der Spielhistorie
+
+* Vergleich zwischen Spielern
+
+
+
+### Ziel
+
+
+
+Das Leaderboard soll Benutzer motivieren, öfter zu spielen und bessere Ergebnisse zu erreichen.
+
+
+
+---
+
+
+
+## 5.4 Use Case D – Friends Page
+
+
+
+### Beschreibung
+
+
+
+Die Friends Page ist ein Social Feature der App. Benutzer können andere Spieler als Freunde hinzufügen und deren Daten ansehen.
+
+
+
+### Funktionen
+
+
+
+* Freunde anzeigen
+
+* Freundesanfragen senden
+
+* Freundesanfragen annehmen oder ablehnen
+
+* Freunde entfernen
+
+* Freundesdaten anzeigen
+
+
+
+### Ziel
+
+
+
+Die App soll dadurch mehr wie eine echte Online-Plattform wirken und nicht nur wie eine Sammlung von Spielen.
+
+
+
+---
+
+
+
+## 5.5 Use Case E – Rewards
+
+
+
+### Beschreibung
+
+
+
+Die App enthält Belohnungssysteme, damit Benutzer regelmäßig zurückkommen.
+
+
+
+### Funktionen
+
+
+
+* Daily Reward
+
+* Mystery Box
+
+* Zufällige Belohnungen
+
+* Bonus-Coins
+
+* Mögliche Buffs oder Vorteile
+
+
+
+### Ziel
+
+
+
+Rewards sollen die App motivierender und interaktiver machen.
+
+
+
+---
+
+
+
+## 5.6 Use Case F – EduBet+
+
+
+
+### Beschreibung
+
+
+
+EduBet+ ist unser Premium-System. Es soll besondere Vorteile für Premium-User darstellen.
+
+
+
+### Funktionen
+
+
+
+* Premium-Status beim User speichern
+
+* Besondere Markierung
+
+* Bessere Rewards
+
+* Mögliche Bonus-Vorteile
+
+
+
+### Ziel
+
+
+
+EduBet+ zeigt, wie ein Premium-System in einer Web-App umgesetzt werden kann.
+
+
+
+---
+
+
+
+## 6. Spieleübersicht
+
+
+
+---
+
+
+
+## 6.1 Slot Machine
+
+
+
+### Beschreibung
+
+
+
+Die Slot Machine ist ein Spielautomat mit Walzen und Symbolen.
+
+
 
 ### Ablauf
 
-1. Spieler drückt **„Spin“**
-2. Alle Reihen und Spalten drehen sich gleichzeitig
-3. Die Drehung stoppt nacheinander und zeigt das Ergebnis
 
-### Gewinnlogik
 
-- Abhängig davon, wie viele gleiche Symbole verbunden sind
-- Berechnet den Gewinn des Spielers
+1. Spieler wählt Einsatz
 
-### Umsetzung
+2. Spieler klickt auf Spin
 
-- Animationen für die drehenden Symbole
-- Algorithmus für Erkennung der Kombinationen und Gewinnberechnung
+3. Walzen drehen sich
 
-## Mines Übersicht
+4. Symbole stoppen
 
-<img src="pics/mines.jpg" width="400">
+5. Gewinn wird berechnet
 
-## Definition
 
-Mines ist ein einfaches Raster-Spiel mit wählbaren Größen, z.B:
-
-- 9×9
-- 12×12
-- 18×18
-
-## Ablauf
-
-1. Bomben werden zufällig im Grid verteilt
-2. Spieler klickt Felder an und versucht, nur sichere Felder zu treffen.
-3. Jeder sichere Klick erhöht den Gewinn
-4. Ein Bombenklick beendet die Runde
-
-## Gewinnlogik
-
-Multiplikatoren pro sicherem Feld:
-
-- **9×9:** 1.15×
-- **12×12:** 1.10×
-- **18×18:** 1.05×
-
-**Beispiel:**  
-100 coins Einsatz + 3 sichere Klicks im 9×9 → **145 coins Gewinn**
 
 ### Umsetzung
 
-- einfach, haben wir letztes Jahr in WMC gemacht
 
-## Roulette Übersicht
 
-<img src="pics/roulette.jpg" width="400">
+* Animierte Walzen
 
-### Definition
+* Verschiedene Symbole
 
-Spieler setzen auf Zahlen oder Farben und die Kugel im Rad die Gewinnzahl bestimmt.
+* Gewinnlogik
+
+* Coinsystem
+
+* Spielverlauf speichern
+
+
+
+---
+
+
+
+## 6.2 Roulette
+
+
+
+### Beschreibung
+
+
+
+Bei Roulette setzt der Spieler auf Zahlen oder Farben. Danach dreht sich ein Roulette-Rad und eine Gewinnzahl wird bestimmt.
+
+
 
 ### Ablauf
 
-1. Spieler setzen auf dem Tischl.
-2. Das Rad dreht sich, Kugel wird eingeworfen.
-3. Die Kugel landet auf einer Zahl (0–36).
-4. Einsätze werden falls richtiges Setzen ausgezahlt.
 
-### Gewinnlogik
 
-Auszahlung hängt von der Setzung ab.  
-Beispiel: 10 € auf Zahl 12 → Kugel landet auf 12: **350 € Gewinn**.
+1. Spieler setzt Coins
 
-## Umsetzung
+2. Rad wird gedreht
 
-- Roulette-Rad + Kugel animieren
-- Zufallszahl 0–36 generieren
-- Setzfelder
-- Gewinne entsprechend auszahlen
+3. Gewinnzahl wird erzeugt
 
-## Blackjack Übersicht
+4. Auszahlung wird berechnet
 
-<img src="pics/blackjack.jpg" width="400">
 
-### Definition
-
-Ein Kartenspiel, bei dem Spieler versuchen, näher an **21** zu kommen als der Dealer, ohne diese Zahl zu überschreiten.
-
-### Ablauf
-
-1. Spieler und Dealer erhalten Startkarten.
-2. Spieler entscheidet: **Hit**, **Stand**, **Double**, **Split** (falls möglich).
-3. Dealer zieht Karten bis mindestens 17.
-4. Werte werden verglichen, nähster Spieler gewinnt.
-
-### Grundregeln
-
-- Zahlenkarten = ihr Wert
-- Bildkarten = 10
-- Ass = 1 oder 11
-- Blackjack (Ass + 10er-Karte) zahlt meist **3:2**
-
-### Gewinnlogik
-
-Spieler gewinnt, wenn:
-
-- Seine Hand näher an 21 ist als die des Dealers
-- Der Dealer über 21 geht (**Bust**)
-- Spieler Blackjack hat
 
 ### Umsetzung
 
-- Kartendeck generieren/mischen
-- Kartenlogik + Handwerte
-- Spieleraktionen (Hit/Stand/Double/Split)
-- Dealer-Automation (zieht bis 17)
-- Rundenauswertung + Auszahlung
 
-## Plinko Übersicht
 
-<img src="pics/plinko.jpg" width="400">
+* Animiertes Roulette-Rad
 
-## Definition
+* Verschiedene Wettmöglichkeiten
 
-Ein Ball fällt von oben und an Pins abprallt, bevor er in unten liegenden Fächern landet, die Punkte vergeben.
+* Zufallszahl
 
-## Ablauf
+* Gewinnberechnung
 
-1. Spieler wählt Einsatz und Fall-Position des Balls.
-2. Ball fällt durch das Pin-Gitter, prallt an Pins ab.
-3. Ball landet in einem Punktefach, Punkte werden angezeigt.
-4. Optional: mehrere Bälle nacheinander, Reset-Funktion.
+* Speicherung im Spielverlauf
 
-## Gewinnlogik
 
-- Punkte hängen vom Fach ab, in dem der Ball landet.
-- Risiko-Stufe einstellbar: höhere Stufe → größere mögliche Punkte, aber höhere Schwankungen.
-
-## Umsetzung
-
-- Physikalische Schwerkraft für den Ball simulieren.
-- Kollisionserkennung mit Pins.
-- Animationen: flüssige Bewegung, Aufleuchteffekte bei Kollisionen.
 
 ---
 
-## 3. Funktionale Anforderungen
+
+
+## 6.3 Blackjack
+
+
+
+### Beschreibung
+
+
+
+Blackjack ist ein Kartenspiel, bei dem der Spieler versucht, näher an 21 Punkte zu kommen als der Dealer, ohne über 21 zu gehen.
+
+
+
+### Ablauf
+
+
+
+1. Spieler setzt Coins
+
+2. Spieler und Dealer erhalten Karten
+
+3. Spieler entscheidet zwischen Hit und Stand
+
+4. Dealer zieht Karten
+
+5. Gewinner wird berechnet
+
+
+
+### Umsetzung
+
+
+
+* Kartenlogik
+
+* Handwerte berechnen
+
+* Ass zählt als 1 oder 11
+
+* Hit und Stand
+
+* Auszahlung und Spielverlauf
+
+
 
 ---
 
-### 3.1 Use Case A – Homepage
 
-**Beschreibung:**  
-Die Startseite ist die erste Seite nach dem Öffnen der Website.
-Hier bekommt der Benutzer einen schnellen Überblick über das Casino.
 
-**Funktionen:**
+## 6.4 Plinko
 
-- Navigation (Home, Shop, Games, Profil usw.)
-- Anzeige des aktuellen Coin-Stands
-- Zugriff auf den Shop
-- Anzeige des Leaderboards
-- Anzeige der Top 3 Games
-- Schneller Einstieg in den Top Games
 
-**Ziel:**  
-Der Benutzer soll schnell verstehen, was möglich ist, und direkt spielen können.
 
-![Homepage Scribble](pics/homepageScribble.jpg)
+### Beschreibung
 
----
 
-### 3.2 Use Case B – Leaderboard
 
-**Beschreibung:**  
-Im Leaderboard sieht der Benutzer mithilfe der Filter, wie gut er im Vergleich zu anderen Spielern ist. Er kann sich ein beliebiges Spiel und seine Freunde auswählen, wie auch der aktuelle Ort und wie lang er die Liste haben will.
+Bei Plinko fällt ein Ball durch Pins und landet unten in einem Multiplikator-Feld.
 
-**Funktionen:**
 
-- Anzeige der Top-Spieler
-- Sortierung beliebeige Filter
-- Eigene Position wird angezeigt
-- Auswahl von Spielen
-- Übersichtliche Listenansicht
 
-**Ziel:**  
-Der Benutzer soll motiviert werden, öfter zu spielen und besser zu werden.
+### Ablauf
 
-![Leaderboard Scribble](pics/leaderboardScribble.jpg)
 
----
 
-### 3.3 Use Case C – Shop
+1. Spieler wählt Einsatz
 
-**Beschreibung:**  
-Im Shop kann der Benutzer seine Coins für Skins, Designs oder Extras ausgeben.
+2. Ball fällt nach unten
 
-**Funktionen:**
+3. Ball prallt an Pins ab
 
-- Anzeige verfügbarer Items
-- Anzeige des Preises in Coins
-- Kaufen von Items
-- Anzeige gekaufter Items
-- Spezial-Items (z. B. Events oder Themen)
+4. Ball landet in einem Slot
 
-![Shop Scribble](pics/shopScribble.jpg)
+5. Gewinn wird mit Multiplikator berechnet
 
-**Ziel:**  
-Der Benutzer soll Coins sinnvoll verwenden und sein Casino personalisieren können.
+
+
+### Umsetzung
+
+
+
+* Ball-Animation
+
+* Einfache Physik
+
+* Kollision mit Pins
+
+* Multiplikatoren
+
+* Gewinnberechnung
+
+
 
 ---
 
-## 5. Mengengerüst
 
-- **Benutzeranzahl:**
-  - ca. **1.000+ Benutzer**
-  - optimales Wachstum mit Werbung
 
-- **Datenmenge pro Benutzer:**
-  - Profil, Coins, Fortschritt
-  - unter **3 MB pro Benutzer**
+## 6.5 Mines
 
-- **Serveranfragen:**
-  - ca. 10-30 Serveranfragen pro Sitzung je nach Gebrauch (z. B. Laden von Daten, Seiten, Spielen, Leaderboards)
 
-## 6. Systemarchitektur
 
-### 6.1 Deployment-Diagramm
+### Beschreibung
 
-<img src="pics/deployment_diagram.png" width=500>
 
-### 6.2 Datenmodell
 
-<img src="pics/er_diagram.png" width=300>
+Mines ist ein Risiko-Spiel, ähnlich wie Minesweeper. Der Spieler muss sichere Felder aufdecken und Minen vermeiden.
 
-Figma
 
-https://www.figma.com/make/xXRmznEHGdh0XT9beNfcd8/Online-Casino-App?t=Gc9UMz5TjBcvOwUe-1
+
+### Ablauf
+
+
+
+1. Spieler wählt Einsatz
+
+2. Minen werden verteilt
+
+3. Spieler klickt Felder an
+
+4. Sichere Felder erhöhen den Multiplikator
+
+5. Mine bedeutet Verlust
+
+
+
+### Umsetzung
+
+
+
+* Grid mit Feldern
+
+* Zufällige Minen
+
+* Multiplikator-System
+
+* Cashout-Funktion
+
+* Spielverlauf speichern
+
+
+
+---
+
+
+
+## 7. Mengengerüst
+
+
+
+### Benutzeranzahl
+
+
+
+Für das Schulprojekt rechnen wir mit einer kleinen Testumgebung.
+
+
+
+* ca. 10 bis 50 Testbenutzer
+
+* Erweiterbar auf mehr Benutzer
+
+
+
+### Datenmenge pro Benutzer
+
+
+
+Pro Benutzer werden gespeichert:
+
+
+
+* Profilinformationen
+
+* Coins
+
+* Premium-Status
+
+* Freunde
+
+* Spielverlauf
+
+* Rewards
+
+
+
+Die Datenmenge bleibt gering, da hauptsächlich Text- und Zahlenwerte gespeichert werden.
+
+
+
+### Serveranfragen
+
+
+
+Pro Sitzung entstehen mehrere Requests, zum Beispiel:
+
+
+
+* Login / Registrierung
+
+* Laden des Profils
+
+* Starten eines Spiels
+
+* Speichern des Spielverlaufs
+
+* Laden des Leaderboards
+
+* Laden der Friends Page
+
+* Abholen von Rewards
+
+
+
+---
+
+
+
+## 8. Fazit
+
+
+
+EduBet ist eine vollständige Web-App mit Frontend, Backend und Datenbank. Das Projekt enthält fünf Spiele, ein Coinsystem, Spielverlauf, Leaderboard, Friends Page, Daily Reward, Mystery Box und EduBet+.
+
+
+
+Während der Umsetzung haben wir gelernt, wie man eine größere Web-App strukturiert, Angular mit Express verbindet und Daten in SQLite speichert. Besonders herausfordernd waren die Spiellogik, Animationen und das Zusammenspiel von Frontend, Backend und Datenbank.
+
+
+
+Nicht alle ursprünglich geplanten Features wurden vollständig umgesetzt. Der Fokus lag am Ende auf einer stabilen lokalen Version mit den wichtigsten Funktionen.
+
